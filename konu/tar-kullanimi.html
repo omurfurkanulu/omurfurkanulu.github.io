@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Linuxte Arşiv Oluşturma Tar kullanımı linux arşiv komutları" />
+		<meta name="keywords" content="tar, tar.gz, arşiv, tar ile arşiv oluşturma" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Linuxte Arşiv Oluşturma (tar kullanımı)</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Linuxte Arşiv İşlemleri (tar kullanımı)</h1>
+
+
+			<h2>.tar Dosyası Nedir?</h2>
+			<p>.tar dosyları bir veya birden fazla dosya veya dizinin peş peşe eklenerek tek bir dosyada birleşmiş halidir.</p>
+
+			<h2>Tar Programı</h2>
+			<p>Tar programı ile dosyalarınızı arşivleyebilir, arşivlerinize dosya ekleyip silebilir  ve arşivinizi açabilirsiniz.</p>
+			<p>NOT: tar programı sıkıştırma yapmaz. Ancak parametre ile belirtilirse tar programı diğer sıkıştırma programlarını kullanarak tar arşivini sıkıştırabilir.</p>
+
+
+			<h2  style="border-bottom: 1px dashed white;">NASIL ARŞİV OLUŞTURULUR?</h2>
+
+			<p>tar programını kullanarak aşağıdaki şekilde arşiv oluşturabilirsiniz.</p>
+			<p># tar cf arsivadi.tar arsive_eklenecek_dosyalar</p>
+			<p>Şeklinde kullanabilirsiniz.</p>
+			<pre class="code">root@pc:~/dizin$ touch dosya1.txt
+root@pc:~/dizin$ touch dosya2.txt
+root@pc:~/dizin$ ls
+dosya1.txt  dosya2.txt
+
+root@pc:~/dizin$ tar cf arsiv.tar dosya*
+
+root@pc:~/dizin$ ls
+arsiv.tar  dosya1.txt  dosya2.txt
+</pre>
+
+<p>Yazdığımız komutları incelersek</p>
+<p>dizin klasörünün içerisinde dosya1.txt dosya2.txt adında iki dosya oluşturduk.</p>
+<p>c parametresi ile create(yarat) ile arşiv oluşturma komutunu vermiş oluyoruz.</p>
+<p>f parametresi kendisinden sonra gelen ismi arşiv ismi olarak belirtmemizi sağlıyor.</p>
+
+
+<br />
+<p>arsiv.tar yerine uzantıyı yazmadanda arşiv oluşturabiliriz. Ancak dosyanın bir arşiv dosyası olduğunun anlaşılması için .tar soyadını dosyaya eklemenizde fayda var. Arşiv dosyalarının sonuna .tar eklemek bir UNIX geleneğidir.</p>
+<p>Tabi file programı ile dosyanın sonunda .tar olmasa bile dosyanın hangi türde olduğunu öğrenebiliriz.</p>
+<pre class="code">root@pc:~/dizin$ tar cf arsiv dosya1.txt dosya2.txt
+
+root@pc:~/dizin$ file arsiv
+arsiv: POSIX tar archive (GNU)
+</pre>
+
+
+<br />
+
+<p>Dizinleri Arşivlemek</p>
+<pre class="code">root@pc:~/dizin$ ls
+dosya1.txt  dosya2.txt dizin2
+
+root@pc:~/dizin$ tar cf arsiv.tar dosya1.txt dosya2.txt dizin2
+
+root@pc:~/dizin$ ls
+arsiv.tar  dosya1.txt  dosya2.txt  dizin2
+</pre>
+<p>arşiv adını belirttikten sonra arşive eklemek istediğimizi dosya ya da dizinlerin adını yazmamız yeterli.</p>
+
+<h2 style="border-bottom: 1px dashed white;">ARŞİV İÇERİĞİNİ GÖRÜNTÜLEMEK</h2>
+
+<p>tar programını kullanarak arşivi çıkartmadan arşivin içindeki dosyaları görüntülememiz mümkün.</p>
+<p># tar tf arsiv.tar</p>
+<pre class="code">root@pc:~/dizin$ tar tf arsiv.tar
+dizin2/
+dizin2/dosya4.txt
+dizin2/dosya3.txt
+dizin2/dosya5.txt
+dosya1.txt
+dosya2.txt
+</pre>
+<p>t parametresi <q>table of content</q> yani <q>içerik tablosu</q> demektir. Arşiv içeriğini listeler.</p>
+<p>Eğer v parametresini eklerseniz dosyaların okuma/yazma izinlerini ve oluşturulma tarihlerinide görebilirsiniz.</p>
+
+
+
+<h2 style="border-bottom: 1px dashed white;">ARŞİVİ ÇIKARTMAK</h2>
+
+<p># tar xf arsiv.tar</p>
+<pre class="code">root@pc:~/dizin$ tar xf arsiv.tar
+
+root@pc:~/dizin$ ls
+dosya1.txt  dosya2.txt
+</pre>
+<p>x parametresi ile arşivimizi çıkartmak istediğimizi belirttik(extract)</p>
+
+
+
+<h2 style="border-bottom: 1px dashed white;">ARŞİVE DOSYA EKLEMEK</h2>
+
+<p>Bir arşiv oluşturdunuz ve içerisine yeni dosya eklemek istiyorsunuz. Bunun için ilk önce arşivi çıkartırsınız daha sonra ise içerisine eklemek istediğiniz dosya ile beraber tekrardan arşiv oluşturursunuz değil mi? Aslında buna gerek yok tar programı bunun için bize çözüm bulmuş.</p>
+<br />
+<p># tar rf arsiv.tar eklenecekdosya.txt</p>
+
+<pre class="code">root@pc:~/dizin$ touch eklenecekdosya.txt
+root@pc:~/dizin$ ls
+arsiv.tar  dizin2  dosya1.txt  dosya2.txt  eklenecekdosya.txt
+
+root@pc:~/dizin$ tar tf arsiv.tar
+dizin2/
+dizin2/dosya4.txt
+dizin2/dosya3.txt
+dizin2/dosya5.txt
+dosya1.txt
+dosya2.txt
+
+root@pc:~/dizin$ tar rf arsiv.tar eklenecekdosya.txt
+
+root@pc:~/dizin$ tar tf arsiv.tar
+dizin2/
+dizin2/dosya4.txt
+dizin2/dosya3.txt
+dizin2/dosya5.txt
+dosya1.txt
+dosya2.txt
+eklenecekdosya.txt
+</pre>
+<p>r parametresi append anlamındadır. Yani sonuna ekle diyor. Arşivimizin sonuna belirtilen dosyayı eklememizi sağlıyor.</p>
+
+
+<h2 style="border-bottom: 1px dashed white;">ARŞİVDEN DOSYA SİLME</h2>
+
+<p>Arşiv içerisinden arşivi açmadan dosya  ve dizin silmek için --delete parametresi kullanılır.</p>
+<pre class="code">root@pc:~/dizin$ tar tf arsiv.tar
+dizin2/
+dizin2/dosya4.txt
+dizin2/dosya3.txt
+dizin2/dosya5.txt
+dosya1.txt
+dosya2.txt
+eklenecekdosya.txt
+
+root@pc:~/dizin$ tar f arsiv.tar --delete eklenecekdosya.txt
+
+root@pc:~/dizin$ tar tf arsiv.tar
+dizin2/
+dizin2/dosya4.txt
+dizin2/dosya3.txt
+dizin2/dosya5.txt
+dosya1.txt
+dosya2.txt
+
+root@pc:~/dizin$ tar f arsiv.tar --delete dizin2
+
+root@pc:~/dizin$ tar tf arsiv.tar
+dosya1.txt
+dosya2.txt
+</pre>
+<p>Yukarıda görüldüğü gibi --delete parametresi ile belirtilen dosya ve dizin arşivin içerisinden silindi. Üstelik arşivi açmamıza gerek kalmadan.</p>
+
+
+	<br />
+
+
+			<br />
+			<footer>
+			<p>Kaynak : Kim Korkar UNIX'ten - Can Uğur Ayfer</p>
+</footer>
+		</section>
+
+		</div><!--page-->
+
+
+	</body>
+</html>

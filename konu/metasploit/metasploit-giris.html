@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Metasploit Penetration Testing Framework Kurulumu ve Temeller, metasploit kullanımı giriş" />
+		<meta name="keywords" content="metasploit,msfconsole,msfdb,meterpreter,payload" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Metasploit Penetration Testing Framework Giriş</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="../../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Metasploit Penetration Testing Framework Giriş - İndirme ve Kurulum</h1>
+
+
+			<p>Metasploit Penetration Testing Framework, 2003 yılında perl dili kullanılarak <q>H.D. Moore</q> tarafından yazılmıştır. Şu anda <q>rapid7</q> şirketi altında ruby dili kullanılarak gelitştirilmeye devam etmektedir.</p>
+
+			<p>Metasploit Framework, içerisinde bir çok zafiyet tarama ve sızma araçlaçları barındıran bir çatıdır. Güvenlik testlerinin vazgeçilmez araçlarından birisidir diyebiliriz.</p>
+
+			<p>Ücretli sürümü olduğu gibi ücretsiz sürümüde mevcuttur. Ücretli sürümde web arayüzünden kontrol edilebilmektedir. Ücretsiz sürümde ise terminal ekranı üzerinden işlemlerimizi gerçekleştirebiliriz.</p>
+
+			<h2>Metasploit İndirme ve Kurulum</h2>
+			<p>Metasploit Framework'ün ücretsiz sürümü açık kaynaklıdır. Github üzerinden erişilebilir.</p>
+			<p>Github: <a href="https://github.com/rapid7/metasploit-framework" style="border-bottom: 1px dotted green;">Github/rapid7/metasploit-framework</a></p>
+
+			<h3>Window İçin Metasploit:</h3>
+			<p><a href="https://windows.metasploit.com/" style="border-bottom: 1px dotted green;">https://windows.metasploit.com/</a> adresinden istenilen sürüm indirilip kurulabilir. Çalıştırılabilir bir dosya olduğu için windows kurulumunu anlatmayacağım.</p>
+			<p>NOT: Metasploit'i kurmak ve hatasız çalıştırmak istiyorsanız güvenlik duvarınızı ve antivirus programınızı kapatmanız ya da ayrıcalık tanıyacak şekilde yapılandırmanız gerekmektedir. Çünkü antivirusler ve windows defender metasploit'i virus olarak algıladığından kurulum sonrası metasploit çalışmayabilir.</p>
+
+			<h3>GNU/Linux Metasploit Framework İndirmek:</h3>
+			<p>Github üzerinden indirilebileceği gibi aşağıdaki komutu terminale yazarakta metasploit'i bilgisayarınıza indirebilirsiniz.</p>
+
+			<pre class="code">curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall &amp;&amp; \
+  chmod 755 msfinstall &amp;&amp; \
+  ./msfinstall</pre>
+  <p>Bu komutları terminal ekranına girdikten sonra metasploit bilgisayarımıza indirilecek ve kurulum başlayacaktır.</p>
+	<pre class="code">root@linuxpc:/home/user# curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall &amp;&amp; \
+>
+</pre>
+<p>İlk satır terminale girildikten sonra diğer satırları girmemiz için bizi bekleyecektir.</p>
+
+	<pre class="code">root@linuxpc:/home/user# curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall &amp;&amp; \
+> chmod 755 msfinstall &amp;&amp; \
+> ./msfinstall
+</pre>
+<p>Diğer satırlarda girilip enterı tuşladığımızda indirilme işlemi başayacak ve kurulum yapılacaktır.</p>
+
+
+  			<h2>Metasploit Framework Database Desteği Sağlamak</h2>
+			<p>Metasploit'i bilgisayarımıza kurduk artık terminal ekranından <q>msfconsole</q> diyerek metasploit'i çalıştırabiliriz.</p>
+
+			<p>Ancak metasploit'i database desteğiyle kullanmak işimizi oldukça kolaylaştıracaktır. Böylece metasploit'i daha verimli ve daha hızlı bir şekilde kullanabiliriz. Aynı zamanda metasploit'in database özelliklerini kullanabileceğiz.</p>
+
+			<p>Metasploit database olarak PostgreSQL kullanmaktadır. Bunun için sisteminizde PostgreSQL kurulu olmalıdır.</p>
+
+			<h3>GNU/Linux PostgreSQL Kurmak</h3>
+			<p>Paket depomuzu kullanarak PostgreSQL'i bilgisayarımıza kurabiliriz.</p>
+
+			<pre class="code"># apt-get install postgresql -y</pre>
+			<p>Yukarıdaki komutu terminalimize yazıp PostgreSQL database'ini bilgisayarımıza kuruyoruz.</p>
+
+			<h3>PostgreSQL Servisini Başlatmak</h3>
+			<p>PostgreSQL'i bilgisayarımıza kurduktan sonra postgresql servisimizi başlatmamız gerek.</p>
+			<pre class="code"># service postgresql start</pre>
+			<p>Yukarıdaki komut ile postgresql servisimizi çalıştırıyoruz. Servisimiz çalıştırıldıktan sonra default olarak 5432 portumuzda postgresql çalışmaya başlıyacaktır.</p>
+
+			<h3>Metasploit PostgreSQL Database'ini Başlatmak</h3>
+			<p>Metasploit database'ini başlatmak için <q>msfdb init</q> komutunu veriyoruz.</p>
+			<pre class="code">user@linuxpc:~$ msfdb init
+Creating database at /home/user/.msf4/db
+Starting database at /home/user/.msf4/db...success
+Creating database users
+Creating initial database schema
+</pre>
+<p>Artık metasploit database'imizi ayağa kaldırdığımıza göre metasploite giriş yapabiliriz.</p>
+
+<h3>Metasplot'i Başlatmak (msfconsole)</h3>
+<p>Herşeyimiz hazır artık metasploiti başlatabiliriz.</p>
+<p>Bunun için terminal ekranımıza <q>msfconsole</q> yazmamız yeterli olacaktır.</p>
+<pre class="code">user@linuxpc:~$ msfconsole
+
+ ** Welcome to Metasploit Framework Initial Setup **
+    Please answer a few questions to get started.
+
+
+
+ ** Metasploit Framework Initial Setup Complete **
+
+
+                          ########                  #
+                      #################            #
+                   ######################         #
+                  #########################      #
+                ############################
+               ##############################
+               ###############################
+              ###############################
+              ##############################
+                              #    ########   #
+                 ##        ###        ####   ##
+                                      ###   ###
+                                    ####   ###
+               ####          ##########   ####
+               #######################   ####
+                 ####################   ####
+                  ##################  ####
+                    ############      ##
+                       ########        ###
+                      #########        #####
+                    ############      ######
+                   ########      #########
+                     #####       ########
+                       ###       #########
+                      ######    ############
+                     #######################
+                     #   #   ###  #   #   ##
+                     ########################
+                      ##     ##   ##     ##
+                            https://metasploit.com
+
+
+       =[ metasploit v4.16.40-dev-                        ]
++ -- --=[ 1739 exploits - 994 auxiliary - 300 post        ]
++ -- --=[ 526 payloads - 40 encoders - 10 nops            ]
++ -- --=[ Free Metasploit Pro trial: http://r-7.co/trymsp ]
+
+msf >
+</pre>
+<p>Artık metasploit kullanıma hazır içerdeyiz.</p>
+
+<h3>Metasploit Database Bağlantısı Kontrolü (db_status)</h3>
+<p>Metasploiti çalıştırdık şimdi database bağlantımız sağlanmış mı onu kontrol edelim.</p>
+<pre class="code">msf > db_status
+[*] postgresql connected to msf
+</pre>
+<p>Görüldüğü üzere database bağlantımız var. Son bir işlemimiz kaldı daha sonra metasploiti özgürce kullanabileceğiz.</p>
+
+<h3>Metasploit Database Önbelleğini Build Etmek (db_rebuild_cache)</h3>
+<p>Metasploit database'ini başlattık ancak msfconsole önbelliği henüz hazır olmayabilir bunun için <q>db_rebuild_cache</q> komutunu msfconsole'a veriyoruz.</p>
+
+<pre class="code">msf > db_rebuild_cache
+[*] Purging and rebuilding the module cache in the background...
+</pre>
+<p>Sonunda metasploit'i istediğimiz gibi kullanabiliriz. Bunun için her metasploit'i çalıştırmadan önce artık sadece <q>postgresql</q> servisini başlatmamız ve sonra metasploiti çalıştırmamız yeterli olacaktır.</p>
+
+<pre class="code"># service postgresql start
+# msfconsole</pre>
+
+
+
+<br /><br />
+<footer>
+		<p>Kaynak: https://en.wikipedia.org/wiki/Metasploit_Project</p>
+		<p>Kaynak: https://hdm.io/</p>
+		<p>Kaynak: https://docs.kali.org/general-use/starting-metasploit-framework-in-kali</p>
+		<p>Kaynak: https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers</p>
+		
+</footer>
+		</section>
+
+
+		</div><!--page-->
+
+
+	</body>
+</html>

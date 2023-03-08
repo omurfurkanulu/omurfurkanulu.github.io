@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="decription" content="Linux process listesini görüntülemek arkaplanda iş başlatmak, ön plana iş getirmek" />
+		<meta name="keywords" content="bg komutu, fg komutu, jobs komutu, ps komutu, pstree komutu" />
+		<meta name="robots" content="index,follow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Linux Processes ve Jobs İşlemleri</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Linux Processes ve Jobs İşlemleri (bg, fg, jobs, kill, ps, pstree, top)</h1>
+
+
+<p>Öncelikle terminal ekranında bir komut veya program çalıştırdığımızda bu bir process ya da jobs olarak çalışmaya başlar.</p>
+<p>Arkaplanda komut çalıştırma işlemlerine başlamadan arkaplanda iş yaptırmak için kullanacağımız programı tanıtayım.</p>
+<pre class="code">$ sleep 10</pre>
+<p>Sleep komutu belirtilen süre kadar bekler. Bu komutu seçmemizin sebebi arkaplan işlemlerini yaparken aktif bir processe ihtiyaç duymamız.</p>
+<p>Yukarıdaki komut 10 saniye bekleyecek ve sonra sonlanacak.</p>
+
+
+
+
+<h2>İşlemi Arkaplanda Çalıştırmak (&amp;)</h2>
+<p>Komutu çalıştırırken yapılacak işlemin arkaplanda çalışmasını istiyorsak komutu verirken komutun sonuna <q>&amp;</q> ekleyerek işlemin arkaplandan çalışmasını sağlayabiliriz.</p>
+<pre class="code">$ sleep 200 &amp;
+[1] 4594
+</pre>
+<p>Yukarıdaki örnekte görüldüğü gibi komutumuz direk arkaplana atıldı ve ekrana hangi pid değeriyle arkaplanda çalıştığını yazdırdı. Burda sleep komutumuz 4594 pid değeriyle çalışmaya başlamış.</p>
+
+
+
+
+<h2>Arkaplandaki İşlemleri Görüntülemek (jobs, ps)</h2>
+<p>Arkaplanda çalıştırılan işlemleri <q>jobs</q> komutu ile listeleyebiliriz.</p>
+<pre class="code">$ jobs
+[1]+  Çalışıyor           sleep 200 &
+</pre>
+<br />
+<p>Aynı zamanda <q><abbr title="Process State">ps</abbr></q> komutu ile bulunduğumuz terminalde çalışan işlemleri listeleyebiliriz.</p>
+<pre class="code">$ ps
+  PID TTY          TIME CMD
+ 4570 pts/0    00:00:00 bash
+ 5135 pts/0    00:00:00 sleep
+ 5136 pts/0    00:00:00 ps
+</pre>
+<p>Yukarıdaki listede bulunduğumuz terminalde çalışan processlerin listesi yer alıyor. Aynı zamanda sleep komutumuzunda arkaplanda bulunduğumuz terminal üzerinde çalıştığını görebiliriz.</p>
+
+
+
+
+<h2>Çalıştırılmakta Olan İşlemi Arkaplana Atmak (Ctrl + z)</h2>
+<p>İşlemi arkaplanda çalıştırmayı unuttuk ve işlem beklenenden uzun sürecek gibi bu durumda bulunduğumuz işlemdeyken <q>ctrl + z</q> kombinasyonuna basarak. Aktif işlemi durdurabiliriz. İşlem durdurulduğunda arkaplanda işlem tekrar başlatılmayı bekler.</p>
+<pre class="code">$ sleep 200
+^Z
+[1]+  Durdu                   sleep 200
+
+$ jobs
+[1]+  Durdu                   sleep 200
+</pre>
+<p>^Z satırı <q>Ctrl + z</q> tuşuna basıldığını temsil ediyor.</p>
+<p>Aktif işlemi durdukduk ve işlem devam ettirilmek üzerek arkaplanda beklemeye alındı.</p>
+
+
+
+
+
+<h2>Durdurulmuş İşlemi(process) Arkaplanda Çalıştırmak (bg komutu)</h2>
+<p>İşlemimizi başlattık ve daha sonra <q>ctrl + z</q> kombinasyonu ile durdurduk ve arkaplanda işlem çalıştırılmayı bekliyor.</p>
+<pre class="code">$ sleep 20
+^Z
+[1]+  Durdu                   sleep 20
+
+$ jobs
+[1]+  Durdu                   sleep 20
+
+$ bg
+[1]+ sleep 20 &amp;
+
+$ jobs
+[1]+  Çalışıyor           sleep 20 &amp;
+</pre>
+<p><q><abbr title="background">bg</abbr></q> komutu ile durdurulmuş ve arkaplanda çalıştırılmayı bekleyen son processi arkaplanda çalıştırır. Yani durdurulmuş işlemin sonuna &amp; ekleyerek işlemi arkaplanda çalıştırır.</p>
+<br />
+<p>Arkaplana birden fazla işem attık ve çalıştırılmayı bekliyorlar. Normalde <q>bg</q> komutu bu jobs listesindeki en son işlemi arkaplanda çalışır hale getirecektir. Ancak listeden istediğimiz işlemi belirterek istediğimiz processin çalışmasını sağlayabiliriz.</p>
+<pre class="code">$ jobs
+[1]   Durdu                   sleep 100
+[2]   Durdu                   sleep 200
+[3]-  Durdu                   sleep 300
+[4]+  Durdu                   sleep 400
+</pre>
+<p>Arkaplanda çalıştırılmayı bekleyen işlem listemiz yukarıdaki gibi olsun. Burda + işareti ile belirtilen işlem son aktif işlemi temsil eder. Eğer bg komutuna işlem belirtmeden kullanırsak + işaretinin olduğu process çalışacaktır.</p>
+<pre class="code">$ bg
+[4]+ sleep 400 &amp;
+
+$ jobs
+[1]   Durdu                   sleep 100
+[2]-  Durdu                   sleep 200
+[3]+  Durdu                   sleep 300
+[4]   Çalışıyor           sleep 400 &amp;
+</pre>
+<p>Örnekte görüldüğü gibi 4 numaralı process çalıştırıldı. İstersek hangi processin çalışacağını belirtebiliriz.</p>
+<pre class="code">$ bg 1
+[1] sleep 100 &amp;
+
+$ jobs
+[1]   Çalışıyor           sleep 100 &amp;
+[2]-  Durdu                   sleep 200
+[3]+  Durdu                   sleep 300
+[4]   Çalışıyor           sleep 400 &amp;
+</pre>
+<p><q>bg jobnumarası</q> ya da <q>bg %jobnumarası</q></p>
+<p>Şeklinde jobs listesinden istenilen işlem çalıştırılabilir.</p>
+
+
+
+<h2>Arkaplana Atılmış İşlemi Önplanda Çalıştırmak (fg komutu)</h2>
+<p>Herhangi bir işlemi arkaplanda çalıştırdık veya işlemi durdurarak arkaplana attık. Bu işlemleri tekrar önplanda getirerek çalıştırmak için <q><abbr title="foreground">fg</abbr></q> komutu kullanılabilir.</p>
+<pre class="code">$ sleep 20
+^Z
+[1]+  Durdu                   sleep 20
+
+$ jobs
+[1]+  Durdu                   sleep 20
+
+$ fg
+sleep 20
+</pre>
+<p><q>fg</q> komutu ile jobs listesindeki son işlemi ön plana getirdik. Yine bg komutunda olduğu gibi jobs listesindeki + işareti hangi işlemin devreye sokulacağını belirtiyor.</p>
+<p>Aşağıdaki gibi bir jobs listemiz olsun.</p>
+<pre class="code">$ jobs
+[1]   Durdu                   sleep 100
+[2]-  Durdu                   sleep 200
+[3]+  Durdu                   sleep 300
+[4]   Çalışıyor           sleep 400 &amp;</pre>
+
+<br />
+<p>Şimdi bu listeden istenilen bir işlemi önplana alalım ve çalıştıralım.</p>
+<pre class="code">$ fg 3
+sleep 300
+</pre>
+<p>Listemizdeki üçüncü işlemi ön plana getirerek çalıştırdık.</p>
+<h2>Linuxte Process Listesini Görüntülemek (ps, pstree, top)</h2>
+<p><abbr title="process state">ps</abbr> komutu işlemlerin durumunu gösteren bir programdır. </p>
+<pre class="code">$ ps
+  PID TTY          TIME CMD
+ 4570 pts/0    00:00:00 bash
+ 5869 pts/0    00:00:00 ps
+</pre>
+<p>Terminal ekranımıza <q>ps</q> yazarak komutu çalıştırabiliriz. Bu bize bulunduğumuz terminaldeki çalışan işlemleri(process) verir.</p>
+<p>Başlıkları açarsak:</p>
+<pre class="code">PID: Process ID (İşlem Kimliği)
+TTY: Terminal ismi, işlemin hangi terminalde çalıştığını gösterir
+TIME: CPU zamanı
+CMD: Çalıştırılan komutu gösterir</pre>
+
+<p>Ağaç şeklinde process listesini getirmek:</p>
+<pre class="code">$ ps axf -o pid,ppid,comm
+  PID  PPID COMMAND
+    2     0 kthreadd
+    3     2  \_ ksoftirqd/0
+    5     2  \_ kworker/0:0H
+..
+..
+</pre>
+<p>Yukarıdaki çıktı uzun olduğu için kısalttım bu parametreler ile kullanmak bize ağaç şeklinde process listesini verecektir.</p>
+
+<h3>Top ile Aktif Process Listesi</h3>
+<p>top programı aktif olarak process listesini terminal ekranına getirir ve bu listeyi günceller.</p>
+<pre class="code">$ top</pre>
+<p>Terminal ekranına <q>top</q> yazılarak ekrana getirilebilir.</p>
+
+
+<h3>Pstree ile Process Ağacını Görüntülemek</h3>
+<p><q>pstree</q> komutu ile process listesini ağaç yapısıyla yani parent ve child processlerin birbiriyle ilişkisini görsel bir şekile görüntüleyebiliriz.</p>
+
+<pre class="code">$ pstree</pre>
+<p>Komutu terminal ekranına yazarak çalıştırabiliriz.</p>
+<pre class="code">$ sleep 20 &amp;
+[1] 6345
+
+$ pstree -p -s 6345
+systemd(1)───lightdm(770)───lightdm(1329)───startdde(1352)───dde-session-ini(1439)───deepin-terminal(4565)───bash(4570)───sleep(6345)</pre>
+<p>Process ID'sini belirterek belirtilen pid değerine sahip processin process ağacını parent processleriyle ilişkisi ekrana getirebiliriz.</p>
+
+<h2>Aktif Processi Sonlandırmak (kill)</h2>
+<p>Kill komutu başka bir processe sinyal göndermek için kullanılır. Ancak genellikle başka bir processi sonlandırmaka için TERM sinyali göndermek için kullanılır.</p>
+<p>Kullanılabilir Sinyaller:</p>
+<pre class="code">$ kill -l
+ 1) SIGHUP	 2) SIGINT	 3) SIGQUIT	 4) SIGILL	 5) SIGTRAP
+ 6) SIGABRT	 7) SIGBUS	 8) SIGFPE	 9) SIGKILL	10) SIGUSR1
+11) SIGSEGV	12) SIGUSR2	13) SIGPIPE	14) SIGALRM	15) SIGTERM
+16) SIGSTKFLT	17) SIGCHLD	18) SIGCONT	19) SIGSTOP	20) SIGTSTP
+21) SIGTTIN	22) SIGTTOU	23) SIGURG	24) SIGXCPU	25) SIGXFSZ
+26) SIGVTALRM	27) SIGPROF	28) SIGWINCH	29) SIGIO	30) SIGPWR
+31) SIGSYS	34) SIGRTMIN	35) SIGRTMIN+1	36) SIGRTMIN+2	37) SIGRTMIN+3
+38) SIGRTMIN+4	39) SIGRTMIN+5	40) SIGRTMIN+6	41) SIGRTMIN+7	42) SIGRTMIN+8
+43) SIGRTMIN+9	44) SIGRTMIN+10	45) SIGRTMIN+11	46) SIGRTMIN+12	47) SIGRTMIN+13
+48) SIGRTMIN+14	49) SIGRTMIN+15	50) SIGRTMAX-14	51) SIGRTMAX-13	52) SIGRTMAX-12
+53) SIGRTMAX-11	54) SIGRTMAX-10	55) SIGRTMAX-9	56) SIGRTMAX-8	57) SIGRTMAX-7
+58) SIGRTMAX-6	59) SIGRTMAX-5	60) SIGRTMAX-4	61) SIGRTMAX-3	62) SIGRTMAX-2
+63) SIGRTMAX-1	64) SIGRTMAX	</pre>
+
+<p>Eğer sinyal belirtilmez ise default olarak 15 numaralı SIGTERM sinyalini belirtilen processe gönderir. Bu sinyal processi sonlandırmak için gönderilir.</p>
+
+<pre class="code">$ sleep 200 &amp;
+[1] 5719
+
+$ jobs
+[1]+  Çalışıyor           sleep 200 &amp;
+
+$ kill 5719
+$ jobs
+[1]+  Sonlandırıldı        sleep 200
+
+
+$ sleep 200 &amp;
+[1] 5757
+
+$ jobs
+[1]+  Çalışıyor           sleep 200 &amp;
+
+$ kill %1
+$ jobs
+[1]+  Sonlandırıldı        sleep 200
+</pre>
+<p>Yukarıdaki örnekte hem pid değeriyle hemde jobs listesindeki numarayı kullanarak processi sonlandırmayı gösterdik.</p>
+
+<br /><br /><br /><br />
+		</section>
+
+		</div><!--page-->
+
+	</body>
+</html>

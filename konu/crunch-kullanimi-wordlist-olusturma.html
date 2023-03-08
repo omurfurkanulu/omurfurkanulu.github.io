@@ -1,0 +1,662 @@
+	<!DOCTYPE html>
+	<html lang="tr-TR">
+		<head>
+			<meta charset="utf-8" />
+			<meta name="robots" content="index,follow" />
+			<meta name="description" content="crunch nedir, crunch ile wordlist oluşturma, linuxte wordlist oluşturma, bruteforce saldırısı" />
+			<meta name="keywords" content="crunch, wordlist, wordlist generator, linux, bruteforce, kabakuvvet" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+			<title>Crunch ile Wordlist Oluşturma ve Crunch Kullanımı</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+		<body>
+			<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+			<section>
+				<h1 style="border-bottom: 1px dashed green;" >Crunch ile Wordlist Oluşturma ve Crunch Kullanımı</h1>
+
+				<ol>
+					<li><a>Wordlist Nedir?</a></li>
+					<li><a >Crunch Nedir?</a></li>
+					<li><a >Crunch Kullanarak Wordlist Oluşturma (Crunch Nasıl Kullanılır?)</a></li>
+					<li><a>Crunch ile Belirli Karakterler Kullanarak Wordlist Oluşturmak</a></li>
+					<li><a>Crunch ile Oluşturduğumuz Wordlist'i Dosyaya Yazmak (-o parametresi)</a></li>
+					<li><a>Charset Dosyasından Karakterleri Otomatik Belirtmek (-f parametresi)</a></li>
+					<li><a>Belirlediğimiz Kelimeye Gelinceye Kadar Wordlist Oluşturma (-e parametresi)</a></li>
+					<li><a >Crunch ile Oluşturduğumuz Wordlist'i Parçalama (-b ve -c parametreleri)</a></li>
+					<li><a>Crunch Yer Tutucu Semboller</a></li>
+					<li><a>Yan Yana Gelecek Aynı Karakter Sayısını Belirlemek (-d parametresi)</a></li>
+					<li><a >Çıktıyı Ters Çevirmek (-i parametresi)</a></li>
+
+					<li><a>Ekrana Yüzde Yazdırmayı Kapatmak (-u parametresi)</a></li>
+					<li><a>Spesifik Wordlistler Oluşturmak (-t parametresi)</a></li>
+					<li><a>Crunch Yer Tutucuları Karakter Olarak Kullanmak (-l parametresi)</a></li>
+
+					<li><a>Crunch ile Belirli Kelimeler Kullanarak Wordlist Oluşturmak (-p parametresi)</a></li>
+					<li><a>Crunch'a Verilen Kelimedeki Harfleri Kombine Etmek (-p parametresi)</a></li>
+					<li><a>Başka Bir Dosya İçerisindeki Kelimeleri Kombine Ederek Wordlis Oluşturmak (-q parametresi)</a></li>
+					<li><a>Kelimeleri ve Yer Tutucuları Kombine Etmek (-t ve -p parametrelerinin birlikte kullanımı)</a></li>
+				</ol>
+
+
+
+				<h2 >Wordlist Nedir?</h2>
+				<p>Crunch programının kullanımına geçmeden önce wordlist nedir ne işe yarar biraz bahsetmek gerek. Wordlistler parola tahmini için oluşturulmuş kelime listeleridir. İçerisinde parola tahmini için kullanılacak kelimeler vardır. Ve hedef sistemde parola tahmini için bu listedeki kelimeler tek tek denenir. Wordlistler yardımı ile hedef sistemlerde parola denemesi yapılır. Eğer parola wordlist içerisinde geçiyorsa hedef sistemdeki parola bulunmuş olur. Bir wordlist içerisindeki parolaların tek tek denenerek parolanın bulunmasına çalışmaya <q>brute force</q> türkçesiyle <q>kaba kuvvet</q> saldırısı denir.</p>
+
+				<h2>Crunch Nedir?</h2>
+				<p>Crunch Brute Force saldırıları için kullanılan wordlistleri oluşturmaya yarıyan bir programdır. İnternetten bulunabilecek hazır wordlistler olduğu gibi wordlistleri kendimizde oluşturabiliriz. Kendi özel wordlistlerimizi oluşturmak için web siteleri olduğu gibi kendi bilgisayarımızdan da wordlist oluşturabiliriz. Wordlist oluşturmak için kullanılan programlardan biriside <q>crunch</q> adlı programdır.</p>
+
+
+
+				<h2>Crunch Kullanarak Wordlist Oluşturma (Crunch Nasıl Kullanılır?)</h2>
+				<p>Crunch ile wordlist oluşturma işlemi oldukça kolaydır. Terminal ekranına <q>crunch</q> yazdığımızda bize en temel kullanım şeklini gösterecektir.</p>
+				<p># crunch</p>
+				<pre class="code">root@kali:~# crunch
+crunch version 3.6
+
+Crunch can create a wordlist based on criteria you specify.  The output from crunch can be sent to the screen, file, or to another program.
+
+Usage: crunch &lt;min&gt; &lt;max&gt; [options]
+where min and max are numbers
+
+Please refer to the man page for instructions and examples on how to use crunch.
+</pre>
+				<p>Ekrana çıkan çıktıdan anlaşıldığı üzere önce <q>crunch</q> yazıp sonra minimum ve maximum aralığı belirtmemizi istiyor.</p>
+
+				<p># crunch 2 3</p>
+				<pre class="code">root@kali:~# crunch 2 3
+Crunch will now generate the following amount of data: 72332 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 18252
+aa
+ab
+ac
+ad
+ae
+af
+ag
+ah
+ai
+aj
+.
+.
+.
+.
+zzs
+zzt
+zzu
+zzv
+zzw
+zzx
+zzy
+zzz
+</pre>
+	<p>Yukarıdaki örnektte crunch programına aralık olarak en küçük 2 karakterli ve en fazla 3 karakterli bir wordlist oluşturmasını söyledik.</p>
+	<p>Kullanması gereken karakterleri crunch programına vermediğimiz için default olarak sadece ingilizce harfleri kullanarak 2 ve 3 karakterli tüm olasılıkları buldu ve bir dosyaya yazmasını belirtmediğimiz için ekrana bastı.</p>
+	<p><q>72332 bytes</q> ile oluşturduğumuz çıktıdaki toplam karakter sayısı belirtiliyor.</p>
+	<p><q>18252</q> ilede kaç satır kelime oluştuğunu yani wordlisteki toplam kelime sayısını belirtiyor.</p>
+	<p>Yukarıdaki örnekte en küçük 2, en fazla 3 karakterli ingilizce harflerden oluşan tüm olasıkları hesapladık ve toplam 18252 tane kelime oluşturduğunu söyledi.</p>
+	<p>Oluşturduğumuz listeyi bir dosyaya kaydetmesini belirtmediğimiz için standart çıktı birimine yani terminal ekranına çıktıyı bastı.</p>
+
+
+
+<h3>Crunch ile Belirli Karakterler Kullanarak Wordlist Oluşturmak</h3>
+<section class="sub-section">
+<p>Crunch programına kullanacağı karakterleri belirtmediğimizde sadece ingilizce harfleri kullandığını belirtmiştik. Şimdi kendi belirttiğimiz karakterleri kullanarak crunch programının bir wordlist hazırlamasını sağlayalım.</p>
+<p># crunch 2 5 123456</p>
+<pre class="code">
+.root@kali:~# crunch 2 5 123456
+Crunch will now generate the following amount of data: 54108 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 9324
+11
+12
+13
+14
+15
+16
+21
+.
+.
+.
+66655
+66656
+66661
+66662
+66663
+66664
+66665
+66666
+</pre>
+<p>Crunch programına 1,2,3,4,5,6 karakterlerini kullanarak en küçük 2 karakterli en fazla 5 karakterli bir wordlist oluşturmasını söyledik.</p>
+
+<p># crunch 2 6 abc12345</p>
+<p>Bu kullanımda ise en küçük 2 karakterli en fazla 6 karakterli olacak şekilde içerisinde a,b,c,1,2,3,4,5 karakterleri geçen tüm olasılıklardan bir wordlist oluşturmasını söyledik.</p>
+
+
+</section>
+
+<h3>Crunch ile Oluşturduğumuz Wordlist'i Dosyaya Yazmak (-o parametresi)</h3>
+<p>Crunch ile istediğimiz karakterleri kullanarak istediğimiz uzunlukta wordlist oluşturmayı gördük ancak bunlar hep terminal ekranına yazdırıryordu. Eğer crunch ile oluşturduğumuz listeyi bir dosyaya yazdırmak istersek -o parametresi(output) ile yazdırmak istediğimiz dosya belirtilir ve oluşturulan parolalar ekrana değilde dosyaya yazdırılır.</p>
+
+<p># crunch 5 8 abc123546789 -o wordlist.lst</p>
+<pre class="code">root@kali:~# crunch 5 8 abc123456789 -o wordlist.lst
+Crunch will now generate the following amount of data: 4178884608 bytes
+3985 MB
+3 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 469048320
+
+crunch:  12% completed generating output
+
+crunch:  22% completed generating output
+
+crunch:  33% completed generating output
+
+crunch:  45% completed generating output
+
+crunch:  56% completed generating output
+
+crunch:  69% completed generating output
+
+crunch:  80% completed generating output
+
+crunch:  92% completed generating output
+
+crunch: 100% completed generating output
+
+root@kali:~# ls
+Belgeler     dosya      Genel  Masaüstü  Resimler   Videolar  wordlist.lst
+dead.letter  Downloads  hs     Müzik     Şablonlar  vmware
+
+root@kali:~# head -n 10 wordlist.lst
+aaaaa
+aaaab
+aaaac
+aaaa1
+aaaa2
+aaaa3
+aaaa4
+aaaa5
+aaaa6
+aaaa7
+</pre>
+<p>Oluşturduğumuz dosyanın uzantısı olmayabilir ya da kullanıcının bunun bir wordlist dosyası olduğunu anlamasını kolaylaştırmak için dosya soyadına <q>.lst</q> yazılabilir.</p>
+<p>Oluşturduğumuz wordlist uzunluğu toplam 4GB seviyesine yaklaştı. Üstelik maximum karakter uzunluğu 8 karakter olan bir liste oluşturduk. Toplamda ise a,b,c,1,2,3,4,5,6,7,8,9 karakterleri kullanılarak 469048320 parola üretmiş olduk.</p>
+<p>head ile dosyamızın ilk 10 satırını okuduğumuzda anlaşılıyorki <q>aaaaa</q>'dan başlayıp tüm olasılıklar deneniyor.</p>
+
+
+
+
+<h3>Charset Dosyasından Karakterleri Otomatik Belirtmek (-f parametresi)</h3>
+<p>Crunch ile oluşturmak istediğimiz wordlistte kullanılacak karakterleri belirtiyorduk. Ancak crunch programının bizim kullanmamız için oluşturduğu charset (karakter kümeleri) mevcut.</p><p> <q>/usr/share/crunch/charset.lst</q> dosyasını açtığımızda görüyoruz ki içerisinde bizim kullanmamız için hazır charsetler mevcut.</p>
+
+<p>Dosya içeriğinde şu şekilde charsetler tanımlı</p>
+<pre class="code">
+numeric                       = [0123456789]
+numeric-space                 = [0123456789 ]
+ualpha                        = [ABCDEFGHIJKLMNOPQRSTUVWXYZ]
+ualpha-space                  = [ABCDEFGHIJKLMNOPQRSTUVWXYZ ]
+ualpha-numeric                = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]
+ualpha-numeric-space          = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ]
+ualpha-numeric-symbol14       = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()-_+=]
+ualpha-numeric-symbol14-space = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()-_+= ]
+ualpha-numeric-all            = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()-_+=~`[]{}|\:;"'&lt;&gt;,.?/]
+ualpha-numeric-all-space      = [ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()-_+=~`[]{}|\:;"'&lt;&gt;,.?/ ]</pre>
+
+<p>Köşeli parantez içerisindeki karakterler oluşturacağımız wordlistte kullanmak istediğimiz karakterleri temsil ediyor.</p>
+<p># crunch 5 8 -f /usr/share/crunch/charset.lst numeric -o sayi.lst</p>
+<pre class="code">root@kali:~# crunch 5 8 -f /usr/share/crunch/charset.lst numeric -o sayi.lst
+Crunch will now generate the following amount of data: 987600000 bytes
+941 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 111100000
+
+crunch:  45% completed generating output
+
+crunch: 100% completed generating output
+</pre>
+<p><q>-f /usr/share/crunch/charset.lst numeric</q> ile charset dosyamızı tanımladık ve daha sonra içerisindeki kullanmak istediğimiz charseti belirledik.</p>
+
+
+<p>İstersek bu charset dosyasına kendimizde bir karakter seti tanımlayabiliriz.</p>
+<p>Mesela furkan123456 şeklide bir charset oluşturalım.</p>
+<pre class="code">root@kali:~# echo "furkan = [furkan123456]" &gt;&gt; /usr/share/crunch/charset.lst
+root@kali:~# crunch 5 8 -f /usr/share/crunch/charset.lst furkan</pre>
+
+<p>Oluşturduğumuz charseti belirterek wordlistimizi oluşturmaya başladık içerisinde şu karakterler var f,u,r,k,a,n,1,2,3,4,5,6
+
+
+
+
+<h3>Belirlediğimiz Kelimeye Gelinceye Kadar Wordlist Oluşturma (-e parametresi)</h3>
+<p>Crunch ile wordlist oluştururken crunch'ın belirli bir kelimeye ulaştığında durmasını belirtebiliriz.</p>
+<p># crunch 5 8 -f /usr/share/crunch/charset.lst furkan -e furkan12 -o furkan.lst</p>
+<pre class="code">root@kali:~# crunch 5 8 -f /usr/share/crunch/charset.lst furkan -e furkan12 -o furkan.lst
+Crunch will now generate the following amount of data: 48391578 bytes
+46 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6046064
+
+crunch: 100% completed generating output
+
+root@kali:~# tail furkan.lst
+furkann2
+furkann3
+furkan1f
+furkan1u
+furkan1r
+furkan1k
+furkan1a
+furkan1n
+furkan11
+furkan12
+</pre>
+
+<p>Yukarıdaki örnekte en az 5, en fazla 8 karakterli bir wordlist oluşturmasını söyledik. Charsetimizide önceden belirlediğimiz <q>furkan</q> adlı charset olarak belirledik.</p>
+<p>e parametresi ilede hangi kelimeye gelince wordlist oluşturmayı kesmesi gerektiğini belirttik. Burda <q>furkan12</q> kelimesine gelene kadar wordlist oluşturmasını söylemiş olduk.</p>
+<p>NOT: Burda -e parametresi ile belirtilen kelime oluşturduğumuz wordlistteki maximum karakter sayısı ile aynı olmalı. Yani 8 karakterli olmalı.</p>
+
+
+<h3>Crunch ile Oluşturduğumuz Wordlist'i Parçalama (-b ve -c parametreleri)</h3>
+<p>Crunch ile wordlist oluşturmayı öğrendik ancak crunch ile uzun GB lar seviyesinde wordlisteler oluşturmak ve saldırı sırasında tüm wordlistin bitmesini beklemek istemiyorsunuz. İlk yüzde 20lik kısmını deneyip daha sonra diğer kısımlarını denemek istiyebilirsiniz. Bunun için crunch bize dosya boyutu satır sayısı gibi dosya parçalamak için kullanılabilecek seçenekler vermiş bulunmakta.</p>
+<p>b parametresi kullanılarak dosya boyutu belirli bir boyuta ulaştıkça dosyayı bölebiliriz.</p>
+<p>NOT: b parametresi kullanılabilmesi için -o parametresi ile dosya belirtilmeli ancak dosya adı <q>START</q> şeklinde olmalıdır.</p>
+<p># crunch 5 9 123456789 -o START -b 500mb</p>
+<pre class="code">root@kali:~# crunch 5 9 123456789 -o START -b 500mb -u
+Disabling printpercentage thread.  NOTE: MUST be last option
+
+Crunch will now generate the following amount of data: 4303963512 bytes
+4104 MB
+4 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 435840669
+
+root@kali:~/Masaüstü/crunch# ls -la
+toplam 4203148
+drwxr-xr-x 2 root root      4096 Tem 25 00:58 .
+drwxr-xr-x 7 root root      4096 Tem 25 00:45 ..
+-rw-r--r-- 1 root root 499999992 Tem 25 00:57 11111-125296376.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:57 125296377-239374472.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:57 239374473-354452567.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:57 354452568-468529663.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:58 468529664-583597758.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:58 583597759-697675854.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:58 697675855-822753949.txt
+-rw-r--r-- 1 root root 500000000 Tem 25 00:58 822753951-936832145.txt
+-rw-r--r-- 1 root root 303963520 Tem 25 00:58 936832146-999999999.txt
+</pre>
+<p>Yukarıdada göründüğü gibi wordlist her 500mb'a ulaştığında yeni bir wordlist oluşturuldu.</p>
+
+
+<p>İstediğimiz sayıda kelime oluşunca yeni bir wordlist dosyasından oluşturmaya devam etmesini -c parametresi ile yapabiliriz.</p>
+<p># crunch 5 9 123456789 -o START -c 100000000</p>
+<pre class="code">root@kali:~/Masaüstü/crunch# crunch 5 9 123456789 -o START -c 100000000
+Crunch will now generate the following amount of data: 1429758622 bytes
+1363 MB
+1 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 148420180
+
+root@kali:~/Masaüstü/crunch# ls -la
+toplam 4203120
+drwxr-xr-x 2 root root       4096 Tem 25 01:44 .
+drwxr-xr-x 7 root root       4096 Tem 25 00:45 ..
+-rw-r--r-- 1 root root  945556822 Tem 25 01:42 11111-228156291.txt
+-rw-r--r-- 1 root root 1000000000 Tem 25 01:42 228156292-457312482.txt
+-rw-r--r-- 1 root root 1000000000 Tem 25 01:43 457312483-686457673.txt
+-rw-r--r-- 1 root root 1000000000 Tem 25 01:43 686457674-925613864.txt
+-rw-r--r-- 1 root root  358406690 Tem 25 01:44 925613865-999999999.txt
+</pre>
+<p>-c 100000000 ile her 100milyon kelimede bir yeni bir wordlist oluşturmasını belirttik. Böylece 5 farklı wordlistimiz oldu.</p>
+
+
+<h3>Crunch Yer Tutucu Semboller</h3>
+
+<p>Crunch ile wordlist oluştururken kullanabileceğimiz özel yer tutucular vardır. Bunları wordlistimizi oluştururken kullanabiliriz. Amaçları tuttukları yere belirttikleri gruptan bir karakterin geleceğidir.</p>
+<pre class="code">@ küçük harfler için
+, büyük harfler için
+% rakamlar için
+^ özel semboller için</pre>
+
+
+
+
+<h3>Yan Yana Gelecek Aynı Karakter Sayısını Belirlemek (-d parametresi)</h3>
+<p>Yan yana bir karakterin ne kadar gelebileceğini crunch ile ayarlıyabiliriz. Örnek olarak harflerin iki kereden fazla yan yana gelmesini istemiyoruz. Bu durumlarda yer tutucular kullanılarak belirtilir.</p>
+<p># crunch 2 4 -d 2@</p>
+<pre class="code">root@kali:~/crunch# crunch 2 5 -d 2@
+Crunch will now generate the following amount of data: 73330478 bytes
+69 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 12303876
+aa
+ab
+ac
+ad
+.
+.
+.
+zzyzt
+zzyzu
+zzyzv
+zzyzw
+zzyzx
+zzyzy
+zzyzz
+</pre>
+<p>@ işareti ile yer tutucu olarak küçük harf kullanılacağını belirtik, d parametresi ile en fazla aynı küçük harften 2 kere yan yana gelebileceğini belirttik. Burda crunch'a wordlist oluştururken kullanması gereken karakterleri belirtmediğimiz için ingilizce harfleri kullanacaktı. Eğer çıktımızı bir dosyaya yazdırıp grep ile dosya içerisinde yan yana geçen aynı üç harfi aramaya kalksaydık (aaa gibi ya da zzz gibi) bir sonuç bulumazdık. Çünkü d parametresi ile 2@ diyerek yan yana aynı harften en fazla 2 tane olabileceğini belirttik.</p>
+<p>Zaten son ürettiği kelimelerden anlaşıldığı gibi üç tane z harfi yan yana gelemiyor.</p>
+
+<pre class="code">root@kali:~/crunch# crunch 2 5 123456789 -o wordlist.lst -d 2%
+Crunch will now generate the following amount of data: 390258 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 66420
+
+crunch:  96% completed generating output
+root@kali:~/crunch# tail wordlist.lst
+99889
+99891
+99892
+99893
+99894
+99895
+99896
+99897
+99898
+99899
+</pre>
+<p>Sayı örneğindede görüldüğü gibi aynı harften en fazla iki kere yan yana gelebilmiş üç kere yan yana gelebilmesi için d parametresi ile 3% olarak belirtmeliydik.</p>
+
+
+
+<h3>Çıktıyı Ters Çevirmek (-i parametresi)</h3>
+<p>Wordlistimizdeki çıktıları ters çevirmek için i(inverse) parametresini kulanırız.</p>
+<p>abc olan çıktıyı cba şeklinde ters çevirir.</p>
+<pre class="code">root@kali:~/crunch# crunch 3 3 -i
+aaa
+baa
+caa
+daa
+.
+.
+</pre>
+
+
+<h3>Ekrana Yüzde Yazdırmayı Kapatmak (-u parametresi)</h3>
+<p>Crunch normal kullanımda oluşturduğu wordlistin yüzde kaçını bitirdiğini ekrana basar. Eğer u parametresi kullanılırsa bu yüzde basma işlemini yapmaz.</p>
+
+<p># crunch 5 5 -o wordlist.lst -u</p>
+<p>NOT: u parametresi son parametre olarak kullanılmalı.</p>
+
+
+<h3>Spesifik Wordlistler Oluşturmak (-t parametresi)</h3>
+
+<p>Crunch'ın en önemli özelliği bu olsa gerek. Spesifik derken yani istediğimiz yerde harf istediğimiz yerde sembol gibi belirli özelliklerde bir wordlist oluşturmak istersek -t parametresini kullanıyoruz.</p>
+<p>Kullanımı ise şu şekilde crunch'ın özel karakterleri belirtmek için yer tutucuları kullandığını yukarıda belirtmiştik. Şimdi t parametresi ile bu yer tutucuları kullanarak istediğimiz şekillerde wordlist oluşturabiliriz.</p>
+<p>Örnek vericek olursak wordlistimizdeki kelimeler ahmet ile başlasın ve sonraki 4 hanesi rakamlardan oluşsun.</p>
+<pre class="code">root@kali:~/crunch# crunch 9 9 -t ahmet%%%%
+ahmet0000
+ahmet0001
+.
+.
+ahmet9997
+ahmet9998
+ahmet9999
+</pre>
+
+<p>Başka bir örneğimizde ise şu şekilde olsun ilk üç karakterin harf olduğunu biliyoruz 4. karaterin <q>e</q> olduğunu biliyoruz sonraki 5. ve 6. karakterin sayı olduğunu biliyoruz ve son karakterinde bir sembol olduğunu biliyoruz. Şimdi buna uygun bir wordlist oluşturalım.</p>
+<p># crunch 7 7 -t @@@e%%^ -o wordlist.lst</p>
+<pre class="code">root@kali:~# crunch 7 7 -t @@@e%%^ -o wordlist.lst
+Crunch will now generate the following amount of data: 464006400 bytes
+442 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 58000800
+
+crunch:  99% completed generating output
+
+crunch: 100% completed generating output
+root@kali:~# head wordlist.lst
+aaae00!
+aaae00@
+aaae00#
+aaae00$
+aaae00%
+aaae00^
+aaae00&amp;
+aaae00*
+aaae00(
+aaae00)
+root@kali:~# tail wordlist.lst
+zzze99;
+zzze99"
+zzze99'
+zzze99<
+zzze99>
+zzze99,
+zzze99.
+zzze99?
+zzze99/
+zzze99
+</pre>
+<p>Wordlistimizin ilk üç karakteri a harfinden başlayarak z harfine kadar devam etti 4. karakterimiz ise sabit bir şekilde <q>e</q> harfi olarak kaldı 5. ve 6. karakterimizi % ile bir rakam olduğunu belirttik. Son karakterimizi ise ^ ile bir sembol olarak ayarladık ve işte sonucumuz.</p>
+
+
+<h3>Crunch Yer Tutucuları Karakter Olarak Kullanmak (-l parametresi)</h3>
+<p>t parametresi ile yer tutucular kullanılarak bazı karakter gruplarını belirtebileceğimiz öğrenmiştik. Şimdi bu yer tutucuları sabit bir karakter olarak kullanmayı öğrenicez.</p>
+<p>Örnek olarak @ karakteri küçük harfleri temsil eder ancak biz küçük harfleri değil bildiğimiz @ işaretinin yerini tutmasını istiyoruz. Bu durumda l parametresini kullanarak bunu çözüyoruz.</p>
+<p># crunch 5 5 -t p@ss% -l a@aaa
+<pre class="code">root@kali:~# crunch 5 5 -t p@ss% -l a@aaa
+Crunch will now generate the following amount of data: 60 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 10
+p@ss0
+p@ss1
+p@ss2
+p@ss3
+p@ss4
+p@ss5
+p@ss6
+p@ss7
+p@ss8
+p@ss9
+</pre>
+<p>Normalde -t parametresi ile @ işaretinin belirtildiği yerde tüm ingilizce küçük harfler olacaktı ancak -l parametresi ile ikinci karakteri @ işareti olarak belirledik, burda crunch şunu anlıyorki ikinci karakter olan @ bir yer tutucu değil. Böylece ikinci karakteri bir yer tutucu olarak değil bir karakter olarak algılacayacak.</p>
+<p>l ile belirtilen a karakterleri birer yer tutucudur ve herhangi bir harf olabilir.</p>
+<pre class="code">crunch 5 5 -t p@ss% -l a@abc</pre>
+Ancak bu -t ile belirtilen karakter sayısı ile eşit sayıda olmalı ve yer tutucu özel karakterin değişmemesini istiyorsak o karakteri -l parametresinide aynı yerde belirtmeliyiz.</p>
+
+
+<h3>Crunch ile Belirli Kelimeler Kullanarak Wordlist Oluşturmak (-p parametresi)</h3>
+
+<p>Crunch ile istediğimiz kelimeleri kombine ederek bu kelimelerin oluşturduğu tüm olasılıklar hesaplanabilir.</p>
+<p># crunch 4 5 -p kedi kopek kus</p>
+<pre class="code">root@kali:~# crunch 4 6 -p kedi kopek kus
+Crunch will now generate approximately the following amount of data: 78 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6
+kedikopekkus
+kedikuskopek
+kopekkedikus
+kopekkuskedi
+kuskedikopek
+kuskopekkedi
+</pre>
+<p>kedi, kopek, kus kelimelerinin oluşturduğu tüm kombinasyonlar hesaplandı toplam 6 tane sonuç çıktı. Her kelimenin bir kez kullanıldığı durumda 3'ün faktöryelini alarak sonuçta 6 farklı kelime oluşacaktır.</p>
+<p>NOT: p parametresi ile kelimeleri kombine ederken maksimum ve minimum uzunluğun bir önemi olmasada rastgelede olsa bu değerler girilmeli.</p>
+<p>NOT: p parametresi son parametre olmalıdır.</p>
+
+
+
+<h3>Crunch'a Verilen Kelimedeki Harfleri Kombine Etmek (-p parametresi)</h3>
+
+<p>p parametresini birde karakter belirtilerek verilen karakterleri birbirleri ile kombine etmek için kullanılabilir.</p>
+<pre class="code">root@kali:~# crunch 3 3 -p mert
+Crunch will now generate approximately the following amount of data: 120 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 24
+emrt
+emtr
+ermt
+ertm
+etmr
+etrm
+mert
+metr
+mret
+mrte
+mter
+mtre
+remt
+retm
+rmet
+rmte
+rtem
+rtme
+temr
+term
+tmer
+tmre
+trem
+trme
+</pre>
+<p><q>mert</q> kelimesindeki karakterler kullanılarak hepsi birbiri ile kombine edildi. 4 karakter olduğundan 4! (faktöryel) bize sonucumuzdaki çıktı sayısını veriyor.</p>
+
+
+
+<h3>Başka Bir Dosya İçerisindeki Kelimeleri Kombine Ederek Wordlis Oluşturmak (-q parametresi)</h3>
+<p>p parametresine kombine edilmesini istediğimiz kelimeleri vererek wordlist oluşturuyorduk. q parametresinde tek fark bu kelimeleri vermek yerine dosyanın ismini vermemiz ve dosyadaki her satırı bir kelime olarak alıp bunları kombine etmesidir.</p>
+
+<p># crunch 4 6 -q test.txt</p>
+<pre class="code">root@kali:~# cat test.txt
+ali
+baba
+nerde
+
+root@kali:~# crunch 9 9 -q test.txt
+Crunch will now generate approximately the following amount of data: 78 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 6
+alibabanerde
+alinerdebaba
+babaalinerde
+babanerdeali
+nerdealibaba
+nerdebabaali
+</pre>
+<p>Oluşturulacak kelimelerin uzunluğu önemli değil ancak crunch'a bu bilgiler önemsizde olsa verilmeli.</p>
+
+
+
+
+<h3>Kelimeleri ve Yer Tutucuları Kombine Etmek (-t ve -p parametrelerinin birlikte kullanımı)</h3>
+
+<p>t parametresi ile yer tutucuları kullanarak wordlistimizdeki karakterlerin bizim istediğimiz karkter kümeleriyle kombine edilebiliyordu.</p>
+<p>p parametresi ile kelimeleri veya bir kelimedeki harfleri kombine etmeyi öğrenmiştik şimdi t ve p parametrelerini birlikte kullanarak wordlist oluşturalım.</p>
+
+<p>Aşağıdaki örnekte -p parametresi ile belirtilen ali kelimesinin kendi içinde kombinasyonu -t parametresindeki aaa ile belirtilen yer tutucuların yerine gelecektir. -t ile % olarakta son karakterinin bir rakam olması gerektiğini belirttik.</p>
+
+<pre class="code">root@kali:~# crunch 4 4 -t aaa% -p ali
+Crunch will now generate approximately the following amount of data: 300 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 60
+ail0
+ail1
+ail2
+ail3
+ail4
+ail5
+.
+.
+.
+lia5
+lia6
+lia7
+lia8
+lia9
+</pre>
+<br /><br />
+
+<p>Şimdi birden fazla kelimeyi kombine ederek wordlist oluşturalım.</p>
+<pre class="code">root@kali:~# crunch 4 4 -t a%%a -p mert ali
+Crunch will now generate approximately the following amount of data: 2000 bytes
+0 MB
+0 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 200
+ali00mert
+ali01mert
+ali02mert
+..
+ali98mert
+ali99mert
+mert00ali
+mert01ali
+..
+mert98ali
+mert99ali
+</pre>
+<p>Bu sefer t parametresindeki yer tutucu harfleri -p parametresindeki kelimelerin yerini tutacak şekilde ayarlıyoruz. Bu sefer a harfi -p parameresindeki kelimeleri temsil ediyor. Harfleri istediğimiz gibi dağıtabiliriz. -p parametresindeki kelimeler kendi içlerinde yer tutucu(a) harfleri ile yer değiştirecektir.</p>
+<p>Wordlistimiz kısaca aşağıdaki durumun tüm olasılıkları şeklinde olacaktır.</p>
+<p>ali%%mert</p>
+<p>mert%%ali</p>
+
+		  <br /><br />
+
+
+			</section>
+
+			</div><!--page-->
+
+		</body>
+	</html>

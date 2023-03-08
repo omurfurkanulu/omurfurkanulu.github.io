@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Windows diskpart.exe nasıl kullanılır. Diskpart ile flash bellek formatlama" />
+		<meta name="keywords" content="diskpart, cmd, flashbellek, formatlama" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Diskpart Kullanımı</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">Dispart.exe Kullanımı (Diskpart ile Flash Bellek Formatlama)</h1>
+			<p>Diskpart console ekranında çalışan metin tabanlı kullanıcı arayüzüne sahip bir disk yönetim programıdır.</p>
+			<p>Diskpart ile disklerinizi partisyonlara bölebilir ve formatlayabilirsiniz.</p><br />
+			<p>Başlat &gt; çalıştır &gt; cmd.exe yolunu izleyip cmd.exe programını çalıştırıyoruz</p>
+			<p>Sonra cmd ekranına diskpart yazarak dispart.exe programını çalıştırabilirsiniz.</p>
+			<p>Ya da Başlat &gt; ara &gt; diskpart.exe yolunu izleyip diskpart programına ulaşabilirsiniz</p>
+
+
+			<p>Diskpart programımız çalıştıktan sonra console ekranında şöyle bir ekran çıkmış olmalı</p>
+			<pre class="code">DISKPART&gt;</pre>
+			<p><q>help</q> komutu kullanılarak tüm diskpart komutlarını görebilirsiniz</p>
+			<pre class="code">DISKPART&gt; help</pre>
+			<p><q>list disk</q> komutu ile bilgisayarımıza bağlı olan depolama cihazlarını listeleyebiliriz.</p>
+			<pre class="code">DISKPART&gt; list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          931 GB   109 GB
+  Disk 1    Online         7446 MB      0 B</pre>
+			<p>Listede bilgisayarıma takılı olan flashbellek ve harddisk'im gözüküyor.</p>
+			<p>Boyutlardanda anlaşıldığı üzere (disk 0) benim harddiskimi temsil ediyor (disk 1) ise takılı olan 8GB
+			usb belleğimi temsil ediyor. Size bölümünde disklerin boyutu gözüküyor zaten.</p>
+			<p><q>select disk 1</q> komutu ile usb belleğimi işaretliyorum</p>
+			<pre class="code">DISKPART&gt; select disk 1
+
+Disk 1 is now the selected disk.</pre>
+			<p>Şimdi tekrar disklerimize bakalım ne değişmiş</p>
+			<pre class="code">DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          931 GB   109 GB
+* Disk 1    Online         7446 MB      0 B</pre>
+
+
+			<p><q>clean</q> komutu ile disk1'imizin içeriğini siliyoruz. Usb belleğimiz formatsız bir hal alıyor
+			bu komutu verirken hangi diskin seçili olduğundan emin olunması gerek çünkü kaza ile harddiskinizi
+			 seçip başınıza iş almayın.Clean komutu flash belleğimizin format türünü sıfırlıyor yani flash belleğimiz raw(ham) formatlanmamış hale dönüyor</p>
+			<pre class="code">DISKPART> clean
+
+DiskPart succeeded in cleaning the disk.</pre>
+			<p>Şimdi içeriği silinmişmi diye kontrol etmek için tekrar list disk komutu verelim</p>
+			<pre class="code">DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          931 GB   109 GB
+* Disk 1    Online         7446 MB  7445 MB</pre>
+			<p>disk 1'in free alanı ile size alanının aynı olduğunu görüyoruz usb belleğimizin içeriği temizlenmiş
+			Usb belleğimizin içeriğine şuanda ulaşmamız mümkün değil. Önce usb belleğimizi formatlamamız gerekiyor</p>
+			<p>Şimdi usb belleğimizin içinde bir partisyon oluşturalım</p>
+			<p><q>create partition primary</q></p>
+			<pre class="code">DISKPART> create partition primary
+
+DiskPart succeeded in creating the specified partition.</pre>
+<p>Başarılı bir şekilde birincil partisyon oluşturduk</p>
+<p>Create komutu ile neler oluşturulabilir görmek için create komutu vermemiz yetiyor</p>
+<pre class="code">DISKPART> create
+
+Microsoft DiskPart version 10.0.10586
+
+PARTITION   - Create a partition.
+VOLUME      - Create a volume.
+VDISK       - Creates a virtual disk file.</pre>
+<p>Listede görüldüğü gibi üç farklı seçenek var bunlardan örnek olarak biz partisyon oluşturmak için partition seçeneğini seçtik</p>
+<p>create partition komutu ilede partisyon türü için seçilebilecek seçenekler ekrana listenir</p>
+<pre class="code">DISKPART> create partition
+
+Microsoft DiskPart version 10.0.10586
+
+EFI         - Create an EFI system partition.
+EXTENDED    - Create an extended partition.
+LOGICAL     - Create a logical drive.
+MSR         - Create a Microsoft Reserved partition.
+PRIMARY     - Create a primary partition.</pre>
+<p>Gözüktüğü gibi diskpart çok yönlü bir disk yönetim aracı diskimizi birincil, genişletilmiş, mantıksal, EFI, MSR şeklinde partisyonlara bölebiliyor.</p>
+<p>Biz <q>create partition primary</q> seçeneği ile birincil partisyon oluşturduk</p>
+<p>list disk ile disk durumuna tekrar bakabiliriz ayrıca oluşturduğumuz partisyonu görüntülemek için <q>list partition</q> komutunu kullanabiliriz.</p>
+<pre class="code">DISKPART> list partition
+
+  Partition ###  Type              Size     Offset
+  -------------  ----------------  -------  -------
+* Partition 1    Primary           7445 MB  1024 KB</pre>
+<p>Görüldüğü gibi 7445MB lık birincil partisyonumuz ekrana geldi sol başındaki * işaretide seçili olduğunu gösteriyor</p>
+<p>Şimdi <q>active</q> komutu ile partisyonumuzu formatlamak için çalıştıralım</p>
+<pre class="code">DISKPART> active
+
+DiskPart marked the current partition as active.</pre>
+<p>Şimdide format atmak için <q>format fs=fat32</q> komutunu girelim</p>
+<p>label niteliği ile flashbeleğimize bir ad girebiliriz. Ben flashbelleğimin adını <q>Girme</q> yaptım</p>
+<pre class="code">DISKPART> format fs=fat32 label=Girme
+
+  100 percent completed
+
+DiskPart successfully formatted the volume.</pre>
+
+<p>fs değeri fat32, fat16, ntfs değerleri alabilir, burda fs(file system) ile belirtilen hangi dosya sistemi kullanılarak formatlanacağıdır.
+Flashbellek kullandığımız için ve alanımız 8GB gibi küçük bir alan olduğu için fat32 iş görecektir.</p>
+<p>Şimdi <q>assign</q> komutuyla işlemi bitiriyoruz.
+<pre class="code">DISKPART> assign
+
+DiskPart successfully assigned the drive letter or mount point.</pre>
+<p>Flash Belleğimiz artık hazır.</p>
+<br /><br />
+
+<p>Şimdi <q>list</q> özelliğini inceleyelim</p>
+<pre class="code">DISKPART> list
+
+Microsoft DiskPart version 10.0.10586
+
+DISK        - Display a list of disks. For example, LIST DISK.
+PARTITION   - Display a list of partitions on the selected disk.
+              For example, LIST PARTITION.
+VOLUME      - Display a list of volumes. For example, LIST VOLUME.
+VDISK       - Displays a list of virtual disks.</pre>
+		<p><q>list volume</q> ile diskimizdeki bölümleride görüntülüyebiliriz</p>
+<pre class="code">DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     F                       DVD-ROM         0 B  No Media
+  Volume 1         Sistem Ayrı  NTFS   Partition    500 MB  Healthy    System
+  Volume 2     C                NTFS   Partition    199 GB  Healthy    Boot
+  Volume 3     E   Depo         NTFS   Partition    481 GB  Healthy
+* Volume 4     G   GIRME        FAT32  Removable   7445 MB  Healthy</pre>
+<p>Yukarıda görüldüğü gibi harddiskimizdeki mnatıksal ve birincil bölümler listelendi</p>
+<p>Uyguladığımız yöntemin aynısını bu bölümler içinde uygulayabiliriz ancak harddiskinizi işaretleyip formatlamak
+istediğiniz bölümü işaretlemeden clean yaparsanız tüm harddiskinizi silecektir.</p>
+<p>select disk 0</p>
+<pre class="code">DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          931 GB   109 GB
+  Disk 1    Online         7446 MB      0 B
+
+DISKPART> select disk 0
+
+Disk 0 is now the selected disk.
+
+DISKPART> list partition
+
+  Partition ###  Type              Size     Offset
+  -------------  ----------------  -------  -------
+  Partition 1    Primary            500 MB  1024 KB
+  Partition 2    Primary            199 GB   501 MB
+  Partition 3    Primary            139 GB   200 GB
+  Partition 0    Extended           591 GB   339 GB
+  Partition 5    Logical            476 MB   339 GB
+  Partition 4    Logical            481 GB   450 GB
+
+DISKPART> select partition 3
+
+Partition 3 is now the selected partition.
+
+DISKPART> list partition
+
+  Partition ###  Type              Size     Offset
+  -------------  ----------------  -------  -------
+  Partition 1    Primary            500 MB  1024 KB
+  Partition 2    Primary            199 GB   501 MB
+* Partition 3    Primary            139 GB   200 GB
+  Partition 0    Extended           591 GB   339 GB
+  Partition 5    Logical            476 MB   339 GB
+  Partition 4    Logical            481 GB   450 GB</pre>
+
+  <p>Artık seçtiğiniz partisyonu <q>clean</q> ile silebilir daha sonrada format atabilirsiniz.</p>
+		<br />
+		<p style="border-top: 1px dashed green;">Kaynak : https://technet.microsoft.com/en-us/library/bb490893.aspx </p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

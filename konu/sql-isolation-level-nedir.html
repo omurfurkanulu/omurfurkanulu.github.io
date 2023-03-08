@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Isolation level nedir? Nasıl kullanılır?" />
+		<meta name="keywords" content="sql isolation level" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>SQL Transaction Isolation Level</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1>Transaction Isolation Levels</h1>
+			<ol>
+				<li><a>Transaction Isolation Levels Nedir?</a></li>
+				<li><a>T-SQL Isolation Level Syntax</a></li>
+				<li><a>Transaction Isolation Seviyeleri Nasıl Belirlenir?</a></li>
+				<li><a>Transaction Isolation Seviyeleri Nelerdir?</a>
+					<ol>
+						<li><a>READ UNCOMMITTED</a></li>
+						<li><a>READ COMMITTED</a></li>
+						<li><a>REPEATABLE READ</a></li>
+						<li><a>SNAPSHOT</a></li>
+						<li><a>SERIALIZABLE</a></li>
+					</ol>
+				</li>
+			</ol>
+
+			<h2>Transaction Isolation Levels Nedir?</h2>
+<p>SQL isolation level, veya kısaca isolation level, bir transaksiyonun diğer transaksiyonlar tarafından hangi seviyede görülebileceğini belirleyen bir özelliktir. SQL veritabanı yönetim sistemleri, birden fazla işlem aynı anda çalıştığında, bu işlemlerin birbirlerinin verilerini nasıl görebileceklerini ve etkileşime geçebileceklerini belirlemek için isolation level özelliğini kullanırlar.</p>
+<p>Isolation level, transaksiyonların birbirlerinin verilerine erişimini ve değişikliklerini nasıl kontrol edeceğini belirleyen bir dizi düzeyi içerir. Bu seviyeler, diğer transaksiyonların bir transaksiyonun çalışmasını nasıl etkileyebileceği konusunda farklı kurallar ve kısıtlamalar içerir.</p>
+<p>Bir SQL veritabanı yönetim sistemi genellikle dört farklı isolation level sunar: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ ve SERIALIZABLE. Her seviye, diğer transaksiyonlarla olan etkileşimlerin farklı şekillerde yönetilmesine izin verir.</p>
+			<h2>T-SQL Isolation Level Syntax</h2>
+<p>SQL Server ve Azure SQL Database için syntax aşağıdaki gibidir.</p>
+			<pre class="code">
+SET TRANSACTION ISOLATION LEVEL
+    { READ UNCOMMITTED
+    | READ COMMITTED
+    | REPEATABLE READ
+    | SNAPSHOT
+    | SERIALIZABLE
+    }</pre>
+
+	<h2>Transaction Isolation Seviyeleri Nasıl Belirlenir?</h2>
+
+
+	<p>İşlem izolasyon seviyeleri, işlem izolasyonunun başarısını ölçen bir ölçüdür. Özellikle, işlem izolasyon seviyeleri aşağıdaki olguların varlığı veya yokluğuyla tanımlanır:</p>
+
+<ol>
+	<li>
+		<u>Lost Updates</u>
+		<p>Aynı anda birden fazla transaction aynı anda bir veri üzerinde güncelleme yapmak istediği zaman en son işlem yapan transaction'ın kaydı geçerli olur.Bu yüzden veri kaybı yaşanır.</p>
+		
+		
+		<u>Dirty Reads</u> 
+		<p>Kirli okuma (dirty read), bir işlem henüz tamamlanmadan önce verileri okuduğunda meydana gelir. 
+			Örneğin, 1.işlem bir satırı güncellediğinde, 2.işlem güncelleme işlemi tamamlanmadan önce güncellenmiş satırı okursa, 2.işlem hiç var olmamış olarak kabul edilen verileri okumuş olur.
+		</p>
+		</li>
+	<li><u>Nonrepeatable Reads</u> 
+		<p>Tekrarlanamayan okuma, bir işlem aynı satırı iki kez okuduğunda ancak her seferinde farklı veriler alındığında meydana gelir. 
+			Örneğin, 1.işlem bir satırı okur. 2.işlem o satırı günceller veya siler. 
+			1.işlem satırı tekrar okursa, farklı satır değerlerini alır veya satırın silindiğini keşfeder.</p></li>
+
+	<li><u>Phantoms</u>
+		<p>Bir hayalet satır, arama kriterlerine uygun olan ancak başlangıçta görülemeyen bir satırdır. 
+			Örneğin, 1.işlem bir dizi satır okur ve belirli bir arama kriterini karşılar. 
+			2.işlem, 1.işlem için arama kriterlerine uyan yeni bir satır oluşturur (güncelleme veya ekleme yoluyla). 
+			1.işlem, satırları okuyan ifadeyi yeniden yürüttüğünde, farklı bir satır kümesi alır.
+		</p>
+		</li>
+</ol>
+
+<h2>Transaction Isolation Seviyeleri Nelerdir?</h2>
+<ol>
+	<li>READ UNCOMMITTED (Level 0)</li>
+	<li>READ COMMITTED (Level 1)(SQL Server varsayılan transaction isolation seviyesi)</li>
+	<li>REPEATABLE READ (Level 2)</li>
+	<li>SERIALIZABLE (Level 3)</li>
+</ol>
+
+	<h3>READ UNCOMMITTED - Level 0</h3>
+	<section class="sub-section">
+		<pre class="code">SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED</pre>
+		<p>Diğer işlemlerin henüz commitlemediği(veritabanına kayıt etmediği) kayıtlar da tablodan okunabilir.</p>
+		<p>1.işlem, yaptığı işlemleri rollback ile geri aldığında, diğer işlemler kayıtlı olmayan verileri okuyacağı için hatalı verileri okumuş olur.</p>
+		<p>Bu seviye hiçbir kilitleme işlemi yapmadığı için performans açısından iyidir ancak "dirty reads" durumu doğurur.</p>
+</section>
+
+
+
+	<h3>READ COMMITTED - Level 1 - SQL Server Varsayılan Seviyesi</h3>
+	<section class="sub-section">
+		<pre class="code">SET TRANSACTION ISOLATION LEVEL READ COMMITTED</pre>
+		<p>Şu durumları engeller:</p>
+		<ol>
+			<li>Dirty Reads</li>
+		</ol>
+<br />
+		<p>Şu durumların oluşmasına izin verir:</p>
+		<ol>
+			<li>Nonrepeatable Reads</li>
+			<li>Phantoms</li>
+		</ol>
+
+		<p>Geçici veriler işlem sırasında okunamaz, ancak değiştirilebilir.</p>
+	<p>Başka transactionlar tarafından güncellenmekte olan veriler, güncelleme işlemi tamamlanana kadar okunamazlar.  Bu "dirty read" i engeller.  Veri, her bir transaction arasında başka bir transaction tarafından güncellenebilir. Bu seviyede nonrepeatable veya phantom read ler oluşabilir.
+		READ COMMITTED seviyesi, SQL Server'ın varsayılan isolation seviyesidir. </p>
+
+		<p>İşlem, diğer işlemler tarafından yazma kilidi kaldırılana kadar bekler; bu, "kirli" verilerin okunmasını engeller.
+
+			İşlem, diğer işlemlerin güncelleme veya silme yapmasını önlemek için mevcut satırda bir okuma kilidi (yalnızca satırı okurken) veya yazma kilidi 
+			(satırı günceller veya silerken) tutar. İşlem, mevcut satırdan ayrıldığında okuma kilidini serbest bırakır. 
+		</p>
+			<p>Yazma kilidini, yapılan işlemler commit edilene ya da rollback yapılana kadar tutar.</p>
+		</section>
+
+
+
+
+
+	<h3>REPEATABLE READ</h3>
+	<section class="sub-section">
+		<pre class="code">SET TRANSACTION ISOLATION LEVEL REPEATABLE READ</pre>
+	<p>Şunları engeller:</p>
+	<ol>
+		<li>Dirty Reads</li>
+		<li>Nonrepeatable Reads</li>
+		<li>Phantoms</li>
+	</ol>
+	<p>Güncellenen ancak henüz commit edilmeyen veriler, commit edilene kadar okunamaz veya başka transaction lar tarafından güncellenemez. </p>
+<p>İşlem, diğer işlemler tarafından yazı kilidi olan satırlar serbest kalana kadar bekler; bu, herhangi bir "kirli" veriyi okumaktan kaçınır.
+
+	İşlem, döndürdüğü tüm satırlarda okuma kilitleri ve eklediği, güncellediği veya sildiği tüm satırlarda yazma kilidi tutar. Örneğin, işlem şu SQL ifadesini içeriyorsa: SELECT * FROM Orders, uygulama bu satırları getirdikçe işlem okuma kilidi tutar. İşlem şu SQL ifadesini içeriyorsa: DELETE FROM Orders WHERE Status = 'CLOSED', işlem silerken yazma kilidi tutar.
+	
+	Diğer işlemler bu satırları güncelleyemez veya silemediği için, mevcut işlem herhangi bir tekrarlanamayan okumayı önler. İşlem, taahhüt edildiğinde veya geri alındığında kilitlerini serbest bırakır.</p>
+
+</section>
+
+
+	<h3>SERIALIZABLE</h3>
+	<section class="sub-section">
+		<pre class="code">SET TRANSACTION ISOLATION LEVEL SERIALIZABLE</pre>
+	<p>Şunları engeller:</p>
+	<ol>
+		<li>Lost Updates</li>
+		<li>Dirty Reads</li>
+		<li>Nonrepeatable Reads</li>
+		<li>Phantoms</li>
+	</ol>
+	<p>1.işlemin etki alanındaki tüm satırları kilitler, okuma(select), yazma(insert) ve güncelleme(update) işlemlerine ilk işlem bitene kadar izin verilmez.</p>
+	<p>Commit edilmemiş veri okunamaz veya güncellenemez. Bir transaction, okunan veri aralığına ait key ile, okuma işlemi tamamlanana kadar insert işlemi yapamaz. </p>
+<p>İşlem, diğer işlemler tarafından yazı kilidi olan satırlar açılıncaya kadar bekler; bu, herhangi bir "kirli" veri okumasını önler.</p>
+<p>Sorgunun etki ettiği tüm satırları tüm işlemlere kilitler, bu yüzden veri tutarlılığı kesin bir şekilde korunmuş olur, ancak diğer işlemlerin çalışabilmesi için aktif işlemin sonlanmasını beklemek gerekir(commit veya rollback). Bu performans sorunları doğurabilir.</p>
+
+
+</section>
+		
+		
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		<p>Kaynak: https://learn.microsoft.com/en-us/sql/t-sql/statements/set-transaction-isolation-level-transact-sql?source=recommendations&view=sql-server-ver16</p>
+		<p>Kaynak: https://learn.microsoft.com/en-us/sql/odbc/reference/develop-app/transaction-isolation-levels?view=sql-server-ver16</p>
+		<p>Kaynak: https://social.technet.microsoft.com/wiki/contents/articles/26576.sql-server-transaction-isolation-levels-tr-tr.aspx</p>
+		<p>Kaynak: https://programlamanotlari.blogspot.com/2010/10/transaction-isolation-level-lar-nedir.html</p>
+		<p>Kaynak: https://learn.microsoft.com/tr-tr/dotnet/api/system.transactions.isolationlevel?view=net-7.0</p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

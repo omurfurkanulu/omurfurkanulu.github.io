@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Yararlı cmd komutları ve kullanımı" />
+		<meta name="keywords" content="ipconfig,ping,trarcert,cmd,komut istemi,command prompt,terminal" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Yararlı Cmd Komutları</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+
+
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">Yararlı Cmd Komutları (ipconfig, ping, tracert)</h1>
+
+			<p>Cmd yani Command Promp Türkçesi Komut İstemi olan bu program kabuk ile iletişime geçmemizi sağlayan bir programdır. Linux terminali kadar başarılı olduğu söylenemesede oldukça yatenekli bir programdır. Windows ile beraber gelir.</p>
+			<p>Çalıştırmak için Başlat > Ara > cmd.exe yazmanız yeterli olacaktır.</p>
+			<br />
+
+
+			<p>&gt; ipconfig</p>
+			<p>Bu komut(program) bilgisayarımızın yerel ağdaki ip adresini verir</p>
+			<pre class="code">C:\Users\>ipconfig
+
+Windows IP Configuration
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::f1f3:308:2759:c95c%15
+   IPv4 Address. . . . . . . . . . . : 192.168.0.111
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.0.1
+
+Wireless LAN adapter Wi-Fi:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :</pre>
+<br />
+<p>Yukarıdakine benzer bir çıktı vericektir. Bende Wi-Fi kapalı olduğu için bağlı gözükmüyor</p>
+<p>IPv4 Address yazan kısımda local ip adresim yazıyor. 192.168.0.111</p>
+<p>Ipv6 Address yazan kısımda ise local ipv6 adresim yazıyor: fe80::f1f3:308:2759:c95c%15</p>
+<p>Bu ip adresleri internet ortamındaki ip adresiniz değildir. Bu adresler modeminizin kendi içerisinde size atadığı adreslerdir.</p>
+<p>IPv4 32bit(4 byte) uzunluğundadır ve bu da bize yaklaşık 4 milyar farklı adress verebileceği anlamına gelir.
+Ancak dünyadaki 4 milyarın üzerinde cihaz olduğu düşünülürse bu sayı bize yetmiyecektir. Bu yüzden her modem kendi içerisindeki bilgisayarlara
+başka bir ip adresi atar ve bilgisayarlar internete modemin ip adresi ile çıkış yapar. Böylece bu sorun bir şekilde aşılmış olunur.</p>
+<p>Eğer internetteki ip adresinizi öğrenmek isterseniz google üzerinde <q>what is my ip address</q> ya da <q>ip adresim</q> şeklinde aramalar yaparak public ip adresinizi öğrenebilirsiniz. Bu public ip adresiniz sizin modeminizin internete çıkış adresidir. Sizde bu adress üzerinden internette dolaşırsınız.</p>
+
+<br />
+<p>&gt; net user administrator /active:yes</p>
+<p>Bu komut ile administrator hesabını aktif hale getirebilirsiniz</p>
+<p>Ancak cmd.exe yi çalıştırmadan önce programa sağ tıklayıp yönetici olarak çalıştırmanız gerekmekte. Yönetici olarak çalıştırdıktan sonra bu komutu girerek administrator kullanıcısını aktif edebilirsiniz.</p>
+<pre class="code">C:\WINDOWS\system32>net user administrator /active:yes
+Komut başarıyla tamamlandı.</pre>
+<p>Administrator kullanıcısını aktif ettikten sonra oturumu kapattığınızda Administrator adında bir kullanıcı hesabının daha geldiğini görecektsiniz.
+<p>&gt; net user administrator /active:no</p>
+<pre class="code" >C:\WINDOWS\system32>net user administrator /active:no
+Komut başarıyla tamamlandı.</pre>
+<p>komutu ile Administrator hesabı tekrar kapatılabilir</p>
+<br />
+
+<p>&gt; ping www.google.com</p>
+<p>Ping programı 1983 yılında Mike Muss tarfından yazılmış bir programdır.</p>
+<p>Genel olarak ping belirtilen bilgisayara 32 byte'lık bir paket gönderir ve paketin geri gelmesini bekler.</p>
+<p>Hedef siteye verinin ulaşıp ulaşmadığı, ne kadar sürede ulaştığı, hedef sitenin ip adresi gibi bilgiler ping ile çok basit bir şekilde öğrenilebilir.</p>
+<pre class="code">C:\Users>ping google.com
+
+Pinging google.com [216.58.206.14] with 32 bytes of data:
+Reply from 216.58.206.14: bytes=32 time=77ms TTL=55
+Reply from 216.58.206.14: bytes=32 time=68ms TTL=55
+Reply from 216.58.206.14: bytes=32 time=93ms TTL=55
+Reply from 216.58.206.14: bytes=32 time=85ms TTL=55
+
+Ping statistics for 216.58.206.14:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 68ms, Maximum = 93ms, Average = 80ms</pre>
+	<p>Ping programı google.com'a 4 tane 32bytle lık paket gönderdi</p>
+	<p>Google.com'un ip adresin 216.58.206.14 olduğunu belirtmiş</p>
+	<p>En aşağıda Average olarak belirtilen paketlerin sunucuya ortalama ulaşma sürelerini gösterir.</p>
+	<p>Benim bilgisayarım google.com ile ortalama 80milisaniye içinde iletişim kuruyormuş.</p>
+	<p><abbr title="Time To Live">TTL</abbr> ile belirtilenler ise gönderilen bir paketin internet ortamındaki yaşam süresidir. Eğer paketlerimiz yollarını kaybeder ve hedefi bulamazlarsa internet ortamında trafik yaratmaması için paketler yok edilir. Yani TTL bir paketin ne kadar süre boyunca yaşayacağını belirtir. Bu ttl değerleri paketimiz her kontrol noktasına ulaştığına 1 azaltılır böylece yaşam süreleri azaltılarak paket yok edilir.</p>
+
+	<br />
+	<p>&gt; tracert google.com</p>
+	<p>Tracert programı belirtilen hedefe gönderdiğimiz bir paketin hedefe ulaşması için izlediği yolları verir.</p>
+	<pre class="code">C:\Users\>tracert google.com
+
+Tracing route to google.com [216.58.206.14]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.0.1
+  2    <1 ms    <1 ms    <1 ms  192.168.254.254
+  3     6 ms    24 ms    52 ms  172.31.8.10
+  4     *        *        *     Request timed out.
+  5   101 ms    59 ms    30 ms  212.174.242.5.static.ttnet.com.tr [212.174.242.5]
+  6    91 ms    64 ms    75 ms  72.14.214.130
+  7    68 ms   103 ms    83 ms  64.233.174.237
+  8    90 ms    80 ms    64 ms  216.239.56.149
+  9   103 ms    91 ms    75 ms  fra16s20-in-f14.1e100.net [216.58.206.14]
+
+Trace complete.</pre>
+<p>Paketimiz modemimizden çıkmış ve sırasıyla yukarıda belirtilen ip adreslerindeki bilgisayarlara google.com'un adresini sormuş(Sora sora bağdat bulunur hesabı) gerçektende internet ortamındaki bir paket adresini böyle bulur. Yani paketimizin üzerinde nereye gideceği yazıyor ve onu gerekli servisler gideceğin yer şurası oraya git orda kime sorsan gösterir gibisinden bir yönlendirme ile sonraki adrese gönderiyorlar. Tracert'ın dediğine göre bilgisayarımızdan google.com'a gönderdiğimiz bir paket sora sora yani 8 kişiye(bilgisayara) sorarak 9.adımda hedefini bulabiliyormuş.</p>
+
+<br />
+<p style="border-top: 1px dashed green;">Kaynak : http://ftp.arl.army.mil/~mike/</p>
+<p>Kaynak : http://ftp.arl.army.mil/~mike/ping.html</p>
+		</section>
+
+		</div><!--id=page-->
+
+
+	</body>
+</html>

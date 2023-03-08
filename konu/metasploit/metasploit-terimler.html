@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Metasploit terimleri, pentest terimleri, exploit vulnerability payload nedir" />
+		<meta name="keywords" content="metasploit,exploit, vulnerability, payload, auxilary, meterpreter, module" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Metasploit Framework Terimler (vulnerability, exploit, payload)</title>
+
+
+
+		<!--[if lt IE 9]>
+			<script src="../../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="../../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Metasploit Framework Terimler (vulnerability, exploit, payload)</h1>
+		
+
+			<p>Metasploit kullanımına geçmeden önce pentest ile alakalı bazı terimleri bilmemizde fayda var.</p>
+
+			<h2>Vulnerability(Zafiyet) Nedir?</h2>
+			<p>Vulnerability, saldırganın hedef sisteme ulaşabilmesini sağlayan güvenlik zayıflığına verilen addır. Bunlar, privilege escalation(yetki yükseltme), denial-of-service(servis dışı bırakma), buffer overflows, stolen passwords(parola çalma) gibi zafiyetlerdir.</p>
+
+			<h2>Exploit(Sömürmek, kötüye kullanmak) Nedir?</h2>
+			<p>Exploit belirli bir zafiyet(vulnerability) üzerinde avantaj sağlayabilen ve saldırganın hedef sisteme erişimini sağyalabilen yazılımdır.</p>
+
+			<h2>Payload Nedir?</h2>
+			<p>Payload, exploit işlemi başarıyla tamamlandıktan sonra çalıştırılacak kod parçasıdır. Aynı zamanda bir payload hedef sisteme nasıl bir shell bağlantısı yapacağınızı belirlemenize izin verir. Hedef sisteme sızdıktan sonra ne yapmak istediğinizi belirleyen koddur.</p>
+
+			<h2>Shell Nedir?</h2>
+			<p>Shell, hedef sisteme saldırganın erişebilmesi için konsol benzeri bir arayüz sunar.</p>
+			<p>NOT: Burdaki shell tanımı metasploit içerisindeki shell tanımını yapmaktadır.</p>
+
+			<h2>Meterpreter Nedir?</h2>
+			<p>Meterpreter, etkileşimli kabuğa(shell) sahip gelişmiş ve çok fonksiyonlu bir payloaddır. Meterpreter kabuğu(shell) ile hedef sistem üzerinde dosya indirmek, dosya almak, kullanıcı hesaplarının hashlerini almak gibi birçok işlemi yapabilirsiniz. Meterpreter hafıza(memory,RAM) üzerinde çalışır ve diske yüklenmez bu yüzden çoğu güvenlik sistemi tarafından tespit edilemez.</p>
+
+			<h2>Listener(Dinleyici) Nedir?</h2>
+			<p>Listener, sömürülmüş(exploited) sistemden ya da saldırganın makinesinden gelen bağlantıları bekler ve bağlantı geldiğininde bu bağlantıları yönetir.</p>
+
+			<h2>Module Nedir?</h2>
+			<p>Metasploit Framework içerisinde belirli bir işlemi gerçekleştirmek için önceden hazırlanmış kod koleksiyonudur.</p>
+
+			<h3>Exploit Module Nedir?</h3>
+			<p>Exploit module, bir uygulama ya da sistem üzerinde bulunan belirli bir zafiyet için çalıştırılacak komut dizisidir.</p>
+
+			<h3>Auxilary Module Nedir?</h3>
+			<p>Auxilary module, bir payload çalıştırmaz, bunun yerine rastgele denebilecek davranışları gerçekleştirebilecek komut dizilerine sahiptir bunlar exploit işlemiyle alakalı olmayabilir. Örnek olarak brute-force(kaba kuvvet), fuzzig(rastgele girdi), denial-of-service(servis dışı bırakma) ve port tarama, bilgi toplama gibi araçları içerisinde barındırır.</p>
+
+			<h3>Post Exploitation Module Nedir?</h3>
+			<p>Post exploitation module, sömürülmüş(exploited) sistem üzerinde daha sonra yetki yükseltebilmek için bilgi toplamaya izin verir.</p>
+
+			<h2>Shellcode Nedir?</h2>
+			<p>Shellcode, exploitlerin payload olarak kullanabildiği makine talimatları(instruction) içeren koddur. Aynı zamanda genellikle shellcodelar saldırgana sistemi rahat bir şekilde yönetebilmek için shell verirler. Ancak bir shellcode bir programın yaptığı herşeyi yapabilir.</p>
+
+			<h2>0-Day (Sıfırıncı Gün Zafiyetleri) Nedir?</h2>
+			<p>Bir zafiyetin ilk kez biri tarafından bulunduğu zamanki zafiyetlere verilen isimdir. Zafiyeti daha önceden kimse bilmediği için önlemi alınmamıştır. En tehlikeli zafiyet türüdür.</p>
+
+
+<br /><br />
+<footer>
+		<p>Kaynak: https://metasploit.help.rapid7.com/docs/metasploit-basics</p>
+</footer>
+		</section>
+
+
+		</div><!--page-->
+
+
+	</body>
+</html>

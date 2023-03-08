@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="C fork kullanımı ve child process oluşturma" />
+		<meta name="keywords" content="c, fork, child process, linux, c fork" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>C Fork Kullanımı - Fork ile Yeni İşlem Başlatma</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+
+
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1>C Fork Kullanımı - Fork ile Yeni İşlem Başlatma (fork, exec, wait, exit, pid_t, getpid)</h1>
+
+<p>C dilinde yeni bir işlem yaratmanın en ilkel yöntemi <q>fork</q> sistem çağrısını(syscall) kullanmaktır.</p>
+<p>Fork sistem çağrı numarası: 57</p>
+<p>unistd.h header dosyası içerisinde tanımlıdır.</p>
+<p>Fork ile yaratılan işlemin(process) özellikleri:</p>
+<ol>
+<li>Yeni oluşturulan işlemin kendi (PID)process id'si vardır.</li>
+<li>Bir işlem(process) içerisinden başka bir işlem(process) başlatmak forking olarak adlandırılır.</li>
+<li>Fork işlemi çocuk(child) işlem(process) başlatmaktır.</li>
+<li>Parent ve child aynı anda çalışabilirler.</li>
+<li>Ancak programımızda parent ve child processin aynı anda çalışmaması belirtebiliriz.</li>
+<li>Programımıza child process'in işini bitirmesini beklemesini wait ya da waitpid fonksiyonları ile belirtebiliriz.</li>
+<li>wait ve waitpid fonksiyonları programın neden sonlandığına dair limitli bilgi verir.</li>
+<li>Bu bilgiler exit status kodlarıdır.</li>
+<li>fork sistem çağrısından dönen pid değerine göre parent process'in mi yoksa child process'in mi işlemde olduğunu öğrenebiliriz.</li>
+<li>Exec fonksiyonu kullanılarak başka bir process başlatılabilir.</li>
+<li>Exec ile başka bir program çalıştırıldığında eski process image'ı yok olur.</li>
+<li>Yerine çalıştırılan programın process image'ı gelir.</li>
+<li>Eğer program sonlanırsa eski process image'ına dönmez onun yerine program tamamen sonlanır.</li></ol>
+
+
+
+<p>Kullanımı:</p>
+<pre class="code">fork();
+
+ya da
+
+pid_t pid;
+pid = fork();</pre>
+<p>Yukarıdaki tanımda fork ile yeni bir process oluşturulmuştur.</p>
+<p>pid_t = process id type</p>
+<p>pid_t veri türü içerisinde processlerin pid değerini tutabilen veri türüdür.</p>
+<p>Oluşturduğumuz pid değişkenine fork() işleminden dönen değeri atıyoruz böylece program akışında child ve parent processleri ayırt edebiliriz.</p>
+
+
+
+
+<h2>Process Kimliğini Belirlemek - Process Identification (getpid, getppid, pid_t)</h2>
+<p>Fork işlemine geçmeden önce getpid ve getppid fonksiyonlarını öğrenmemiz fork'un nasıl çalıştığını anlamamıza yardımcı olacaktır.</p>
+<p>Getpid(): Çalışan programımızın pid değerini döndürür.</p>
+<p>Getppid(): Çalışan programımızın üzerindeki parent process'in pid değerini döndürür.</p>
+<p>Bu fonskiyonlar <q>unistd.h</q> header dosyası içerisindedir bu yüzden bu fonksiyonları çalıştırmadan önce bu dosya sayfaya include edilmelidir.</p>
+
+<p>Örnek verirsek:</p>
+<pre  class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void){
+
+	pid_t pid;
+ 	pid = getpid();
+
+	printf(&quot;%s %d\n&quot;, &quot;Process ID:&quot;, pid);
+
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">Process ID: 9500
+</pre>
+<p>Programımız çalıştırdık ve PID değeri olarak 9500 numaralı PID değeri ile çalıştığını gördük.</p>
+
+<br />
+
+<h3>Parent Processin ID'sini Almak - getppid()</h3>
+
+<pre  class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void){
+
+	pid_t pid, ppid;
+ 	pid = getpid();
+	ppid = getppid();
+
+	printf(&quot;%s %d\n&quot;, &quot;Process ID:&quot;, pid);
+	printf(&quot;%s %d\n&quot;, &quot;Parent PID:&quot;, ppid);
+
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">Process ID: 9500
+Parent PID: <span style="color: green">8947</span>
+</pre>
+<p>Programımız çalıştığında kendi process id'sini ve parent(ebeveyn) process'in id numarasını ekrana yazdırıyor.
+Görüldüğü üzere programımızın PID değeri <q>9500</q> parent processin ise <q>8947</q>.</p>
+<br />
+<p>Bulunduğumuz terminalin(shell) <abbr title="Process Identification">PID</abbr> değerine <q>ps</q> programı ile bakalım.</p>
+<pre class="code">
+$ ps
+ PID TTY          TIME CMD
+<span style="color: green">8947</span> pts/0    00:00:00 bash
+9636 pts/0    00:00:00 ps
+</pre>
+<p>Görüldüğü üzere programımız doğru bir şekilde çalışıyor. ps programının çıktısında bash programının PID değeri 8947 ve bizim
+ programımızda bu bash programı altında çalıştığından programımız parent processin ID'sini aynı verdi.</p>
+<br />
+
+<p>Aslında bash processide başka bir processin altında çalışan bir başka program.
+	Bash processinin üstünde çalışan programları(parent processes) görmek için <q>pstree</q> programını ya da <q>ps</q> programını kullanabiliriz.</p>
+
+<pre class="code">$ pstree -s -p 8947
+systemd(1)───xfce4-panel(1247)───xfce4-terminal(8943)───bash(<span style="color: green">8947</span>)───pstree(10071)
+</pre>
+
+<p>PID değeri 1 olan process  <q>systemd</q> bu process <q>system daemon</q> diye adlandırılır. Windowstaki servisler linux ortamında daemon olarak adlandırılır.</p>
+<p>Systemd processi sistem açılışında init processi ile başlar. Systemd, sistem processlerini yöneten bir daemondur.</p>
+
+<h2>Fork ile Process Oluşturmak</h2>
+<p>Fork işlemi program içerisinde yeni bir child process oluşturabilmemizi sağlar.</p>
+<pre class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void){
+
+	pid_t pid, getid;
+	getid = getpid();
+	printf(&quot;%s %d\n&quot;, &quot;Process ID:&quot;, getid);
+
+	pid = fork();
+	<span style="color:green">//Eğer fork başarılı olursa program üst satırdan sonra bir kez daha çalışacak</span>
+	printf(&quot;%s %d\n&quot;, &quot;Fork(Child) PID:&quot;, pid);
+
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">Process ID: 1769
+Fork(Child) PID: 1770
+Fork(Child) PID: 0
+</pre>
+<br />
+<p>Fork() fonksiyonunun döndürdüğü değerleri incelersek. Önce 1770 ve sonra 0 değerini döndürüyor.
+	İlk değer fork işleminin başarılı olduğunu ve fork işleminin PID değerini gösteriyor.
+	0 değeri ise programın fork() satırından itibaren ikinci kez çalıştığında bir daha yeni bir fork
+oluşturmak yerine önceki fork işleminin başarılı olduğunu belirten 0 değerini döndürüyor. Böylece
+parent processte mi yoksa child processte mi olduğumuzu ayırt edebiliriz.</p>
+
+
+<p>Bu yeni child processin id'si genellikle bulunulan processin id'sinin bir fazlası olur. </p>
+
+<h3>Fork Fonksiyonu Nasıl Çalışır?</h3>
+<p>pid = fork(); satırında program yeni bir child process oluşturur.</p>
+<p>Dönen değerler:</p>
+<pre class="code">
+Forktan dönen pid değeri
+0  -> Child başarıyla oluşturulmuştur.
+-1 -> Fork işlemi başarısız.
+Dönen sonuç 0 ve -1 den farklı ise oluşturulan child processin pid değerini döndürür.
+</pre>
+
+<p>İlk örneğimize dönersek programımız 1769 pid değeriyle çalışmaya başlıyor. pid=fork(); satırında yeni bir child process oluşturuyoruz. Bu process pid değeri olarak 1770 değerini alıyor. Evet halen asıl programımız içerisindeyiz ve kodlarımız fork satırından itibaren çalışacaktır.</p>
+<p>Asıl programımızdaki kodlar çalıştırıldıktan sonra program fork satırından itibaren tekrar çalıştırılır.
+Bu sefer fork() satırı 0 değerini döndürür böylece kısır döngüye girip sürekli fork oluşturulmaz.
+0 değeri oluşturmaya çalıştığımız fork işleminin başarılı bir şekilde gerçekleştiğini belirtir ve program fork satırından itibaren bir daha çalışır.</p>
+
+<p>Bu noktada child procesin içerisinde olduğumuz için <q>getpid()</q> fonksiyonu bize oluşturduğumuz child processin PID değerini verecektir.</p>
+
+<p>Fork örnek:</p>
+<pre class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void){
+
+	pid_t pid, getid;
+	getid = getpid();
+	printf(&quot;(Parent program) PID: %d\n&quot;,getid);
+	printf(&quot;Bu satır parent(asıl) program tarafından oluşturuldu.\n\n&quot;);
+
+	pid = fork();
+	<span style="color:green">//Eğer fork başarılı olursa program burdan sonra bir kez daha çalışacak</span>
+	getid = getpid();
+	printf(&quot;Process PID: %d\n&quot;, getid);
+
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">(Parent program) PID: 2200
+Bu satır parent(asıl) program tarafından oluşturuldu.
+
+Process PID: 2200
+Process PID: 2201  -> Bu satır child processten
+</pre>
+
+<p>Yukarıdaki örnekte görüldüğü gibi program ilk önce normal bir şekilde çalıştı ve tüm kodları çalıştırdı. Son satır hariç tüm çıktı parent(asıl) programımızdan üretilmiştir. Programdaki tüm kodlar çalıştırıldıktan sonra fork satırından itibaren program tekrar çalıştırılıyor. Getpid fonksiyonu ile aldığımız pid değeri artık child process içerisinde olduğumuzu gösteriyor.</p>
+
+
+<h2>Parent ve Child İşlemlerini Ayırmak</h2>
+<p>Fork işleminin fork() fonksiyonuyla başladığını belirtmiştik. İlk kez bu satıra geldiğimizde oluşturulan child processin pid değeri döner. Ve program bu fork satırından itibaren tekrar çalıştırmak istediğinde fork fonksiyonu tekrar çalıştırılır. Ancak kısır döngüye girmeyerek yeni child oluşturmaz onun yerine 0 değerini döndürür ve child process içerisinde olduğumuzu belirtir. </p>
+
+<pre class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void){
+
+	pid_t pid, getid;
+	getid = getpid();
+	printf(&quot;(Asıl program) PID: %d\n&quot;,getid);
+	printf(&quot;Bu satır asıl program tarafından oluşturuldu.\n\n&quot;);
+
+	pid = fork();
+	<span style="color:green">//Eğer fork başarılı olursa program burdan sonra bir kez daha çalışacak</span>
+
+	if(pid == 0){
+	<span style="color:green">//fork() satırı 0 değeri döndürdüyse child processteyiz
+	//ve bu if blogu çalışacak.</span>
+		getid = getpid(); <span style="color:green">//child processin PID dönecek</span>
+		printf(&quot;Child processteyiz.\n&quot;);
+		printf(&quot;Child process PID: %d\n&quot;, getid);
+	}
+	else if(pid == -1){
+		printf(&quot;Fork Failed\n&quot;);
+	}
+	else{
+		getid = getpid(); <span style="color:green">//Parent processin PID dönecek</span>
+		printf(&quot;Parent processteyiz.\n&quot;);
+		printf(&quot;Parent process PID: %d\n&quot;, getid);
+	}
+	printf(&quot;Fork PID: %d\n\n&quot;,pid);
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">(Asıl program) PID: 2474
+Bu satır asıl program tarafından oluşturuldu.
+
+Parent processteyiz.
+Parent process PID: 2474
+Fork PID: 2475
+
+Child processteyiz.
+Child process PID: 2475
+Fork PID: 0</pre>
+
+
+
+<h2>Processlere İş Yaptırmak</h2>
+<p>Fork ile child process oluşturduk şimdi child processimize iş yaptıralım.</p>
+<p>Fork Child Process İşlemleri</p>
+<pre class="scroll">#include  &lt;stdio.h&gt;
+#include  &lt;unistd.h&gt;
+
+#define   MAX_COUNT  5
+
+void  ChildProcess(void);                /* child process prototype  */
+void  ParentProcess(void);               /* parent process prototype */
+
+void  main(void)
+{
+     pid_t  pid;
+
+     pid = fork();
+     if (pid == 0){
+          ChildProcess();
+     }
+     else{
+          ParentProcess();
+     }
+}
+
+void  ChildProcess(void)
+{
+     int   i;
+     for (i = 1; i &lt;= MAX_COUNT; i++)
+          printf(&quot;   Bu satır child processten, deger = %d\n&quot;, i);
+     printf(&quot;   *** Child process bitti ***\n&quot;);
+}
+
+void  ParentProcess(void)
+{
+     int   i;
+     for (i = 1; i &lt;= MAX_COUNT; i++)
+          printf(&quot;Bu satır parent processten, deger = %d\n&quot;, i);
+     printf(&quot;*** Parent process bitti ***\n&quot;);
+}
+</pre>
+<p>Çıktı:</p>
+<pre class="code">
+Bu satır parent processten, deger = 1
+Bu satır parent processten, deger = 2
+Bu satır parent processten, deger = 3
+   Bu satır child processten, deger = 1
+Bu satır parent processten, deger = 4
+   Bu satır child processten, deger = 2
+Bu satır parent processten, deger = 5
+   Bu satır child processten, deger = 3
+   Bu satır child processten, deger = 4
+   Bu satır child processten, deger = 5
+*** Parent process bitti ***
+   *** Child process bitti ***
+</pre>
+
+<p>Normalde ilk önce parennt process içerisindeyiz ve parent bitmeden child processin devreye girmemesi gerektiğini düşünüyoruz. Ancak child process kendi işlemini bitirmek için parenta kesinti yaşatıp işini yapmaya çalışır. Bu durum parent ve child arasında sürer.</p>
+
+<h2>İşlemlerin(Process) Tamamlanması Beklemek (wait)</h2>
+<p>Parent processin başladığı yere <q>wait(NULL)</q> satırını ekleyerek child processin işlemini bitirmesini ve daha sonra parent processin çalışmasını sağlayabiliriz.
+Ya da child processin çağrıldığı yere wait(NULL) ekleyerek parent processin işlemini bitirene kadar child processi bekletebiliriz.</p>
+<pre class="code">
+       #include &lt;sys/types.h&gt;
+       #include &lt;sys/wait.h&gt;</pre>
+<p>wait fonksiyonu yukarıdaki headerlar içerisindedir.</p>
+<p>Aşağıdaki örnekte child process bitene kadar parent processi bekletiyoruz böylece processler birbirlerini kesintiye uğratmazlar.</p>
+<p>Örnek wait ve fork kullanımı:</p>
+<pre class="scroll">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+
+#define   MAX_COUNT  5
+
+void  ChildProcess(void);                /* child process prototype  */
+void  ParentProcess(void);               /* parent process prototype */
+
+void  main(void)
+{
+     pid_t  pid;
+
+     pid = fork();
+     if (pid == 0){
+          ChildProcess();
+     }
+     else{
+          <span style="color:green">wait(NULL);</span>
+          ParentProcess();
+     }
+}
+
+void  ChildProcess(void)
+{
+     int   i;
+     for (i = 1; i &lt;= MAX_COUNT; i++)
+          printf(&quot;   Bu satır child processten, deger = %d\n&quot;, i);
+     printf(&quot;   *** Child process bitti ***\n&quot;);
+}
+
+void  ParentProcess(void)
+{
+     int   i;
+     for (i = 1; i &lt;= MAX_COUNT; i++)
+          printf(&quot;Bu satır parent processten, deger = %d\n&quot;, i);
+     printf(&quot;*** Parent process bitti ***\n&quot;);
+}
+</pre>
+<p>Çıktı:</p>
+<pre class="code">  Bu satır child processten, deger = 1
+  Bu satır child processten, deger = 2
+  Bu satır child processten, deger = 3
+  Bu satır child processten, deger = 4
+  Bu satır child processten, deger = 5
+  *** Child process bitti ***
+Bu satır parent processten, deger = 1
+Bu satır parent processten, deger = 2
+Bu satır parent processten, deger = 3
+Bu satır parent processten, deger = 4
+Bu satır parent processten, deger = 5
+*** Parent process bitti ***
+</pre>
+<p>Şimdi parent process, child processin işini bitirmesini bekleyecek ve sonra parent yapılacaktır. Artık programı istediğimiz kadar yeniden başlatalıp processler birbirlerini kesinti uğratmadan sırayla yapılacaktır.</p>
+
+
+<h2>Programdan Çıkış Yapmak - Exit() Fonksiyonu</h2>
+<p>Exit fonksiyonlarını kullanabilmek için <q>stdlib.h</q> sayfaya inlcude edilmelidir.</p>
+<h3>Normal Sonlandırma</h3>
+<p>Exit fonksiyonu ile programın içerisinden processi sonlandırabiliriz.</p>
+<pre class="code">exit(status kodu);</pre>
+<p>Yukarıdaki tanımlamada exit fonkskiyonunun nasıl kullanılacağı gösterilmiştir.</p>
+
+<h3>Exit Status(Durum) Kodları</h3>
+<p>Exit fonksiyonu programı sonlandırırken sınırlı miktarda bir bilgiyi üst programa gönderir. Bu bilgiler exit status kodları olarak adlandırılır.</p>
+<pre class="code">0 - Programın başarılı bir şekilde sonlandığını belirtir.
+1 - Programın hata ile sonlandığını belirtir.</pre>
+<p>Exit status kodları 0 ile 255 arasında istediğimiz bir sayı olabilir. Yukarıdaki tanımlamalar bir standart olmasada çoğu program bu değerleri kullanırlar.</p>
+<h3>Exit Status Macroları</h3>
+<p>Exit status kodlarını istediğimiz gibi belirtebiliriz demiştik. Aynı zamanda bu değerleri içlerinde barındıran MACROlar mevcuttur.</p>
+
+<pre class="code">EXIT_SUCCESS - 0 döndürür başarılı sonlandırmayı ifade eder.
+EXIT_FAILURE - 1 döndürür ve başarısızlığı ifade eder.</pre>
+
+<p>Örnekle inceleyecek olursak:</p>
+<pre class="code">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void){
+
+	pid_t pid, getid;
+	getid = getpid();
+	printf(&quot;PID: %d\n\n&quot;,getid);
+
+	pid = fork();
+	if(pid == 0){
+		getid = getpid();
+		printf(&quot;Child process PID: %d\n&quot;, getid);
+		exit(EXIT_SUCCESS);
+		<span style="color:green">printf(&quot;Bu satır yazdırılmıyacak!\n&quot;);</span>
+	}
+	else if(pid == -1){
+		printf(&quot;Fork Failed\n&quot;);
+	}
+	else{
+		wait(NULL);
+		getid = getpid();
+		printf(&quot;Parent process PID: %d\n&quot;, getid);
+
+	}
+
+	printf(&quot;Fork PID: %d\n&quot;,pid);
+	exit(EXIT_FAILURE);
+	return 0;
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">PID: 5385
+
+Child process PID: 5386
+Parent process PID: 5385
+Fork PID: 5386
+
+$ echo $?
+1
+</pre>
+<p>Child processimizi SUCCESS = 0 başarılı durumla sonlandırırken parent yani asıl programımızı FAILURE = 1 ile sonlandırıyoruz.</p>
+<p>echo $? komutu ile son çalıştırılan programın hangi exit status kodu ile sonlandığını öğrenebiliriz. Çıktıda FAILURE kodu olan 1 görünüyor. Program hata ile sonlandığını bildiriyor. Tabi ki bunu biz yaptık programımız gayet başarılı bir şekilde çalıştı.</p>
+<p>Child processin son satırındaki printf satırı exit fonksiyonundan sonra geldiği için çalıştırılmadan process sonlandırılıyor.</p>
+
+
+
+<br /><br />
+<footer>
+<p>Kaynak:</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Process-Creation-Concepts.html#Process-Creation-Concepts</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Process-Identification.html#Process-Identification</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Creating-a-Process.html#Creating-a-Process</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Executing-a-File.html#Executing-a-File</p>
+<p>https://www.gnu.org/software/libc/manual/html_node/Process-Completion.html#Process-Completion</p>
+</footer>
+
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

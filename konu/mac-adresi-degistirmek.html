@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="GNU/Linux MAC adresi değiştirme, GNU/Linux MAC adresi öğrenme, MAC adresi nedir ne işe yarar. MAC adresi üreticisini tespit etmek" />
+		<meta name="keywords" content="mac adresi, mac address, ip command, ifconfig, macchanger, mac adresi öğrenme" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>MAC Adresi Değiştirme ve MAC Adresi Öğrenme (ip, ifconfig, macchanger)</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+
+		<h1>MAC Adresi Değiştirme (MAC Spoofing) MAC Adresi Nasıl Öğrenilir ve Değiştirilir?</h1>
+
+		<ol>
+			<li><a>MAC Adresi Nedir?</a></li>
+			<li><a >GNU/Linux MAC Adresini Öğrenmek</a></li>
+			<li><a >MAC Adresi Değiştirme (MAC Spoofing)</a></li>
+			<li><a>IP Aracı ile MAC Adresi Değiştirmek</a></li>
+			<li><a>Ifconfig Aracı ile MAC Adresini Değiştirmek</a></li>
+			<li><a>Macchanger Programı ile MAC Adresini Değiştirmek</a></li>
+		</ol>
+
+
+			<h2>MAC Adresi Nedir?</h2>
+			<p><abbr title="Media Access Control">MAC</abbr> adresleri bir ağ üzerindeki cihazların <abbr title="Network Interface Controller">NIC</abbr> üzerinden birbirleri ile iletişime geçebilmesini sağlayan 48bit(6byte) uzunluğunda eşsiz bir adrestir.</p>
+			<p>Her NIC arayüzünün kendisine özel MAC adresi bulunur. Aynı ağdaki bilgisayarlar, birbirlerinin IP adreslerini öğrenmek için MAC adresleri üzerinden birbirleri ile iletişime geçerler(<abbr title="Address Resolution Protocol">ARP</abbr>).</p>
+			<p>MAC adresleri fiziksel adres, donanım adresi ya da ağ adresi olarakta isimlendirilir.</p>
+			<p>MAC adreslerinin ilk 3 okteti(byte) <abbr title="Organizationally Unique Identifier">OUI</abbr> olarak adlandırılır ve bu ilk 3byte üretici firmayı belirtir. Bir MAC adresinin ilk 3byte'ına bakarak üretici firma tespit edilebilir.</p>
+			<p><a style="border-bottom: 1px dotted green;" href="https://www.macvendorlookup.com/">MacvendorLookup</a> adresinden MAC adreslerinin üreticisini tespit edebilirsiniz.</p>
+
+
+
+
+<h2>GNU/Linux MAC Adresini Öğrenmek</h2>
+<p>MAC adresinizi öğrenmek için aşağıdaki araçlardan birisi kullanılabilir.</p>
+<ol>
+	<li>ip</li>
+	<li>ifconfig</li>
+	<li>macchanger</li>
+</ol>
+<p>Yukarıdaki araçları kullanarak MAC adresini öğrenebileceğimiz gibi GUI arayüzü ile MAC adresini öğrenebiliriz. Biz komut satırı arayüzünden MAC adresini öğrenmeyi göreceğiz.</p>
+
+<p><q>ip</q> aracı <q>iproute2</q> network araçları koleksiyonunun içerisinde sisteminizde kurulu halde gelecektir. <q>ifconfig, netstat, route, arp</q> gibi araçları içerisinde barındıran <q>net-tools</q> network araçları koleksiyonunun yerini <q>iproute2</q> almıştır. Bu sebeble bu yazıda genel olarak <q>ip</q> aracı kullanılacaktır.</p>
+<p>Eğer <q>ifconfig</q> aracı sisteminizde yoksa ve kurmak istiyorsanız <q>sudo apt-get install net-tools</q> şeklinde yükleme yapmanız gerekmektedir.</p>
+<br />
+<p>Linux üzerinde network arayüzlerinin(interface) MAC adresini öğrenmek için terminal ekranını açıp <q><strong>ip link</strong></q> ya da <q><strong>ip link show</strong></q> yazmanız yeterlidir.</p>
+
+<pre class="code">root@pc:~# ip link show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp1s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state <span style="color: red;">DOWN</span> mode DEFAULT group default qlen 1000
+    link/ether <span style="color: green;">68:f7:28:ba:ba:de</span> brd ff:ff:ff:ff:ff:ff
+3: wlp2s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state <span style="color: red;">UP</span> mode DORMANT group default qlen 1000
+    link/ether <span style="color: green;">d0:7e:35:ba:ba:de</span> brd ff:ff:ff:ff:ff:ff
+</pre>
+<p>Yukarıdaki çıktıda yeşil renk ile gösterilmiş alanlar enp1s0 ve wlp2s0 arayüzlerinin MAC adreslerini temsil ediyor.</p>
+<p>NOT: Bu arayüz isimleri sisteminize göre farklılık gösterebilir.(eth0, wlan0 gibi)</p>
+<p>NOT: Kırmızı ile gösterilenler, arayüzünün aktif(UP) ya da devredışı(down) olduğu gösteriyor. Arayüzümüz aktif, yani çalışır durumdayken, MAC adresini değiştirmemize izin verilmez. MAC adresi değiştirebilmemiz için arayüzümüzün devredışı(DOWN) halde olması gerekir. Bu yazıda tüm arayüzlerin UP(aktif) durumunda olduğu kabul edilerek, önce arayüzlerin kapatılıp sonra MAC adresinin değiştirilmesi gösterilmiştir. Eğer arayüzünüz DOWN(devredışı) durumda ise bu adımı geçebilirsiniz.</p>
+
+<br />
+<p>Bunlardan hangisinin wi-fi arayüzümüz olduğunu öğrenmek için <q>iw dev | grep Interface</q> komutu kullanılabilir.</p>
+<pre class="code">root@pc:~# iw dev | grep Interface
+	Interface wlp2s0
+</pre>
+<p>Wi-fi arayüzümüzün(interface) wlp2s0 olduğunu görüyoruz.</p>
+
+
+<h2>MAC Adresi Değiştirme (MAC Spoofing)</h2>
+<p>Normal şartlarda MAC adresi donanıma gömülü haldedir ve değiştilemez. Ancak network sanallaştırma işleminde, donanımsal ve yazılımsal network kaynakları ve işlevleri birleştirilerek, yazılım tabanlı yönetilebilir bir varlık halline getirilir. Network sanallaştırması MAC adresini yazılım tabanlı olarak yönetmemize izin verir. Bu sebeble NIC kartımıza gömülü halde gelen MAC adresini değiştiremesekte sanal olarak MAC adresimizi değiştirebiliriz.</p>
+<p><q>MAC Spoofing</q> terimi ise MAC adresini değiştirme ya da MAC adresi zehirleme işlemine denir.</p>
+<br />
+<p>MAC adresinin yapısı vikipedideki şu resimden incelenebilir.</p>
+<p>Link: <a target="_blank" href="https://upload.wikimedia.org/wikipedia/commons/9/94/MAC-48_Address.svg" style="border-bottom: 1px dotted green;">Mac Address Structure</a></p>
+
+<br />
+<p>MAC adresini elle değiştirirken dikkat etmemiz gereken bazı kısıtlamalar vardır. MAC adresleri broadcast MAC adresi(<span style="color:red">ff:ff:ff:ff:ff:ff</span>) olarak tanımlanamaz, çünkü broadcast adresler ağdaki tüm MAC adreslerini temsil eder.
+Eğer broadcast MAC adresine bir paket gönderilirse bu paket ağdaki tüm ulaşılabilir MAC adreslerine gönderilir.</p>
+<br />
+<p>Ayrıca multicast adreslerede izin verilmez. Multicast MAC adreslerinde ilk byte'ın <abbr title="Least Significant Bit">LSB</abbr>'i (sağ en baştaki bit) 1 olamaz. Eğer 1 olarak ayarlanırsa bu adres multicast bir MAC adresini temsil eder.</p>
+<p>Yani MAC adresinin ilk byte'ının ikinci nibble'ı hexadecimal(16lık sistem) olarak şu değerleri barındırmamalıdır. </p>
+<p>1(000<span style="color:red">1</span>) 3(001<span style="color:red">1</span>) 5(010<span style="color:red">1</span>) 7(011<span style="color:red">1</span>) 9(100<span style="color:red">1</span>) b(101<span style="color:red">1</span>) d(110<span style="color:red">1</span>) f(111<span style="color:red">1</span>)</p>
+<br />
+<p> X<span style="color:red">X</span>:XX:XX:XX:XX:XX şeklinde bir MAC adresinin kırmızı ile gösterilen(ikinci nibble) alanına (1,3,5,7,9,b,d,f) <q>çift sayı</q> olmayan hex değerleri yazılmamalıdır. Aksi taktirde hata alırsınız.</p>
+
+<h3>IP Aracı ile MAC Adresi Değiştirmek</h3>
+<p>MAC adresini değiştirmek için, öncelikle MAC adresini değiştirmek istediğimiz arayüzü kapatmamız gerekiyor. Daha sonra MAC adresini değiştirip arayüzümüzü tekrar attif hale getireceğiz.</p>
+<p>NOT: Aşağıdaki işlemler root(0) kullanıcısı yetkisi gerektirir.</p>
+<pre class="code">ip link set dev &lt;interface&gt; down
+ip link set dev &lt;interface&gt; address &lt;Yeni MAC Adresi&gt;
+ip link set dev &lt;interface&gt; up</pre>
+
+<br />
+<p>Şimdi <q>enp1s0</q> arayüzümüzün MAC adresini değiştirelim.</p>
+<pre class="code">root@pc:~# ip link set dev enp1s0 down
+root@pc:~# ip link set dev enp1s0 address de:ad:be:ef:ba:ba
+root@pc:~# ip link set dev enp1s0 up
+
+root@pc:~# ip link show enp1s0
+2: enp1s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
+    link/ether <span style="color: green;">de:ad:be:ef:ba:ba</span> brd ff:ff:ff:ff:ff:ff
+</pre>
+<p>Eski MAC adresimiz 68:f7:28:ba:ba:de iken yeni MAC adresimiz de:ad:be:ef:ba:ba oldu.</p>
+
+<h3>Ifconfig Aracı ile MAC Adresini Değiştirmek</h3>
+<p>Ifconfig aracı ile MAC adresimizi değiştirebilmek için yine aynı şekilde ağ kartımızın arayüzünü kapatıp işlem yapmamız gerekiyor.</p>
+<p>NOT: Aşağıdaki işlemler root(0) kullanıcısı yetkisi gerektirir.</p>
+<pre class="code">ifconfig wlp2s0 down
+ifconfig wlp2s0 hw ether &lt;Yeni MAC Adresi&gt;
+ifconfig wlp2s0 up</pre>
+<br />
+<p>Şimdi ifconfig aracı ile MAC adresini değiştirelim.</p>
+<pre class="code">root@pc:~# ifconfig wlp2s0 down
+root@pc:~# ifconfig wlp2s0 hw ether de:ad:be:ef:ba:ba
+root@pc:~# ifconfig wlp2s0 up
+
+root@pc:~# ifconfig wlp2s0
+wlp2s0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.254.244  netmask 255.255.255.0  broadcast 192.168.254.255
+        ether <span style="color: green;">de:ad:be:ef:ba:ba</span>  txqueuelen 1000  (Ethernet)
+        RX packets 46092  bytes 34245121 (32.6 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 27114  bytes 3991097 (3.8 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre>
+<p>Yukarıda <q>ether</q> satırında yeni MAC adresini görüyoruz.</p>
+
+
+<h3>Macchanger Programı ile MAC Adresini Değiştirmek</h3>
+<p>Macchanger programı MAC adreslerini yönetmek ve ağ arayüzlerini kontrol etmek için yazılmış bir programdır.</p>
+<p>https://github.com/alobbs/macchanger</p>
+<p>http://ftp.sotirov-bg.net/pub/mirrors/gnu/macchanger/</p>
+<p>Adreslerinden indirilebilir ya da repo üzerinden indirebilirsiniz.</p>
+<p>Debian sürümleri için:</p>
+<pre class="code">sudo apt-get install macchanger</pre>
+<p>Komutu ile indirilebilir.</p><br />
+
+<br />
+
+<p>Macchanger ile MAC adresini öğrenmek için:</p>
+<pre class="code">macchanger -s &lt;interface&gt;</pre>
+<p>-s parametresi show anlamında ve belirtilen arayüzümüzdeki(interface) MAC adresini gösterir.</p>
+<pre class="code">root@pc:# macchanger -s wlp2s0
+Current MAC:   de:ad:be:ef:ba:ba (unknown)
+Permanent MAC: <span style="color: green;">d0:7e:35</span>:ba:ba:de <span style="color: green;">(Intel Corporate)</span>
+</pre>
+<p>Current MAC kısmı şu anda sahip olduğumuz MAC adresini gösteriyor.</p>
+<p>Permanent MAC kısmında ise ağ kartımızın üreticisi tarafından bize verilen MAC adresi yer alıyor.</p>
+<p>MAC adresimizi ilk 3 okteti(byte) üretici firmayı temsil ettiğini söylemiştik. Macchanger programı bu ilk 3 oktete bakarak ağ kartımızın üreticisini bize söylüyor.</p>
+
+<br /><br />
+<p>Üretici firmaların ilk 3 oktetini(byte) OUI listelemek için:</p>
+<pre class="code">macchanger -l</pre>
+<p>-l parametresi ile MAC adresi veren firmaların listesi erkana gelecektir. Burda hangi ilk 3 oktetin hangi firma tarafından verildiği görülebilir.</p>
+
+<br /><br />
+<p>Macchanger ile arayüzümüze rastgele(random) MAC adresi vermek için;
+<pre class="code">ip link set dev &lt;interface&gt; down
+macchanger -A &lt;interface&gt;
+ip link set dev &lt;interface&gt; up</pre>
+<p>-A parametresi belirtilen arayüze rastgele bir MAC adresi verir.</p>
+<p>Daha öncede bahsettiğim gibi MAC adresini değiştirmek için ağ arayüzümüzü kapatmamız gerekiyor.</p>
+
+<pre class="code">root@pc:# macchanger -A enp1s0
+Current MAC:   de:ad:be:ef:ba:ba (unknown)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+[ERROR] Could not change MAC: interface up or insufficient permissions: Device or resource busy
+
+root@pc:# ip link set dev enp1s0 down
+
+root@pc:# macchanger -A enp1s0
+Current MAC:   de:ad:be:ef:ba:ba (unknown)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+New MAC:       <span style="color: green;">00:15:d1:cf:6d:fc</span> (ARRIS Group, Inc.)
+
+root@pc:# ip link set dev enp1s0 up
+</pre>
+
+<p>Ağ kartımızı kapatmadan MAC adresimizi değiştirmeye çalıştığımızda hata ile karşılaştık o yüzden MAC adresi değiştirmeden önce ip aracı ile enp1s0 arayüzünü kapatıyoruz. Daha sonra MAC adresimizi başarılı bir şekilde değiştirdiğimiz görülebiliyor.</p>
+
+<br />
+<p>Hem ip aracı ile hemde macchanger ile MAC adresimizi kontrol ettiğimizde MAC adresimizin değiştiğini görebiliyoruz.</p>
+
+<pre class="code">root@pc:# macchanger -s enp1s0
+Current MAC:   <span style="color: green;">00:15:d1:cf:6d:fc</span> (ARRIS Group, Inc.)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+
+root@pc:# ip link show enp1s0
+2: enp1s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
+    link/ether <span style="color: green;">00:15:d1:cf:6d:fc</span> brd ff:ff:ff:ff:ff:ff</pre>
+
+
+<br />
+<br />
+<p>Belirli bir MAC adresi vermek için:</p>
+<pre class="code">ip link set dev enp1s0 down
+macchanger -m &lt;Yeni MAC Adresi&gt; enp1s0
+ip link set dev enp1s0 up</pre>
+<p>-m parametresi ile MAC adresini belirtebiliyoruz.</p>
+<pre class="code">
+root@pc:# ip link set dev enp1s0 down
+
+root@pc:# macchanger -m <span style="color: green;">de:de:ba:ba:de:de</span> enp1s0
+Current MAC:   00:15:d1:cf:6d:fc (ARRIS Group, Inc.)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+New MAC:       <span style="color: green;">de:de:ba:ba:de:de</span> (unknown)
+
+root@pc:# ip link set dev enp1s0 up
+
+root@pc:# ip link show enp1s0
+2: enp1s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
+    link/ether <span style="color: green;">de:de:ba:ba:de:de</span> brd ff:ff:ff:ff:ff:ff
+</pre>
+
+<br /><br />
+<p>Asıl MAC adresine geri dönmek için:</p>
+
+<pre class="code">ip link set dev &lt;interface&gt; down
+macchanger -p &lt;interface&gt;
+ip link set dev &lt;interface&gt; up</pre>
+<p>-p permanent yani kalıcı MAC adresine dönmek istediğimizi belirtiyor.</p>
+<pre class="code">root@pc:# ip link set dev enp1s0 down
+
+root@pc:# macchanger -p enp1s0
+Current MAC:   de:de:ba:ba:de:de (unknown)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+New MAC:       d0:7e:35:ba:ba:de (Intel Corporate)
+
+root@pc:# ip link set dev enp1s0 up
+
+root@pc:# macchanger -s enp1s0
+Current MAC:   d0:7e:35:ba:ba:de (Intel Corporate)
+Permanent MAC: d0:7e:35:ba:ba:de (Intel Corporate)
+</pre>
+<br /><br />
+		</section>
+
+		<footer style="border-top: 1px dashed green;">
+			<p>Kaynak: https://en.wikipedia.org/wiki/Organizationally_unique_identifier</p>
+			<p>Kaynak: https://en.wikipedia.org/wiki/MAC_address</p>
+			<p>Kaynak: https://en.wikipedia.org/wiki/MAC_spoofing</p>
+			<p>Kaynak: https://en.wikipedia.org/wiki/Network_virtualization</p>
+			<p>Kaynak: https://en.wikipedia.org/wiki/Network_interface_controller</p>
+			<p>Kaynak: https://wiki.archlinux.org/index.php/MAC_address_spoofing</p>
+			<br /><br />
+		</footer>
+
+		</div><!--page-->
+
+
+	</body>
+</html>

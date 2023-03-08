@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Fcrackzip kullanarak zip parolası kırma, zip parola kırma, wordlist ile zip parolası kırma" />
+		<meta name="keywords" content="fcrackzip, zip parola kırma, brute force, wordlist saldırısı" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Fcrackzip ile Zip Parolası Kırma (fcrackzip, Brute Force, Kaba Kuvvet)</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+		<h1>Fcrackzip ile Zip Parolası Kırma (fcrackzip, Brute Force, Kaba Kuvvet)</h1>
+
+			<p>Elimizde parola korumalı bir zip dosyası olsun ve parolayı brute force(kaba kuvvet) ile bulmaya çalışalım.</p>
+
+			<pre class="code">$ ls
+secret.txt
+
+$ zip guvenli secret.txt -e -m
+Enter password:
+Verify password:
+  adding: secret.txt (stored 0%)
+
+$ ls
+guvenli.zip
+</pre>
+<p>Yukarıdaki örnekte <q>secret.txt</q> adındaki metin belgesini parola korumalı bir zip dosyasına çevirdik. <q>secret.txt</q> adlı dosyaya ulaşmak için parolanın bilinmesi gerekir.</p>
+<br />
+
+<p>Parolanın girilmediği durumlarda zip dosyası açılmayacaktır.</p>
+<pre class="code">$ unzip guvenli.zip
+Archive:  guvenli.zip
+[guvenli.zip] secret.txt password:
+password incorrect--reenter:
+password incorrect--reenter:
+   skipping: secret.txt              incorrect password
+</pre>
+
+<h2>Fcrackzip Nedir?</h2>
+<p>Fcrackzip ücretsiz/hızlı bir zip parola kırma programıdır.</p>
+<p>Zip dosyası içerisindeki şifrelenmiş dosyalara erişmek için gerekli parolayı kaba kuvvet yöntemi ile deneme yanılma yoluyla tespit etmeye çalışır.</p>
+
+
+<h2>Fcrackzip Kullanımı</h2>
+<p>Öncelikle fcrackzip ile parola kırma işlemine başlamadan fcrackzip'in seçeneklerine bakalım.</p>
+<pre class="code">$ fcrackzip -h
+
+fcrackzip version 1.0, a fast/free zip password cracker
+written by Marc Lehmann <pcg@goof.com> You can find more info on
+http://www.goof.com/pcg/marc/
+
+USAGE: fcrackzip
+          [-b|--brute-force]            use brute force algorithm
+          [-D|--dictionary]             use a dictionary
+          [-B|--benchmark]              execute a small benchmark
+          [-c|--charset characterset]   use characters from charset
+          [-h|--help]                   show this message
+          [--version]                   show the version of this program
+          [-V|--validate]               sanity-check the algortihm
+          [-v|--verbose]                be more verbose
+          [-p|--init-password string]   use string as initial password/file
+          [-l|--length min-max]         check password with length min to max
+          [-u|--use-unzip]              use unzip to weed out wrong passwords
+          [-m|--method num]             use method number "num" (see below)
+          [-2|--modulo r/m]             only calculcate 1/m of the password
+          file...                    the zipfiles to crack
+
+methods compiled in (* = default):
+
+ 0: cpmask
+ 1: zip1
+*2: zip2, USE_MULT_TAB
+</pre>
+<br />
+<p>Bu listede bizim için önemli olanları açıklarsak.</p>
+<p>-b brute force(kaba kuvvet) saldırı seçeneği</p>
+<p>-D dictionary(sözlük, wordlist) kullanarak brute force</p>
+<p>-B benchmark testi için (performans testi)
+<p>-c charset(karakter seti) brute force için kullanılacak karakterler. -c seçeneğinden sonra aşağıdakilerden birisi belirtilmelidir.</p>
+
+<ol>
+	<li>a tüm küçük harfleri dahil et [a-z]</li>
+	<li>A tüm büyük harfleri dahil et [A-Z]</li>
+	<li>1 tüm sayıları dahil et [0-9]</li>
+	<li>! şunları içerir [!:$%&amp;/()=?{[]}+*~#] </li>
+</ol>
+<p>-v verbose, ekrana bilgi yazdır</p>
+<p>-p Dictionary(wordlist) için kullanılacak wordlist yolu(path)
+<p>-l &lt;min&gt;-&lt;max&gt; kullanılacak minimum ve maximum parola uzunluğu</p>
+<p>-u arşivi çıkartmak için unzip kullan</p>
+<br />
+<p>Şimdi nasıl kullanılır ona bakalım. Brute force saldırısı yapacağımız için -b seçeneğini eklememiz gerekiyor.
+	Ayrıca unzip(-u) ile çıkartma işlemi yapılacağını belirtmemiz gerekiyor.</p>
+	<pre class="code">$ frackzip guvenli.zip -b -u</pre>
+	<p>Yukarıdaki örnek default olması gereken seçenekleri ve parola tahmininin yapılacağı zip dosyasını içeriyor.</p>
+	<p>Taslak şu şekilde:</p>
+<pre class="code">$ frackzip &lt;zipdosyası&gt; -b -u</pre>
+<br />
+<p>Şimdi brute force yapılacağını ve unzip ile çıkartma işlemi yapılacağını belirttiğimize göre kullanılacak karakter setini ve parolaların minimum ve maksimum uzunluğunu belirlelim.</p>
+
+<pre class="code">$ fcrackzip guvenli.zip -b -u <span style="color:red">-c 1</span> <span style="color:green">-l 4-8</span> -v
+found file 'secret.txt', (size cp/uc     29/    17, flags 9, chk 7279)
+
+
+PASSWORD FOUND!!!!: pw == 123456
+</pre>
+<p>Yukarıdaki örnekte karakter seti olarak(<span style="color:red">-c 1</span>) 1 yani sadece sayılardan oluşan bir parola denemesi olacağını belirttik.
+<p>(<span style="color:green">-l 4-8</span>) seçeneği ile kullanılacak minimum parola uzunluğunu 4, maksimum parola uzunluğunu ise 8 karakter olarak belirttik.</p>
+
+<p>Parolamızı <q>123456</q> olarak bulduğunu son satırda ekrana yazdırarak bize bildiriyor.</p>
+
+
+<h2>Fcrackzip ile Birden Fazla Karakter Setini Birleştirmek</h2>
+<p>Şimdi daha zor bir parolamız olsun içerisnde harfler ve sayılar olsun. Yine -c seçeneği kullanarak gerekli karakter setlerini belirtmemiz yeterli.</p>
+
+<pre class="code">fcrackzip guvenli.zip -b -u <span style="color:red">-c 1a</span> -l 4-8 -v</pre>
+
+<p>Yukarıdaki örnekte (<span style="color:red">-c 1a</span>) ile <q>1</q> ve <q>a</q> karakter setlerini birleştirdik. Yani denenecek parolalarda küçük harfler ve sayıların kombinasyonu olacak.</p>
+
+<pre class="code">$ time fcrackzip guvenli.zip -b -u -c 1a -l 6-6 -v
+found file 'secret.txt', (size cp/uc     29/    17, flags 9, chk 7279)
+checking pw 1aft6n
+
+PASSWORD FOUND!!!!: pw == <span style="color:green">1asd23</span>
+
+real	6m38,660s
+user	0m12,736s
+sys	0m13,720s
+</pre>
+<p>6 dakika içerisinde 6 karakterlik içerisinde küçük harf ve sayılardan oluşan parolamızı buldu. Tabiki bu süre parola uzunluğuna ve sisteminizin hızına göre saatler, günler alabilir.</p>
+<p>Burda örnek olarak fcrazkzip kullanımının anlatımı için basit parolalar tercih edilmiştir.</p>
+
+<h2>Wordlist Belirterek Fcrackzip Kullanımı</h2>
+<p>Fcrackzip gerekli seçenekler belirtildiğinde kendisi denenecek paroları oluşturup, zip dosyasını açıp açamyacağını test ettiğini yukarıda gördük.</p>
+<p>Şimdi hazır bir wordlist kullanarak fcrackzip'in bu wordlistteki parolaları denemesini istiyoruz.</p>
+<p>Taslak şu şekilde:</p>
+<pre class="code">$ fcrackzip &lt;zipdosyası&gt; -u -D -p &lt;wordlist&gt;</pre>
+<p>-D seçeneği sözlük,wordlist kullanılacağını belirtmek için.</p>
+<p>-p seçeneği ilede kullanılacak wordlistin yolunu(path) belirtiyoruz.</p>
+
+<p>Kullanacağımız wordlisti kendimiz oluşturabileceğimiz gibi, internet üzerinden hazır wordlistler bulunabilir.</p>
+<p>BKZ: <a style="border-bottom: 1px dotted green;" href="../../linux/crunch-kullanimi-wordlist-olusturma.html">Crunch ile Wordlist Oluşturma ve Crunch Kullanımı</a></p>
+<br />
+<p>Şimdi küçük harfler ve sayılardan oluşan 6 karakterlik bir wordlist oluşturup fcrackzip ile parola kırma denemesi yapalım.</p>
+<pre class="code">$ crunch 6 6 -f /usr/share/crunch/charset.lst lalpha-numeric -o wordlist.txt
+Crunch will now generate the following amount of data: 15237476352 bytes
+14531 MB
+14 GB
+0 TB
+0 PB
+Crunch will now generate the following number of lines: 2176782336
+crunch: 100% completed generating output
+
+$ ls
+guvenli.zip  wordlist.txt
+</pre>
+<p>14GB lık wordlistimiz hazır. Şimdi bu wordlisti fcrackzip'e vererek zip parolasını bulmaya çalışalım.</p>
+<pre class="code">$ time fcrackzip guvenli.zip -u -D -p wordlist.txt
+
+
+PASSWORD FOUND!!!!: pw == 1asd23
+
+real	142m8,326s
+user	6m23,512s
+sys	5m3,672s
+</pre>
+
+<p>Görüldüğü üzere 142dk içerisinde fcrackzip zip dosyamızın şifresini kırdı.</p>
+
+<h3>Neden Wordlist Kullanımı Daha Uzun Sürdü?</h3>
+<p>Wordlistimizi incelersek wordlistimiz önce harflerden başlıyor. Yani önce harfle başlayan tüm kombinasyonları deniyor.
+	Sonra sayılarla başlıyor.</p>
+	<pre class="code">$ head wordlist.txt -5
+aaaaaa
+aaaaab
+aaaaac
+aaaaad
+aaaaae
+
+$ tail wordlist.txt -n 5
+999995
+999996
+999997
+999998
+999999
+</pre>
+<p>Ancak şifremiz <q>1asd23</q> yani parola denemesi wordlistin sonuna gelene kadar devam edecektir. Bu sebeble wordlist daha yavaş buldu.
+	Ancak eğerki parolamız harf ile başlasaydı çok daha hızlı bir şekilde parolayı bulabilirdik. Çünkü harf ile başlayan parolalar wordlistin başında başlıyor.</p>
+
+<br />
+
+
+
+</section>
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+		</div><!--page-->
+
+
+
+	</body>
+</html>

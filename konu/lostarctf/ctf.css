@@ -1,0 +1,13 @@
+#dicozum, #walkcozum, #infocozum, #windowscozum, #memorycozum, #uptimecozum, #leakcozum, #pokemoncozum, #taskcozum, #clearcozum, #archcozum, #keyboardcozum{
+	display:none;
+	
+}
+
+
+#di, #walk, #info, #windows, #memory, #uptime, #leak, #pokemon, #task, #clear, #arch, #keyboard{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+
+

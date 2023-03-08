@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Lostar Siber Güvenlik Yaz Kampı CTF 2017 Writeup" />
+		<meta name="keywords" content="lostar,ctf,siber,writeup" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lostar Siber Güvenlik Yaz Kampı CTF 2017</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="../../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/anonymous+pro.css" />
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="toggle.js"></script>
+		<link rel="stylesheet" type="text/css" href="ctf.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Lostar Siber Güvenlik Yaz Kampı 2017 CTF Writeup</h1>
+			
+			<p>Lostar'ın siber güvenlik yaz kampı için katılımcılara özel olarak düzenlediği ctf çözümlerini anlatacağım.İlk başta 14 soru vardı daha sonradan 2 soru daha eklendi ve totalde 16 sorumuz vardı.</p>
+			<p>Başlıklar şöyle;</p>
+			<p>Web:</p>
+			<ol><li>browser 100</li>
+			<li>head 300</li>
+			<li>readme 500</li>
+			</ol>
+			<p>Forensic:</p>
+			<ol>
+			<li>di 100</li>
+			<li>walk 150</li>
+			<li>info 200</li>
+			<li>windows 250 (Sonradan eklendi)</li>
+			<li>memory 500</li>
+			</ol>
+			<p>Network:</p>
+			<ol>
+			<li>uptime 210</li>
+			<li>leak 300</li>
+			</ol>
+			<p>Misc:</p>
+			<ol>
+			<li>task 50</li>
+			<li>clear 90</li>
+			<li>arch 100</li>
+			<li>keyboard 110</li>
+			<li>pokemon 120 (Sonradan eklendi)</li>
+			</ol><br />
+			<p>Flag biçimi şu şekildeydi: lostarctf_{flag}</p>
+
+
+
+
+			<h2 style="border-bottom: 1px dashed white;">Web Çözümleri</h2>
+			<h3>Browser 100</h3>
+			<p>Soruda bize bir adres vermişlerdi ve verdikleri adrese gittiğimizde ekrana şöyle bir mesaj çıkıyordu.</p>
+			<pre class="code">Sen muratlostar degilsin !</pre>
+			<p>Bizden bir bilgi almadığına göre header bilgilerine bakmamız lazımdı. User-agent bilgimizi <q>user agent switcher</q> gibi bir araçla <q>muratlostar</q> olarak değiştirince flag ortaya çıkıyordu.</p>
+			<pre class="code">aferin :D - bub1rg1zl1b1lg1</pre>
+			<p>flag:</p>
+			<pre class="code">lostarctf_{bub1rg1zl1b1lg1}</pre>
+
+			<h3>Head 300</h3>
+			<p>Bu sorudada bize bir adres verilmişti. Verilen adreste şöyle bir header bilgisi vardı.</p>
+			<pre class="code">flagishere:gcabw_npkvrjce_gsafsi</pre>
+			<p>Flagın şifrelenmiş olduğu anlaşılıyordu. <q>https://gchq.github.io/CyberChef</q> adresi üzerinden vigenere decoder'ı seçip flag bilgisini girip anahtar kısmınada <q>flagishere</q> yazınca flagımız ortaya çıkıyordu.</p>
+			<p>flag:</p>
+			<pre class="code">lostarctf_{bravo_vigenere_akiyor}</pre>
+
+			<h3>Readme 500</h3>
+			<p>Bu soruda bize bir ip adresi verilmişti ipucuda yoktu. Adrese girmeye çalışınca hiçbir sayfa açılmıyordu. Ip adresini nmap taramasına sokunca şöyle bir sonuç çıktı.</p>
+			<pre class="code">PORT    STATE    SERVICE
+22/tcp  open     ssh
+25/tcp  filtered smtp
+808/tcp open     ccproxy-http</pre>
+<p>Böylece 808.portun http isteklerine açık olduğunu anlamış oluyorduk. Ip adresine 808. port üzerinden bağlanınca ekrana <q>Lostar</q> çıktısını veriyordu. İlk başta flagın bu olduğu akla geliyordu ancak flag bu degildi. Nikto ile Ip adresini 808. port üzerinden taratınca nikto bize Ip adresinin bir <q>robots.txt</q> dosyasına sahip olduğunu söylüyordu. robots.txt dosyasının içeriği şöyleydi:</p>
+<pre class="code">User-agent: *
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Diallow: /hamdi
+Diallow: /lostar.html</pre>
+<p>hamdi dizini ilgi çekici olsada öyle bir dizine ulaşılamıyordu. Bu adresleri tek tek deneyice varlığından emin olduğumuz tek bir adres kalıyordu <q>lostar.html</q> çünkü url'den bu adrese bağlanmak istenildiğinde bağlantı resetleniyordu. Bilinçli olarak bu adrese bağlanmamız engelleniyordu. Ancak çözüm basitti, url encode edilerek sayfaya ulaşılabilirdi. Url encode karakterlerine bakılarak adresi yeniden düzenlediğimizde adrese erişebiliyorduk.</p>
+<pre class="code">lostar%2ehtml</pre>
+<p>Adrese gittiğimizde ekrana <q>flag_bu_degil</q> yazıyordu. Sayfa kaynağını görüntülediğimizde ise html açıklama satırı olarak flag konulmuştu.</p>
+<p>flag:</p>
+<pre class="code">lostarctf_{aferinsana_iptables_bypass}</pre>
+
+
+
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Forensic Çözümleri</h2>
+<h3>Di 100</h3>
+<p>Dosya: <a href="dit.rar" id="link">dit</a>
+<p id="di">Çözüm: Göster/Gizle</p>
+<div id="dicozum">
+<p>Öncelikle dosyanın ne tür bir dosya olduğunu anlamak için <q>file</q> ile inceleyoruz</p>
+<p>Bu soruda bir ses dosyası verilmişti daha doğrusu bir numara tuşlanma sesiydi.</p>
+<p><a href="http://dialabc.com/sound/detect/" id="link">http://dialabc.com/sound/detect/</a> sitesi üzerinden hangi numaraların tuşlandığı bulunabilirdi.</p>
+<p>Sonucumuz şöyle oluyordu: 567827</p>
+<p>Bu sayıların birer harfe tekabul ettiği belliydi. Kelime tahmin edilerekte bulunabileceği gibi online sistemler üzerindende uygun kelimeyi bulmak denenebilirdi.</p>
+<p><a href="http://www.dialabc.com/words/search/" id="link">http://www.dialabc.com/words/search/</a></p>
+<p><a href="http://www.phonespell.org/" id="link">http://www.phonespell.org/</a></p>
+<p>Siteleri üzerinden 567827 sayısının tekabul ettiği kelimeler incelenebilirdi. Sitelerden bakıldığında göze hemen <q>lostar</q> kelimesi çarpıyordu.</p>
+<p>flag:</p>
+<pre class="code">lostarctf_{lostar}</pre>
+</div>
+
+<h3>Walk 150</h3>
+<p>Dosya: <a href="flag.zip" id="link">flag.zip</a>
+<p id="walk">Çözüm: Göster/Gizle</p>
+<div id="walkcozum">
+<p>Zip dosyası şifreliydi, ancak fazlada zorlamamak için şifreyi dosya adı ile aynı koymuşlardı. <pre class="code">zip şifresi: flag</pre>
+<p>Zip dosyası içerisinde <q>flagMi.dat</q> adında bir dosya vardı. </p>
+<pre class="code"># cat flagMi.dat
+buradaDeğil</pre>
+<p>Dosya içeriğine baktığımızda flagın orada olmadığını anlıyorduk. Yanlış yerdeydik. Birşeyi kaçırmıştık. Zip dosyasına binwalk ile bakmamız gerekiyordu.</p>
+<pre class="code"># binwalk flag.zip
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Zip archive data, encrypted at least v1.0 to extract, compressed size: 25, uncompressed size: 13, name: flagMi.dat
+189           0xBD            End of Zip archive
+211           0xD3            PNG image, 1000 x 600, 8-bit/color RGBA, non-interlaced
+</pre>
+<p>binwalk ile zip dosyasına baktığımızda zip dosyasının içerisinde bir png dosyası olduğunu görüyoruz.</p>
+<p>dd ile png dosyasını çıkartıyoruz.</p>
+<pre class="code"># dd if=flag.zip of=resim.png skip=211 bs=1</pre>
+<p>Png dosyasını açtığımızda beyaz arkaplan üzerinde siyah renkte <q>FlagBurada!</q> yazıyordu. Ancak flag bu değildi. Ekranı hafifçe eğince gözüken siyah yazının altında küçük font ile yazılmış gri tonunda bir yazı vardı flag oydu.</p>
+<p>flag: </p>
+<pre class="code">lostarctf_{tamdaBurada}</pre>
+</div>
+
+
+
+<h3>Info 200</h3>
+<p>Dosya: <a href="lostar.rar" id="link">lostar</a></p>
+<p id="info">Çözüm: Göster/Gizle</p>
+<div id="infocozum">
+<p>Verilen dosyaya file ile bakınca dosyanın bir .pcap dosyası olduğu anlaşılıyordu.</p>
+<pre class="code"># file lostar
+lostar: pcap-ng capture file - version 1.0</pre>
+<p>Wireshark ile dosyayı açıp göz gezdiriyoruz. Ve ilk olarak yapmamız gerekeni yapıyoruz. Dosyanın istatistiklerine bakıyoruz. Statistic -> Capture file statistic yolunu izliyoruz. Çıkan ekranda elimizdeki dosyanın iki pcap dosyası ile birleştirilidiği anlaşılıyor. Capture file comments kısmında ise birleştirilen dosyaların isimleri yer alıyordu. </p>
+<pre class="code">File1: flagbudur.pcap
+File2: lostar_kamp.pcap</pre>
+<p>İki dosyada merge edildiğinden flagımızında merge edilmesi gerekiyordu. Dosya isimlerini birleştirdiğimizde flagımıza ulaşılıyorduk.</p>
+<p>flag:</p>
+<pre class="code">lostarctf_{flagbudurlostar_kamp}</pre>
+</div>
+
+<h3>Windows 250</h3>
+<p>Dosya: <a href="system32.rar" id="link">system32.dll</a></p>
+<p id="windows">Çözüm: Göster/Gizle</p>
+<div id="windowscozum">
+	<p>Bu soru sonradan eklendi. Verilen dll dosyasını binwalk ile incelediğimizde sonuç şu şekilde oluyordu.</p>
+	<pre class="code"># binwalk system32.dll
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Microsoft executable, portable (PE)
+1036          0x40C           JPEG image data, EXIF standard
+1048          0x418           TIFF image data, big-endian, offset of first image directory: 8
+689252        0xA8464         Microsoft executable, portable (PE)
+691060        0xA8B74         XML document, version: "1.0"
+691140        0xA8BC4         Unix path: /www.microsoft.com/schemas/ie8compatlistdescription/1.0">
+691300        0xA8C64         JPEG image data, JFIF standard 1.01
+691330        0xA8C82         TIFF image data, little-endian offset of first image directory: 8
+691436        0xA8CEC         JPEG image data, JFIF standard 1.01
+710084        0xAD5C4         PNG image, 177 x 61, 8-bit/color RGB, non-interlaced
+710125        0xAD5ED         Zlib compressed data, default compression
+718388        0xAF634         XML document, version: "1.0"
+718468        0xAF684         Unix path: /www.microsoft.com/schemas/ie8compatlistdescription/1.0">
+</pre>
+
+<p>dll dosyamızın içerisinde jpeg ve png dosyaları olduğunu anlıyoruz.</p>
+<p>Png dosyalarını export edince anlamlı bir veri elde edemiyorduk. Ancak jpeg dosyalarını export ettiğimizde flag bir jpeg dosyasında beliriyordu.</p>
+<pre class="code"># binwalk system32.dll -D jpeg</pre>
+<p>binwalk ile system32.dll dosyasının içerisindeki tüm jpeg dosyalarını export ediyoruz. <q>A8C64</q> dosyasında flagımızı görüyorduk.</p>
+<p>flag:</p>
+<pre class="code">lostarctf_{res_hacker_akar}</pre>
+</div>
+
+
+<h3>Memory 500</h3>
+<p>Dosya: <a href="lostar.raw.tar.gz" id="link">lostar.raw.tar.gz</a>
+<p>İpucu: İstediğim adrese ulaşamıyorum.</p>
+<p id="memory">Çözüm: Göster/Gizle</p>
+<div id="memorycozum">
+	<p>Verilen tar.gz dosyasını çıkartıyoruz. İçerisindeki <q>lostar.raw</q> dosyasına binwalk ile baktığımızda bunun bir ram imajı olduğunundan emin oluyoruz. Burda ipucundan yola çıkılarak bakılması gereken yer hosts dosyası olacaktı.</p>
+	<p>Volatility ile hosts dosyasını buluyoruz</p>
+	<pre class="code"># volatility -f lostar.raw filescan | grep hosts
+
+Volatility Foundation Volatility Framework 2.5
+0x00000000017b0160      1      0 R--rwd \Device\HarddiskVolume1\WINDOWS\system32\drivers\etc\hosts
+</pre>
+
+<p>Belki hosts dosyasında birşey vardır diyerek hosts dosyasını export ediyoruz.</p>
+<pre class="code"># volatility dumpfiles -f lostar.raw -Q 0x00000000017b0160 -D /</pre>
+<p>hosts dosyamızı ram imajından / dizinine çıkartıyoruz. cat ile dosya içeriğini okuduğumuzda karşımıza base64 ile encode edilmiş bir veri çıkıyor.</p>
+<pre class="code"># cat file.None.0x812acd08.dat
+aGFja1RoZVBsYW5ldA </pre>
+<p>Bu değeri base64 ile decode ettiğimizde flag değerine ulaşıyoruduk.
+<pre class="code"># base64 -d file.None.0x812acd08.dat
+hackThePlanet</pre>
+<p>flag:</p>
+<pre class="code">lostarctf_{hackThePlanet}</pre>
+</div>
+
+
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Network Çözümleri</h2>
+
+<h3>Uptime 210</h3>
+<p>Dosya: <a href="wireless.rar" id="link">wireless.cap</a></p>
+<p>İpucu: ZyXEL modemim çok ısındı :/ Kim bilir ne kadar zamandır aktif :S</p>
+<p id="uptime">Çözüm: Göster/Gizle</p>
+<div id="uptimecozum">
+	<p>Soru adındanda anlaşıldığı gibi bizden uptime süresini istiyor. <q>Airodump-ng</q> aracı ile bunu kolaylıkla öğrenebilirdik.</p>
+	<pre class="code"># airodump-ng --uptime -r wireless.cap
+
+ CH  0 ][ Elapsed: 12 s ][ 2017-07-14 18:49 ][ Finished reading input file wireless.cap.
+
+
+ BSSID              PWR  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH        UPTIME  ESSID
+
+ 4C:9E:FF:4C:2A:44    0        1        1    0   6  54e  WPA2 CCMP   PSK    6d 21:48:34  TTNET_ZyXEL_77YC
+ C4:07:2F:68:C7:CC    0        1        0    0  11  54e  WPA2 CCMP   PSK    1d 08:46:28  SUPERONLINE
+ F8:1A:67:55:6B:3F    0        1        0    0   2  54e  WPA2 CCMP   PSK    3d 18:20:02  MRTSBHOMR
+ 14:CC:20:A8:7F:26    0        1        0    0   1  54e  WPA2 CCMP   PSK   22d 02:25:56  asbm27</pre>
+ <p>ZyXEL marka AP'nin 6 gün 21 saat 48 dakikadır açık olduğunu görüyoruz.</p>
+ <p>flag:</p>
+ <pre class="code">lostarctf_{6d 21:48:34}</pre>
+</div>
+
+
+<h3>Leak 300</h3>
+<p>Dosya: <a href="lostargame.rar" id="link">lostargame.pcap</a>
+<p>İpucu: Birisi veri kaçırmaya çalışıyor ?</p>
+<p id="leak">Çözüm: Göster/Gizle</p>
+<div id="leakcozum">
+	<p>Verilen dosyası wireshark ile incelemeye koyuluyoruz. Birinin veri kaçırdığını düşünüyoruz haliyle. Http filtresi uyguladığımızda tek bir istek çıkıyor oda sertifika için. Burdan http üzerinden bir veri gönderilmediği anlaşılıyor. Wireshark ile inceleyeme başlıyoruz. Düzenli olarak 192.168.1.23 ipsi üzerinden 192.168.1.12 ipsinin farklı farklı portlara TCP SYN paketleri gönderilmiş. Dikkatimizi buraya yönlendiriyoruz. </p>
+	<img src="lostargame-tcp.jpg" alt="tcp syn packet" width="100%"/>
+	<p>Dikkatimizi çeken nokta şu ki 192.168.1.23 sürekli SYN paketini yollayıp duruyor. Her paketin TCP kısmına bakınca her pakette gönderilen karakterin değiştiği görünüyor.</p>
+	<img src="lostargame-ascii.jpg" alt="tcp ascii data" width="100%" />
+	<p>Bu karakterleri not alınca sonuç olarak elimizde şu karakterler oluyor: cjyakehro</p>
+	<p>Şimdi burdan anlamlı bir veri çıkarmaya çalışırsak içerisinde <q>hacker</q> kelimesinin geçtiğini çok rahat bir şekilde görebiliyoruz.</p>
+	<p>Kalan harflerden <q>jyo</q> ise <q>joy</q> kelimesi çıkıyor. Sonuç olarak flagımızı bulmuş oluyoruz.</p>
+<p>flag:</p>
+<pre class="code">lostarctf_{hackerjoy}</pre>
+</div>
+
+
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Misc Çözümleri</h2>
+
+<h3>Task 50</h3>
+<p>İpucu: Belirlediğiniz bir zaman yada zaman diliminde belirlediğiniz komut, script yada uygulamanın çalışmasını sağlarsınız.</p>
+<p id="task">Çözüm: Göster/Gizle</p>
+<div id="taskcozum">
+	<p>Linux sistemlerde zamanlanmış görevleri ayarlamak için <q>crontab</q> kullanılır.</p>
+	<pre class="code">lostarctf_{crontab}</pre>
+</div>
+
+
+<h3>Clear 90</h3>
+<p>İpucu: Windows sistemlerde komut satırını temizlemek amacı ile hangi komut kullanılır?</p>
+<p id="clear">Çözüm: Göster/Gizle</p>
+<div id="clearcozum">
+	<p>Windows terminal ekranını <q>cls</q> komutu ile temizleriz.</p>
+	<pre class="code">lostarctf_{cls}</pre>
+</div>
+
+<h3>Arch 100</h3>
+<p>İpucu: Arch işletim sisteminin paket yöneticisinin ismi nedir ?</p>
+<p id="arch">Çözüm: Göster/Gizle</p>
+<div id="archcozum">
+	<p>Arch linux işletim sisteminin paket yöneticisi <q>pacman packet manager</q></p>
+	<pre class="code">lostarctf_{pacman}</pre>
+</div>
+
+<h3>Keyboard 110</h3>
+<p>İpucu: Windows sistemlerde ekran klavyesinin ismi nedir? </p>
+<p id="keyboard">Çözüm: Göster/Gizle</p>
+<div id="keyboardcozum">
+	<p>Ekran klavyesini başlatıp daha sonra görev yönetici üzerinden bakılarak öğrenilebilirdi.</p>
+	<pre class="code">lostarctf_{osk.exe}</pre>
+</div>
+
+
+<h3>Pokemon 120</h3>
+<p>Dosya: <a href="pokemon.rar" id="link">pokemon.exe</a>
+<p>İpucu: Programı yazanın en çok sevdiği pokemon hangisidir?</p>
+<p id="pokemon">Çözüm: Göster/Gizle</p>
+<div id="pokemoncozum">
+	<p>Program <abbr title="Graphical User Interface">GUI</abbr>'e sahip bir C/C++ programıydı. Şöyle görünüyordu:</p>
+	<img src="pokemon.jpg" alt="pokemon" width="100%" />
+	<p>Ancak hiçbir özelliği çalışmıyordu. Programı IDA ile açtığımda kodların obfuscate edildiğini gördüm. Hiçbir strings'e ulaşamıyorduk. Aslında soru misc sorusuydu reverse'e gerek yoktu. O yüzden daha basit düşünmek gerekiyordu. Reverse ile birşeye ulaşamıyacaktık. Cevap menude saklıydı. Menudeki kelimelerin baş harfleri bize cevabı veriyordu.</p>
+	<pre class="code">lostarctf_{Arbok}</pre>
+</div>
+<br /><br /><br /><br />
+		</section>
+
+		</div><!--page-->
+
+	</body>
+</html>

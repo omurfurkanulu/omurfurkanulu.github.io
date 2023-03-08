@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="decription" content="linuxte dosya nasıl oluşturulur, linuxte dosya ve klasör silme, linuxte klasör oluşturma, linuxte klasör nasıl oluşturulur" />
+		<meta name="keywords" content="temel linux komutları, ls, cd, cat, mkdir, rm, touch, echo" />
+		<meta name="robots" content="index,follow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>GNU/Linux Kullanıcı Hesaplarını Düzenlemek</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">Linux Kullanıcı Hesaplarını Düzenlemek (usermod)</h1>
+		<p>İçerik:</p>
+		<ol>
+			<li><a href="#id">Kullanıcı ID Değerini Değiştirmek (usermod -u)</a></li>
+			<li><a href="#hesapkilitlemek">Hesap Kilitlemek (usermod -L)</a></li>
+			<li><a href="#hesapkilidikaldirmak">Hesap Kilidini Açmak (usermod -U)</a></li>
+			<li><a href="#kullaniciadidegismek">Kullanıcı Adı Değiştirmek (usermod -l)</a></li>
+			<li><a href="#aciklamaeklemek">Kullanıcı için Açıklama Eklemek (usermond -c)</a></li>
+			<li><a href="#homedizinidegismek">Home Dizinini Değiştirmek (usermod -d)</a></li>
+			<li><a href="#sonkullanmatarihieklemek">Hesaba Son Kullanma Tarihi Eklemek (usermod -e)</a></li>
+		</ol>
+<br />
+<p>Kullanıcı hesaplarını düzenlemek için <q>usermod</q> komutu kullanılabilir. Ayrıca bir kullanıcı hesabını düzenleyebilmek için root yetkisine sahip olmanız gerekmektedir.</p>
+<a name="id"></a>
+<h2>Kullanıcı ID Değerini Değiştirmek (usermod -u &lt;id&gt; &lt;kullanıcı&gt;)</h2>
+<p>Kullanıcının id bilgileri <q>id</q> komutu kullanılarak öğrenilebilir.</p>
+<pre  class="code">manual@pc:~$ id
+uid=1002(manual) gid=1002(manual) gruplar=1002(manual)
+
+manual@pc:~$ id root
+uid=0(root) gid=0(root) gruplar=0(root)
+</pre>
+<p>Parametre olarak kullanıcı adı verilebilir eğer parametre verilmez ise bulunduğunuz kullanıcının id ve gid değerlerini verir.</p>
+<br />
+<p>Bir kullanıcının id değerini değiştirmek için <q>usermod -u &lt;id&gt; &lt;kullanıcı&gt;</q> komutu kullanılabilir. <q>manual</q> adında bir kullanıcımız olsun.</p>
+<pre class="code">root@pc:~$ tail -1 /etc/passwd
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+
+root@pc:~$ usermod -u 2000 manual
+
+root@pc:~$ id manual
+uid=2000(manual) gid=1001(manual) gruplar=1001(manual)
+</pre>
+<p>Yukarıdaki örnekte <q>manual</q> kullanıcısının 1001 olan id değerini 2000 değeri ile değiştirdik.
+
+
+<a name="hesapkilitlemek"></a>
+<h2>Hesap Kitlemek (usermod -L &lt;kullanıcıadı&gt;)</h2>
+<p>Kullanıcı hesabını kilitlemek için <q>usermod -L &lt;kullanıcıadı&gt;</q> komutunu verebiliriz.</p>
+<pre class="code">root@pc:/home# tail -1 /etc/passwd; tail -1 /etc/shadow
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+manual:$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7:::
+
+root@pc:/home# usermod -L manual
+
+root@pc:/home# tail -1 /etc/passwd; tail -1 /etc/shadow
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+manual:<span style="color:Red">!</span>$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7:::
+
+root@pc:/home# login manual
+Parola:
+
+Giriş geçersiz
+</pre>
+<p>Yukarıdaki örnekte ilk önce shadow ve passwd dosyalarının son satırını ekrana yazdırdık daha sonra bu hesabı kilitledik ve tekrar bu dosyalarının son satırını ekrana yazdırdık. Hesabı kilitledikten sonra hesaba giriş yapmayı denesekte hesaba giriş başarısız.</p>
+<p>Bir kullanıcı hesabını kilitlemek için /etc/shadow dosyasında kitlenmek istenen hesabın şifre alanının başına !(ünlem) işareti koyularak hesap kilitlenebilir. Ancak yukarıdaki örnekte olduğu gibi bu işlemi usermod komutu ile de yapabiliyoruz. </p>
+
+<a name="hesapkilidikaldirmak"></a>
+<h2>Hesap Kilidini Açmak (usermod -U &lt;kullanıcıadı&gt;)</h2>
+<p>Kilitlediğimiz hesabı usermod komutunu kullanarak açabiliriz.</p>
+<pre class="code">root@pardus:/home# tail -1 /etc/passwd; tail -1 /etc/shadow
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+manual:!$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7:::
+
+root@pardus:/home# usermod -U manual
+
+root@pardus:/home# tail -1 /etc/passwd; tail -1 /etc/shadow
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+manual:$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7:::
+
+root@pc:/home# login manual
+Parola:
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+
+manual@pc:~$ whoami
+manual
+</pre>
+<p><q>usermod -U manual</q> komutunu çalıştırdıktan sonra hesabın kilidinin açıldığını hem shadow dosyasında şifre alanının başından ! işaretinin kalkmasıyla anlıyoruz hemde hesabımıza sorunsuz giriş yapabildiğimiz için anlıyoruz.</p>
+
+
+
+
+<a name="kullaniciadidegismek"></a>
+<h2>Kullanıcı Adı Değiştirmek (usermod -l &lt;yeniisim&gt; &lt;eskiisim&gt;)</h2>
+<p>Kullanıcı adı değiştirmek içinde usermod komutu kullanılabilir.</p>
+<pre class="code">root@pc:/home# ls
+manual
+
+root@pc:/home# tail -1 /etc/passwd
+manual:x:1001:1001:manual,,,:/home/manual:/bin/bash
+
+root@pc:/home# usermod -l blabla manual
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/manual:/bin/bash
+
+root@pc:/home# ls
+manual
+</pre>
+<p>Yukarıdaki örnekte de görüldüğü gibi bu komut kullanıcı adını değiştirdi ancak kukllanıcı home dizininin adı aynı kaldı.</p>
+
+
+
+<a name="homedizinidegismek"></a>
+<h2>Home Dizinini Değiştirmek (usermod &lt;kullanıcı&gt; -d /home/yenihomedizini) </h2>
+<p>Usermod komutu ile kullanıcıların home dizinlerini değiştirebiliriz. Ancak bu home dizininde yeni bir dizin oluşturmayacaktır. Sadece passwd dosyasında kullanılacak home dizinini değiştirir. Home dizini el ile oluşturulmalıdır ya da -m parametresi kullanılarak eski home dizini yeni home dizinine kopyalayabiliriz.</p>
+<pre class="code">
+root@pc:/home# ls
+manual
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/manual:/bin/bash
+
+root@pc:/home# usermod -d /home/yenihomedizini blabla
+
+root@pc:/home# ls
+manual
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/yenihomedizini:/bin/bash
+</pre>
+<p>Çıktıda görüldüğü gibi /etc/passwd dosyasında home dizinini değiştirdik ancak /home klasörü altında bu dizin oluşmadı şimdi iki seçeneğimiz var ya el ile bu home dizinini oluşturacağız ya da -m parametresi ile eski dizindeki verileri bu dizine taşıyacağız.</p>
+<pre class="code">
+root@pc:/home# ls
+manual
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/manual:/bin/bash
+
+root@pc:/home# usermod -m -d /home/yenihomedizini blabla
+
+root@pc:/home# ls
+yenihomedizini
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/yenihomedizini:/bin/bash
+</pre>
+<p><q>-m</q> parametresi kullanıldığında eski home dizininin adınında değiştiğini görebiliyoruz.</p>
+
+<a name="aciklamaeklemek"></a>
+<h2>Kullanıcı için Açıklama Eklemek (usermod -c &lt;açıklama&gt; &lt;kullanıcıadı&gt;)</h2>
+<p>Kullanıcıların passwd dosyasındaki açıklama alanlarına istenilen değer eklenebilir.</p>
+<pre class="code">root@pardus:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:manual,,,:/home/yenihomedizini:/bin/bash
+
+root@pc:/home# usermod blabla -c acıklama
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:acıklama:/home/yenihomedizini:/bin/bash
+
+root@pc:/home# usermod blabla -c acıklama,dunya
+
+root@pc:/home# tail -1 /etc/passwd
+blabla:x:1001:1001:acıklama,dunya:/home/yenihomedizini:/bin/bash
+</pre>
+<p>Yukarıdaki örnekte önce tek bir sonra iki farklı açıklama ekledik.</p>
+
+<a name="sonkullanmatarihieklemek"></a>
+<h2>Hesabın Son Kullanma Tarihini Eklemek (usermod -e &lt;sonkullanmatarihi&gt; &lt;kullanıcıadı&gt;)</h2>
+<p>Kullanıcı hesaplarına son kullanma tarihi eklenebilir bu hesaba erişilebilecek gun sayısını belirler. Yani hesap belirtilen gün sonra kapatılır.</p>
+<pre class="code">
+root@pc:/home# tail -1 /etc/shadow
+blabla:$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/
+O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7:::
+
+root@pc:/home# man usermod
+
+root@pc:/home# usermod blabla -e 2017-12-29
+
+root@pc:/home# tail -1 /etc/shadow
+blabla:$6$8SOeat1v$AR1ATAosLnhUV3sMKpfTvwP.aR/
+O9cz.a0PfwBGBaoE2hM24qXeKwrhCTJ5MyZI6DjzaVh2Hq1YLHpu5/arsP0:17507:0:99999:7::17529:
+</pre>
+<p>Shadow dosyasına baktığımızda ilgili kullanıcının olduğu satırın son alanına baktığımızda <q>17529</q> sayısının eklendiğini görüyoruz bu 1 Ocak 1970 tarihinden sonra belirttiğimiz tarih arasıdaki gün sayısıdır.</p>
+
+
+
+
+
+
+
+<br /><br />
+<footer>
+			<p>Kaynak: Linux Komut Satırı - Kemal Demirez</p>
+			<p>https://www.cyberciti.biz/faq/linux-change-user-group-uid-gid-for-all-owned-files/</p>
+</footer>
+		</section>
+
+		</div><!--page-->
+
+	</body>
+</html>

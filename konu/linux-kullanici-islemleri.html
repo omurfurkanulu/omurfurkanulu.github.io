@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="decription" content="GNU/Linux Kullanıcı işlemleri. Linux Kullanıcı Listesi, Linux kullanıcı ekleme ve silme nasıl yapılır, kabuk değiştimek" />
+		<meta name="keywords" content="passwd,shadow,useradd,userdel,motd,issue" />
+		<meta name="robots" content="index,follow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>GNU/Linux Kullanıcı İşlemleri </title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">GNU/Linux Kullanıcı İşlemleri (/etc/passwd ve /etc/shadow dosyaları incelemesi)</h1>
+			<ol>
+
+			<li><a href="#kullanicilistesi">GNU/Linux Kullanıcı Listesi (/etc/passwd ve /etc/shadow dosyaları)</a>
+			 <ol>
+			 <li><a href="#passwd">Passwd Dosyası (/etc/passwd)</a></li>
+			 <li><a href="#shadow">Shadow Dosyası (/etc/shadow)</a></li>
+			 </ol>
+			</li>
+			<li><a href="#adduser">GNU/Linux Kullanıcı Eklemek (adduser, useradd)</a>
+				<ol>
+					<li>Kullanıcı Dosyaları (/etc/skel/)</li>
+				</ol>
+			</li>
+			<li><a href="#login">Kullanıcı Değiştirmek Oturum Açmak ve Kapatmak(login, logout)</a>
+				<ol>
+					<li><a href="#login">Oturum Açmak (login)</a></li>
+					<li><a href="#logout">Oturum Kapatmak (logout)</a></li>
+				</ol>
+			</li>
+			<li><a href="#kullanicigirisindekimesaj">Kullanıcı Girişindeki Mesaj (/etc/motd ve /etc/issue)</a>
+				<ol>
+					<li><a href="#issue">Issue Dosyası (/etc/issue)</a></li>
+					<li><a href="#motd">Motd Dosyası (/etc/motd)</a></li>
+				</ol>
+			</li>
+			<li><a href="#chsh">Kullanıcı Kabuğunu Değiştirmek (chsh)</a></li>
+				<ol>
+					<li><a href="#shells">Shells Dosyası (/etc/shells)</a></li>
+					<li><a href="#nologinvefalse">Nologin ve False Programı (/bin/false ve /usr/sbin/nologin)</a>
+				</ol>
+			<li><a href="#userdel">Kullanıcı Hesabı Silmek (userdel, deluser)</a></li>
+			<li><a href="#paroladegismek">Parola Değiştirmek (passwd)</a></li>
+			</ol>
+<br />
+			<p>GNU/Linux sistemlerde birden fazla kullanıcı hesabı oluşturulabilir. GNU/Linux çoklu kullanıcı(multi-user) özelliğini destekler.</p>
+			<p>GNU/Linux sistemlerde en yetkili kullanıcı <q>root</q> kullanıcısıdır. Root kullanıcısı tüm yetkilere sahiptir.</p>
+			<p>Kullanıcı hesapları ile ilgili önemli dosyalar:</p>
+<pre class="code">/etc/passwd
+/etc/shadow</pre>
+<p>Bu dosyalar kullanıcılar ile ilgili bilgileri içlerinde tutan dosyalardır.</p>
+<p>Şimdilik bu iki dosyadan kısaca bahsedecek olursak <q>passwd</q> dosyası kullanıcılar ile ilgili bilgileri, <q>shadow</q> dosyası ise bu kullanıcıların parolalarının bilgilerini içeren dosyadır.</p>
+
+
+
+<a name="kullanicilistesi"></a>
+<h2>GNU/Linux Kullanıcı Listesi (/etc/passwd ve /etc/shadow dosyaları)</h2>
+<p>Sisteme kayıtlı kullanıcılar <q>/etc/passwd</q> dosyası içerisinde tutulur. Düz metin dosyası olduğu için içeriği okunabilir.</p>
+
+<a name="passwd"></a>
+<h3>Passwd Dosyası (/etc/passwd)</h3>
+<pre class="code">root@pc:~# cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+..
+..
+test:x:1001:1001:test,,,:/home/test:/bin/bash
+hello:x:1002:1002:hello,,,:/home/hello:/bin/bash
+</pre>
+
+<p>/etc/passwd dosyası sadece <q>root</q> kullanıcısı tarafından değiştirilebilir bir dosyadır. Diğer kullanıcılar bu dosyayı sadece okuyabilirler.</p><br />
+
+<p>/etc/passwd dosyasının içeriğini inceleyecek olursak, her satırda bir kullanıcının bilgilerinin yer aldığını görürüz.</p>
+<pre class="code">
+root:x:0:0:root:/root:/bin/bash
+ │   │ │ │  │    │     └ Kullanıcı kabuk programının dizini(oturum açtıktan sonra başlatılcak program)
+ │   │ │ │  │    └ Kullanıcı home dizini
+ │   │ │ │  └ Kullanıcının tam adı ve telefon numarası(varsa) virgulle ayrılır.
+ │   │ │ └ Kullanıcının bulunduğu grub numarası (gid)
+ │   │ └ Kullanıcı numarası (uid)
+ │   └ Kullanıcının parolasının şifreli hali x ile gösterilmiş
+ └ Kullanıcı adı
+</pre>
+<p>Her satırdaki bilgilerin artık neyi ifade ettiğini biliyoruz. Her <q>:</q> arasında kullanıcı ile ilgili bilgi yer almakta ikinci kısımda x ile belirtilen yerde kullanıcının parolasının şifreli hali olmalıydı ancak güvenlik için bu şifreli parola /etc/shadow dosyasında tutulur. Bu yüzden şifre kısmında x ifadesi yer almakta.</p><br />
+
+<a name="shadow"></a>
+<h3>Shadow Dosyası (/etc/shadow)</h3>
+<p>/etc/shadow dosyası sadece root tarafından okunabilen ve değiştirilebilen bir dosyadır. Bu dosya kullanıcı şifreleriyle ilgili bilgileri tutar. Eskiden /etc/passwd dosyasındaki şifre alanında olan değerler artık bu dosyada saklanıyor. Eskiden şifreler ve kullanıcı bilgileri /etc/passwd dosyasındaydı ancak kullanıcılar kullanıcı listesini görmek istediklerinde birbirlerinin şifrelerinini görebiliyorlardı. Bu sebebe /etc/passwd dosyasındaki şifre alanı /etc/shadow dosyasına taşınmış ve /etc/passwd dosyasındaki şifre alanına <q>x</q> işareti atılmıştır. Böylece kullanıcılar /etc/passwd dosyasını okuyabilirken /etc/shadow dosyasını okuyamazlar. Bu sayede birbirlerinin şifrelerini görmezler.</p>
+<br />
+<p>/etc/shadow dosyasını inceleyecek olursak</p>
+<pre class="code">root@pardus:/home/user# cat /etc/shadow
+root:!:17500:0:99999:7:::
+daemon:*:17472:0:99999:7:::
+bin:*:17472:0:99999:7:::
+sys:*:17472:0:99999:7:::
+..
+..
+test:$6$ZokRaXP3$jFa14BsTVyS9iAI3UgIuItRxO89PTbIbbgyRRH6WFfsUa1DEbMUPqf/n1AwfWTPWIALADOZXyKUq7UYEn05E81:17502:0:99999:7:::
+hello:$6$i7H9wAUH$9ewRmZMwFKp3lkiJYBfRnMh.owCzR9vYj6noVAtK9ROe2d9lYzY.SCmsZJdtyNkXrnexuEZIPRxJKYRGptads/:17503:0:99999:7:::
+</pre>
+
+<p>Burda kullanıcıları ve parolalarının şifreli hallerini görebiliyoruz.</p>
+<pre class="code">test:$6$ZokRaXP3$jFa14BsTVyS9iAI3UgIuItRxO89PTbIbbgyRRH6WFfsUa1DEbMUPqf/n1AwfWTPWIALADOZXyKUq7UYEn05E81:17502:0:99999:7:::
+
+Yukarıdaki satırı : karaktlerinden bölersek ve numaralandırır isek
+1:2:3:4:5:6:7:8:9 gibi
+
+1 - Kullanıcı adı
+2 - Kullanıcı parolasının şifreli(hash+salt) hali
+3 - 1 Ocak 1970 tarihi ile parolanın en son değiştiği tarih arasındaki gün sayısı
+4 - Parola değiştikten sonraki gün sayısı (0 değeri parolanın hiç değiştirilmediğini gösterir)
+5 - Kullanıcının yeni parola belirlemesi için gerekli gün sayısı (99999 parola değiştirmesi için bir çok yılı olduğunu belirtir)
+6 - Parolanın kullanım süresinin dolduğunun kullanıcıya bildirileği gün sayısı
+7 - Parolanın son kullanma tarihi geçtikten sonra hesabın kapatılacağı gün sayısı
+8 - Hesabın kapatıldığı(disabled) tarih ile 1 Ocak 1970 arasındaki gün sayısı
+9 - Daha sonra kullanım için ayrılmış alan
+</pre>
+<p>Yukarıdaki satırı <q>:</q> ifadelerinden parçalıyacak olursak ilk kısım kullanıcı adını ikinci kısım ise kullanıcıya ait parolanın şifreli halini saklar. Şifre kısmında <q>*</q> yazan hesaplar kullanıma kapatılmış hesapları temsil eder. Bir hesabı kullanıma kapatmak(disable) istiyorsak hesabın /etc/shadow dosyasındaki ilgili satırında şifre alanına <q>*</q> atılır. Böylece hesap kapatılır. Hesabı tekrar aktif etmek için <q>*</q> işareti /etc/shadow dosyasından silinir.</p>
+
+<p>Kullanıcı şifresinin bulunduğu alanı incelersek:</p>
+<pre class="code">$6$ZokRaXP3$jFa14BsTVyS9iAI3UgIuItRxO89PTbIbbgyRRH6WFfsUa1DEbMUPqf/n1AwfWTPWIALADOZXyKUq7UYEn05E81
+
+Yukarıdaki satırı $ işaretlerinden bölersek
+$a$b$c şeklinde
+
+a - Şifreleme türünün idsi
+b - Salt(tuz)
+c - Hash
+</pre>
+<p>Bu parola  <q>$id$salt$hash</q> şeklinde saklanır. Güvenlik açısından parola doğrudan burada yer almaz, bunun yerine önce parolanın hash'i alınır sonra salt(tuzlama) işlemine sokulur.</p>
+<p><strong>Hash</strong> herhangi bir veriden üretilen eşsiz bir çıktıdır. Bu çıktı kullanılarak asıl çıktıya ulaşılamaz. Yani geri dönüşü olmayan bir şifreleme türüdür.</p>
+<p><b>Salt</b> işlemi ise rastgele üretilen değerlerin parolaya eklenmesidir. Böylece şifremiz daha karmaşık hale gelir. Ayrıcı aynı parolayı başka bir kullanıcı kullansa bile salt işlemi yapıldığı için kullanıcı şifreleri aynı olmaz.</p>
+
+<pre class="code">
+Şifremizi $a$b$c şeklinde düşünürsek
+$a$ kısmı için aşağıdaki durumlar söz konusudur
+
+$1$ MD5
+$2$ Blowfish
+$5$ SHA256
+$6$ SHA512
+
+$b$ bölümü ise salt değerimizdir.
+ZokRaXP3
+
+$c bölümü hash değerimizi tutar.
+jFa14BsTVyS9iAI3UgIuItRxO89PTbIbbgyRRH6WFfsUa1DEbMUPqf/n1AwfWTPWIALADOZXyKUq7UYEn05E81
+</pre>
+
+
+<a name="adduser"></a>
+<h2>GNU/Linux Kullanıscı Eklemek (adduser, useradd)</h2>
+<p>Kullanıcı eklemek için <q>useradd</q> ya da <q>adduser</q> komutları kullanılabilir. Ancak bu komutlar sadece <q>root</q> kullanıcısı tarafından kullanılabilir.</p>
+
+<pre class="code">root@pc:~# adduser ali
+Adding user `ali' ...
+Adding new group `ali' (1007) ...
+Adding new user `ali' (1007) with group `ali' ...
+Creating home directory `/home/ali' ...
+Copying files from `/etc/skel' ...
+Yeni parolayı girin:
+Yeni parolayı tekrar girin:
+passwd: şifre başarıyla güncellendi
+ali için kullanıcı bilgileri değiştiriliyor
+Yeni değeri girin, veya varsayılan değer için ENTER'a basın
+	Tam İsim []: ali
+	Oda Numarası []: 1
+	İş Telefonu []: 02163333333
+	Ev Telefonu []: 02121111111
+	Diğer []:
+Is the information correct? [Y/n] y
+</pre>
+<p><q>adduser</q> komutu interaktif bir arayüzüz ile <q>root</q> kullanıcısından gerekli bilgileri girmesini ister ve girilen bilgilere göre yeni bir kullanıcı oluşturur.</p>
+<p>Çıktıdaki satırları incelersek:</p>
+<pre class="code">
+Adding user `ali' ...  - ali adında kullanıcı eklendi
+Adding new group `ali' (1007) ...  - ali adında yeni grup eklendi
+Adding new user `ali' (1007) with group `ali' ...  - ali kullanıcısı ali grubuna eklendi
+Creating home directory `/home/ali' ...  - eklenen kullanıcı için home dizini oluşturuldu.
+Copying files from `/etc/skel' ...  - /etc/skel klasörü içerisindeki veriler kullanıcının home dizinine kopyalandı.
+</pre>
+
+<p><q>/etc/skel/</q> dizini yeni kullanıcı oluşturulduğunda kullanıcı home dizinine kopyalanacak dosyaları barındırır. Bu dizine sadece <q>root</q> kullanıcı veri yazabilir. Diğer kullanıcılar buradaki dosyaları sadece okuyabilir.</p>
+<br />
+<p>Yukarıdaki aşamada henüz <q>adduser</q> komutundan çıkmamışken ve parola girilmemişken, yeni bir kullanıcı oluşturduk, yeni bir grup oluşturduk, yeni bir home dizini yarattık.</p>
+<p>Bunları başka bir terminal açarak kontrol edebiliriz.</p>
+<pre  class="code">root@pc:~# tail -1 /etc/passwd
+ali:x:1007:1007::/home/ali:/bin/bash
+
+root@pc:~# tail -1 /etc/shadow
+ali:!:17503:0:99999:7:::
+
+root@pc:/home# ls
+ali  hello  test
+
+root@pc:/home# ls /etc/skel
+.  ..  .bash_logout  .bashrc  .profile
+
+root@pc:~# ls /home/ali
+.  ..  .bash_logout  .bashrc  .profile
+</pre>
+
+
+<p>Henüz program işini bitirmemiş olmasına rağmen yeni bir kullanıcı /etc/passwd dosyasına ve /etc/shadow dosyasına kayıt olarak eklenmiş. Aynı zamanda /etc/skel/ dizini altındaki dosyalar kullanıcı home dizinine kopyalanmış.</p>
+<br />
+<p>adduser programına devam edersek parola girilmediği için /etc/shadow dosyasında şifre alanı <q>!</q> olarak belirtilmiş. Bu hesabın kilitli(lock) olduğunu belirtir. Parola belirlenmediği için hesaba erişim yoktur. Bu hesap ile hiçbir kullanıcı oturum açamaz.</p>
+
+
+
+<br />
+<p>Kullanıcı için parola girildikten sonra ise /etc/shadow ve /etc/passwd dosyalarının içeriğinin şu şekilde değiştiğini görüyoruz.</p>
+<pre class="code">root@pc:~# tail -1 /etc/passwd; tail -1 /etc/shadow
+ali:x:1007:1007::/home/ali:/bin/bash
+ali:!:17503:0:99999:7:::
+
+Parola girildikten sonra passwd ve shadow dosyaları
+
+root@pc:~# tail -1 /etc/passwd; tail -1 /etc/shadow
+ali:x:1007:1007:ali,1,02163333333,02121111111:/home/ali:/bin/bash
+ali:$6$AHbvNGgE$s1O3KtodhcxwKsiJbvEKxLRz7pOOrc6UC8z0klqdpEOQpnKT42VFZ1hdWyjgf7nR5rSpy.mMxuBNb7K7jRLQJ1:17503:0:99999:7:::
+</pre>
+
+
+<a name="login"></a>
+<h2>Kullanıcı Değiştirmek Oturum Açmak ve Kapatmak(login, logout)</h2>
+<p>Kullanıcılar <q>login</q> programını kullanarak sisteme giriş yapabilirler. Kullanıcı sisteme giriş yaptıktan sonra bu kullanıcı için tanımlanmış kabuk veya program çalıştırılır.</p>
+<pre class="code">root@pc:/# login ali
+Parola:
+GNU/Linux pardus 4.9.0-4-amd64 x86_64
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+
+ali@pc:~$ whoami
+ali
+</pre>
+<p>Yukarıdaki örnekte root hesabından ali kullanıcısı hesabında oturum açtık.</p>
+<p>Eğer bu hesap ile daha önceden oturum açılmış ise ve /var/log/lastlog dosyası var ise en son oturum açılma tarihi ekrana basılacak ve shell bağlantısı verilecektir. /var/log/lastlog dosyasındaki veriler <q>last</q> komutu ile görülebilir.</p>
+<p>Eğer kullanıcı için bir shell tanımlı değil ise kullanıcı /bin/sh kabuğunda çalıştırılır.</p>
+<p>Eğer home dizini tanımlı değilse /(kök) dizinde çalıştırılır.</p>
+
+<a name="logout"></a>
+<h3>Oturum Kapatmak (logout)</h3>
+<p>Login ile bağlantı açıldıktan sonra <q>logout</q> komutu ile oturumdan çıkılır.</p>
+<pre class="code">ali@pc:~$ logout
+root@pc:/#
+</pre>
+
+
+
+<a name="kullanicigirisindekimesaj"></a>
+<h2>Kullanıcı Girişindeki Mesaj (/etc/motd ve /etc/issue)</h2>
+<p>Kullanıcıların bir terminalden oturum açarken kullanıcılara gösterilen mesajlar vardır. Bu mesajlar şu dosyalarda bulunur.</p>
+<pre class="code">root@pc:/etc# ls -la issue; ls -la motd
+-rw-r--r-- 1 root root 27 Eyl 15 14:09 issue
+-rw-r--r-- 1 root root 286 Şub 21  2017 motd
+</pre>
+<p>Bu iki dosyanın içeriğide sadece root kullanıcı tarafından değiştirilebilir.</p>
+<a name="issue"></a>
+<h3>Issue Dosyası (/etc/issue)</h3>
+<p>Kullanıcılar bulunulan sisteme giriş yapmak için açılmış olan güvenli terminal ekranında kullanıcıya gösterilecek mesaj <q>/etc/issue</q> dosyasında bulunur.</p>
+<pre class="code">root@pc:~# cat /etc/issue
+Pardus GNU/Linux 17 \n \l
+</pre>
+<br />
+<p>Örnek verirsek <q>ctrl+alt+f2</q> kombinasyonu ile açtığımız terminal giriş ekranı bu amaçladır. Bu terminal doğrudan sistemimize giriş yapmak içindir. Bu terminaller f3,f4,f5 tuşlarıyla değiştirilebilir.</p>
+<br />
+<p>Genellikle bu dosya içerisinde bulunulan sistemin ismi yazar kullanıcının hangi sisteme gireceğini gösterir.</p>
+
+<a name="motd"></a>
+<h3>Motd Dosyası (/etc/motd)</h3>
+<p>Bu dosya kullanıcıların sistemde oturum açtıktan sonra terminal ekranlarında gözükecek metni içerir.</p><br />
+<p><abbr title="message of the day">Motd</abbr> yani <q>message of the day</q> günün mesajı diye çevrilebilir. Root kullanıcı tarafından diğer kullanıcılara terminalde oturum açtıktan sonra gösterilen mesajdır.</p>
+<pre class="code">root@pc:/etc# cat motd
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+</pre>
+<p>Bu içerik root kullanıcı tarafından değiştirilebilir.</p>
+<pre class="code">root@pc:/etc# login manual
+Parola:
+Son giriş: 3 Ara Paz 22:44:10 +03 2017 pts/1 üzerinde
+GNU/Linux pardus 4.9.0-4-amd64 x86_64
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+
+manual@pc:~$ whoami
+manual
+</pre>
+<p>Yukarıdaki örnekte görüldüğü gibi sisteme giriş yaptıktan sonra ekrana /etc/motd dosyasının içeriği basıldı sonra bize bash kabuğu verildi.</p>
+
+
+
+<a name="chsh"></a>
+<h2>Kullanıcı Kabuğunu Değiştirmek (chsh)</h2>
+<p>Sistemdeki kullanıcılar kullandığı kabuk programını <q><abbr title="change login shell">chsh</abbr></q> programını kullanarak değiştirilebilir.</p>
+<pre class="code">manual@pc:~$ cat /etc/passwd | grep manual
+manual:x:1002:1002:manual,,,:/home/manual:/bin/bash
+
+manual@pc:~$ chsh
+Parola:
+manual için oturum kabuğu değiştiriliyor
+Yeni değeri girin, veya varsayılan değer için ENTER'a basın
+	Oturum Kabuğu [/bin/bash]: /bin/dash
+
+- Yukarıda manual kullanıcısı sisteme login olduktan sonra çalıştırılacak kabuk programını /bin/dash kabuğu ile değiştirdi.
+
+manual@pc:~$ cat /etc/passwd | grep manual
+manual:x:1002:1002:manual,,,:/home/manual:/bin/dash
+</pre>
+<br />
+<p>Kullanıcı oturum kabuğunu değiştirebilmek için öncelikle kendi kullanıcı parolasını girmelidir. Daha sonra kullanılmak istenilen kabuk girilir.</p>
+
+<br />
+<p>Aynı zamanda root kullanıcısı istediği bir kullanıcının kullanacağı kabuk programını değiştirebilir.</p>
+<pre class="code">root@pc:# cat /etc/passwd | grep manual
+manual:x:1002:1002:manual,,,:/home/manual:/bin/bash
+
+root@pc:/home# chsh manual
+manual için oturum kabuğu değiştiriliyor
+Yeni değeri girin, veya varsayılan değer için ENTER'a basın
+	Oturum Kabuğu [/bin/bash]: /bin/sh
+
+root@pc:/home# cat /etc/passwd | grep manual
+manual:x:1002:1002:manual,,,:/home/manual:/bin/sh
+</pre>
+<p>Örnekte görüldüğü gibi kullanıcının kabuğunu kullanıcı parolasını bilmesekte değiştirdik.</p>
+
+
+
+<a name="shells"></a>
+<h3>/etc/shells Dosyası</h3>
+<p>Sistemdeki kullanılabilir geçerli kabuk programları <q>/etc/shells</q> dosyasının içerisinde yer almaktadır.</p>
+<pre class="code">manual@pc:~$ cat /etc/shells
+# /etc/shells: valid login shells
+/bin/sh
+/bin/dash
+/bin/bash
+/bin/rbash
+</pre>
+
+<a name="nologinvefalse"></a>
+<h3>/bin/false ve /usr/sbin/nologin Programları</h3>
+<p>/etc/passwd dosyasına baktığımızda bazı hesapların kabuk programı olarak /bin/false ve /usr/sbin/nologin programlarını kullandığını görüyoruz.</p>
+
+<p>/bin/false programı hiç bir şey yapılmayacağını belirtir. Yani kullanıcıya bir shell sunmaz.</p>
+<p>/usr/sbin/nologin programı ise kullanıcının hesabının aktifliğini sonlandırmak için kullanılabilir. Yani hesabı kilitler diyebiliriz.</p>
+
+<p>Örnek olarak <q>test</q> kullanıcının kabuğunu önce /bin/false yapıp giriş yapmayı deneyelim.</p>
+
+<pre class="code">root@linuxpc:/home# cat /etc/passwd | grep test
+test:x:1001:1001:test,,,:/home/test:/bin/bash
+
+root@linuxpc:/home# chsh test
+test için oturum kabuğu değiştiriliyor
+Yeni değeri girin, veya varsayılan değer için ENTER'a basın
+	Oturum Kabuğu [/bin/bash]: /bin/false
+
+
+root@linuxpc:/home# login test
+Parola:
+
+Son giriş: 3 Ara Paz 22:44:10 +03 2017 pts/1 üzerinde
+GNU/Linux pardus 4.9.0-4-amd64 x86_64
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+root@linuxpc:
+</pre>
+<p>Yukarıda görüldüğü üzere kabuğu /bin/false yaptıktan sonra <q>test</q> kullanıcısı ile sisteme giriş yapmaya çalıştık fakat ekrana son login tarihimizi ve /etc/motd dosyasındaki metni yazdıktan sonra sistem üzerinden bir shell alamadan oturumumuz sonlandı.</p>
+
+<br />
+<p>Aynı işlemi /usr/sbin/nologin kullanarak deneyelim.</p>
+<pre class="code">root@linuxpc:/home# cat /etc/passwd | grep test
+test:x:1001:1001:test,,,:/home/test:/bin/bash
+
+root@linuxpc:/home# chsh test
+test için oturum kabuğu değiştiriliyor
+Yeni değeri girin, veya varsayılan değer için ENTER'a basın
+	Oturum Kabuğu [/bin/bash]: /usr/sbin/nologin
+
+
+root@linuxpc:/home# login test
+Parola:
+
+Son giriş: 3 Ara Paz 22:44:10 +03 2017 pts/1 üzerinde
+GNU/Linux pardus 4.9.0-4-amd64 x86_64
+
+The programs included with the Pardus GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Pardus GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+This account is currently not available.
+root@linuxpc:
+</pre>
+<p>Bu sefer ilk örnekten farklı olarak ekrana <q>This account is currently not available.</q> metnini yazdı. Yani hesabın kilitlendiğini erişime kapatıldığını belirtiyor.</p>
+<p>nologin programı bir kullanıcı hesabının erişimini kapatmak için kullanılabilir, aynı zamanda false programı da aynı işlemi görecektir.</p>
+
+
+
+
+
+<a name="userdel"></a>
+<h2>Kullanıcı Hesabı Silmek (userdel, deluser)</h2>
+<p>Kullanıcı silmek için <q>userdel</q> ve <q>deluser</q> komutları kullanılabilir. Bu komutları sadece root kullanıcı kullanabilir.</p>
+<pre class="code">
+root@pc:~# userdel hello
+
+Bu komut hello kullanıcısını silecektir.
+/etc/passwd ve /etc/shadow dosylarına bakarsanız kullanıcının olduğu satırın silindiğini görebiliriz.
+
+root@pc:~# userdel -r hello
+
+-r parametresi belirtilen kullanıcıyı home dizini ile beraber silmemizi sağlar.
+</pre>
+<p>Aynı zamanda kullanıcı silmek için <q>deluser</q> komutu kullanılabilir.</p>
+
+
+
+<a name="paroladegismek"></a>
+<h2>Parola Değiştirmek (passwd)</h2>
+<p>Bir kullanıcı parolasını değitirmek istediğinde <q>passwd</q> komutunu kullanarak parolasını değiştirebilir.</p>
+<pre class="code">hello@pc:~$ passwd
+hello kullanıcısının parolası değiştiriliyor.
+(geçerli) parola:
+Yeni parolayı girin:
+Yeni parolayı tekrar girin:
+passwd: şifre başarıyla güncellendi
+</pre>
+<p>Yukarıdaki örnekte hello adındaki kullanıcı kendi parolasını değiştirdi. Ancak root kullanıcı istediği kullanıcının parolasını o kullanıcının parolasını bilmese bile değiştirebilir.</p>
+<pre class="code">root@pc:~# passwd hello
+Yeni parolayı girin:
+Yeni parolayı tekrar girin:
+passwd: şifre başarıyla güncellendi
+</pre>
+<p>Parola değiştirirken parola giriş alanlarında basılan tuşlar görünmez bu bir güvenlik önlemidir.</p>
+
+
+
+
+
+<br /><br />
+<footer>
+			<p>Kaynak: Linux Komut Satırı - Kemal Demirez</p>
+			<p>Kaynak: Kim Korkat Unix'ten - Can Uğur Ayfer</p>
+			<p>Kaynak: https://www.tldp.org/LDP/lame/LAME/linux-admin-made-easy/disabling-user-accounts.html</p>
+			<p>Kaynak: https://www.tldp.org/LDP/lame/LAME/linux-admin-made-easy/shadow-file-formats.html</p>
+			<p>Kaynak: https://en.wikipedia.org/wiki/Passwd</p>
+</footer>
+		</section>
+
+		</div><!--page-->
+
+	</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Metasploit nedir, metasploit kullanımı,  metasploit framework kullanımı, msfconsole kullanımı" />
+		<meta name="keywords" content="metasploit,msfconsole, module, exploit, run" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Metasploit Framewok Temel Kullanımı (msfconsole)</title>
+
+
+
+		<!--[if lt IE 9]>
+			<script src="../../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="../../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Metasploit Framework Temel Kullanımı (msfconsole)</h1>
+		
+			<p>İçerik:</p>
+			<ol>
+				<li><a href="#yardım">Msfconsole Yardım Menusu (?, help, help <komut>)</a>
+					<ol>
+						<li><a href="#yardımkomut">Bir Komutun Aldığı Parametreleri Öğrenmek (help &lt;komut&gt;, ? &lt;komut&gt;, &lt;komut&gt; -h)</a></li>
+					</ol>
+				</li>
+				<li><a href="#show">Modul Listesini Görmek (show)</a></li>
+				<li><a href="#search">Msfconsole Kelime Arama (search, search &lt;aranacakkelime&gt;)</a></li>
+				<li><a href="#use">Msfconsole Modulleri Kullanmak (use)</a>
+					<ol>
+						<li><a href="#back">Modulden Çıkmak (back)</a></li>
+					</ol>
+				</li>
+				<li><a href="#info">Kullandığımız Modul Hakkında Bilgi Almak(info, info &lt;moduladı&gt;)</a></li>
+				<li><a href="#options">Msfconsole Bir Modulun Seçenekleri Görüntülemek (options)</a></li>
+				<li><a href="#set">Msfconsole Modul Seçenekleri Değiştirmek (set)</a></li>
+				<li><a href="#unset">Msfconsole Bir Modulden Seçeneğin Değerini Silmek (unset)</a></li>
+				<li><a href="#exploitrun">Msfconsole Modulu Çalıştırmak (exploit, run)</a></li>
+			</ol>
+			<br />
+			<p>Metasploit terimlerini ve kurulumunu önceki blog yazımda anlatmıştım.
+			<p>Bkz: <a href="metasploit-giris.html">Metasploit Penetration Testing Framework Giriş - İndirme ve Kurulum</a></p>
+			<p>Bkz: <a href="metasploit-terimler.html">Metasploit Framework Terimler (exploit,vulnerability,payload vb.)</a></p>
+			<p>Şimdi metasploiti nasıl kullanacağımıza bakalım.</p>
+			<p>Terminal ekranını açıp <q>msfconsole</q> diyerek metasploiti başlatıyoruz.</p>
+			<pre class="code">user@pc:~$ msfconsole
+Found a database at /home/user/.msf4/db, checking to see if it is started
+Starting database at /home/user/.msf4/db...success
+_                                                    _
+/ \    /\         __                         _   __  /_/ __
+| |\  / | _____   \ \           ___   _____ | | /  \ _   \ \
+| | \/| | | ___\ |- -|   /\    / __\ | -__/ | || | || | |- -|
+|_|   | | | _|__  | |_  / -\ __\ \   | |    | | \__/| |  | |_
+      |/  |____/  \___\/ /\ \\___/   \/     \__|    |_\  \___\
+
+
+       =[ metasploit v4.16.40-dev-                        ]
++ -- --=[ 1739 exploits - 994 auxiliary - 300 post        ]
++ -- --=[ 526 payloads - 40 encoders - 10 nops            ]
++ -- --=[ Free Metasploit Pro trial: http://r-7.co/trymsp ]
+
+msf > </pre>
+
+<p>msfconsole komutunu verdikten sonra önceden yüklü olan database(veritabanı) olup olmadığını kontrol ediyor ve eğer database bulursa bu database'i başlatıyor. Daha sonra ise ekrana bir banner(afiş, başlık) basarak Metasploit Framework içerisinde barındırdığı exploit, auxiliary, post, payload, ve encoderların sayısını ekrana yazdırıyor.<p>
+<p><strong>Msfconsole</strong>, Metasploit Framework çatısının bize sağladığı modulleri ve araçları kullanabilmemize izin veren gelişmiş bir arayüz sağlar.</p>
+
+<a name="yardım"></a>
+<h2>Msfconsole Yardım Menusu (?, help, help &lt;komut&gt;)</h2>
+<p>Msfconsole içerisindeki komutların neler olduğu ve hangi parametreler ile çalıştığını öğrenmek için kullanabileceğimiz komut <q>help</q> veya <q>?</q> komutudur.</p>
+<pre class="code">msf > help</pre>
+<p>ya da</p>
+<pre class="code">msf > ?</pre>
+<p>Msfconsole ekranına help veya ? yazıp enter tuşuna bastığımızda msfconsole arayüzü içerisinde kullanabileceğimiz komutlar ekrana gelecektir.</p>
+
+<a name="yardımkomut"></a>
+<h3>Bir Komutun Aldığı Parametreleri Öğrenmek (help &lt;komut&gt;, ? &lt;komut&gt;, &lt;komut&gt; -h)</h3>
+<p>Belirli bir komutu hakkında detaylı bilgi almak ve hangi parametreler ile çalıştığını öğrenmek için;</p>
+<pre class="code">msf > ? jobs</pre>
+</p>Şeklinde ? veya help yazdıktan sonra komut adını yazarak o komutun nasıl kullanıldığı ile ilgili detaylı bilgi alabiliriz.</p>
+
+<pre class="code">msf > ? jobs
+Usage: jobs [options]
+
+Active job manipulation and interaction.
+
+OPTIONS:
+
+    -K        Terminate all running jobs.
+    -S &lt;opt&gt;  Row search filter.
+    -h        Help banner.
+    -i &lt;opt&gt;  Lists detailed information about a running job.
+    -k &lt;opt&gt;  Terminate jobs by job ID and/or range.
+    -l        List all running jobs.
+    -v        Print more detailed info.  Use with -i and -l
+msf >
+</pre>
+
+<p>Yukarıdaki örnekte <q>jobs</q> komutunun nasıl kullanıldığı ve hangi parametreler ile çalıştığını ekrana yazdırdık.</p>
+
+<p>Aynı işlem önce komut adı girilip sonrasında <q>-h</q> parametresi belirtilerek de yapılabilir.</p>
+<pre class="code">msf > jobs -h
+Usage: jobs [options]
+
+Active job manipulation and interaction.
+
+OPTIONS:
+
+    -K        Terminate all running jobs.
+    -S &lt;opt&gt;  Row search filter.
+    -h        Help banner.
+    -i &lt;opt&gt;  Lists detailed information about a running job.
+    -k &lt;opt&gt;  Terminate jobs by job ID and/or range.
+    -l        List all running jobs.
+    -v        Print more detailed info.  Use with -i and -l
+msf > </pre>
+<a name="show"></a>
+<h2>Modul Listesini Görmek (show)</h2>
+<p>Metasploit Framework içerisinde bulunan modulleri görmek için <q>show</q> komutu kullanılabilir.</p>
+
+<pre class="code">msf > show
+
+Encoders
+========
+
+   Name                          Disclosure Date  Rank       Description
+   ----                          ---------------  ----       -----------
+   cmd/echo                                       good       Echo Command Encoder
+   cmd/generic_sh                                 manual     Generic Shell Variable Substitution Command Encoder
+   cmd/ifs                                        low        Generic ${IFS} Substitution Command Encoder
+   ...
+   ...
+
+NOP Generators
+==============
+   ...
+
+POST
+====
+   ...
+</pre>
+<p>Yukarıdaki çıktıda çok uzun olduğundan kısaltılmıştır. Her modul başlığının altı (=) işareti ile çizilmiş bulunmakta, her başlığın altında ilgili moduller yer almaktadır.</p>
+<br />
+<p>Encoders başlığının altında ilgili encoder modulleri yer almaktadır.</p>
+<p>Name: Bu başlık altındakiler encoder modulunun adını göstermektedir.</p>
+<p>Disclosure Date: Bu zafiyetin,exploitin bulunduğu tarih
+<p>Rank: Bu modulunun ne kadar etkili olduğu ile ilgili bilgi.</p>
+<p>Description: Modulun kısa tanımımıdır.</p>
+<br />
+<p>Show komutunun nasıl kullanıldığı ile ilgili bilgiye bakalım.</p>
+<pre class="code">msf > show -h
+[*] Valid parameters for the "show" command are: <span style="color: green">all, encoders, nops, exploits, payloads, auxiliary, plugins, info, options</span>
+[*] Additional module-specific parameters are: <span style="color: red">missing, advanced, evasion, targets, actions</span>
+</pre>
+
+<p>Yukarıda yeşil renkle gösterilen ifadeler show komutu ile kullanılabilecek parametrelerdir.</p>
+<p>Kırmızı ile gösterilen ifadeler ise bir belirli bir modul içerisindeyken kullanılabilecek parametreleri gösterir.</p>
+<br />
+<p>Kullanılabilir payload modullerini listeleyelim.</p>
+<pre class="code">msf > show payloads
+
+Payloads
+========
+
+   Name                                                Disclosure Date  Rank    Description
+   ----                                                ---------------  ----    -----------
+   aix/ppc/shell_bind_tcp                                               normal  AIX Command Shell, Bind TCP Inline
+   aix/ppc/shell_find_port                                              normal  AIX Command Shell, Find Port Inline
+   aix/ppc/shell_interact                                               normal  AIX execve Shell for inetd
+   aix/ppc/shell_reverse_tcp                                            normal  AIX Command Shell, Reverse TCP Inline
+   ...
+   ...
+   windows/x64/vncinject/reverse_winhttp                                normal  Windows x64 VNC Server (Reflective Injection), Windows x64 Reverse HTTP Stager (winhttp)
+   windows/x64/vncinject/reverse_winhttps                               normal  Windows x64 VNC Server (Reflective Injection), Windows x64 Reverse HTTPS Stager (winhttp)
+
+msf >
+</pre>
+
+<br />
+<p>Yukarıdaki örnekte kullanabileceğimiz payload modullerini listeledik, show komutu ile ilgili moduller listelenebilir.</p>
+
+<pre class="code">msf > show          //tüm modulleri listeler
+msf > show all      //tüm modulleri listeler
+msf > show exploits //tüm exploit modullerini listeler
+msf > show encoders //tüm encoder modullerini listeler
+msf > show payloads //tüm payload modullerini listeler
+msf > show nops     //tüm nops modullerini listeler
+msf > show auxilary //tüm auxilary modullerini listeler
+msf > show plugins  //tüm pluginsleri listeler
+msf > show info     //info komutunun kullanımını getirir
+msf > show options  //Bulunulan modul içerisinde kullanılabilecek seçenekleri getirir</pre>
+
+<a name="search"></a>
+<h2>Msfconsole Kelime Arama (search, search &lt;aranacakkelime&gt;)</h2>
+<p>Msfconsole içerisinde belirli bir kelimeyi aramak için <q>search</q> komutu kullanılablir.</p>
+<pre class="code">msf > search -h
+Usage: search [keywords]
+
+Keywords:
+  app       :  Modules that are client or server attacks
+  author    :  Modules written by this author
+  bid       :  Modules with a matching Bugtraq ID
+  cve       :  Modules with a matching CVE ID
+  edb       :  Modules with a matching Exploit-DB ID
+  name      :  Modules with a matching descriptive name
+  platform  :  Modules affecting this platform
+  ref       :  Modules with a matching ref
+  type      :  Modules of a specific type (exploit, auxiliary, or post)
+
+Examples:
+  search cve:2009 type:exploit app:client
+</pre>
+<br />
+<p>Search komutu bir modulun ismi hatırlanmadığında çok kullanışlıdır. Aranacak kelime belirtilirdikten sonra kelimenin geçtiği moduller ekrana gelecektir.</p>
+<pre class="code">msf > search ssh_login
+
+Matching Modules
+================
+
+   Name                                    Disclosure Date  Rank       Description
+   ----                                    ---------------  ----       -----------
+   auxiliary/scanner/ssh/ssh_login                          normal     SSH Login Check Scanner
+   auxiliary/scanner/ssh/ssh_login_pubkey                   normal     SSH Public Key Login Scanner
+   exploit/linux/http/alienvault_exec      2017-01-31       excellent  AlienVault OSSIM/USM Remote Code Execution
+
+msf ></pre>
+
+
+<p>Aynı zamanda aranacak kelime özelleştirilebilir.</p>
+<pre class="code">msf > search cve:2009         //<abbr title="Common Vulnerabilies and Exposures">CVE</abbr> id değerinde 2009 olan modulleri listeler
+msf > search cve:2009 http    //CVE id değerinde 2009 olan moduller arasında http geçen modulleri listeler
+msf > search type:exploit     //exploit modulleri arar
+msf > search platform:windows //windows sistemi için olan modulleri arar</pre>
+
+<p>Platform seçeneğine: unix, bsd, ios, android, linux, multi gibi seçenekler yazılarak hedef sistem için olan moduller aranır.</p>
+<p>Type seçeneğine: exploit, payload, auxilary, encoder, pop gibi seçenekler yazılabilir.</p>
+
+<a name="use"></a>
+<h2>Msfconsole Modulleri Kullanmak (use)</h2>
+<p>Msfconsole altında modulleri listelemeyi ve aramayı gördük şimdi bir modul nasıl kullanılır ona bakalım. Bir modulu kullanmak için <q>use</q> komutundan sonra kullanılmak istenilen modul ismi belirtilir.</p>
+<pre class="code">msf > ? use
+Usage: use module_name
+
+The use command is used to interact with a module of a given name.
+</pre>
+<p><q>use</q> komutunun nasıl kullanılacağına baktığımızda bize bir modul ismi ile beraber kullanmamız gerektiği söylüyor. Örnek olarak <q>auxiliary/scanner/ssh/ssh_version</q> modulunu nasıl kullanacağımıza bakalım.</p>
+
+<pre class="code">msf > use auxiliary/scanner/ssh/ssh_version
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) >
+</pre>
+<p>Bir modulu <q>use</q> komutu ile kullanmaya başlayınca msfconsole arayüzündeki istek satırının değiştini görürüz. Bu satırda kırmızı renkli ifade ile hangi modulde olduğumuz belirtilir.</p>
+<br />
+<a name="back"></a>
+<h3>Modulden Çıkmak (back)</h3>
+<p>Bir modulun içerisine girdikten sonra modulden çıkmak için <q>back</q> komutu kullanılabilir.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > back
+msf >
+</pre>
+<p>Görüldüğü gibi msf alanına geri döndük.</p>
+
+<br />
+<a name="info"></a>
+<h2>Kullandığımız Modul Hakkında Bilgi Almak(info, info &lt;moduladı&gt;)</h2>
+<p>Modulumuzu <q>use</q> komutu ile kullanıma aldıktan sonra modulun kullanımına bakmamız doğru olacaktır. Bir modulun hangi seçeneklerle kullanıldığını ve ne işe yaradığını öğrenmek için <q>info</q> komutu kullanılabilir.</p>
+
+<pre class="code">msf > info auxiliary/scanner/ssh/ssh_version
+
+       Name: SSH Version Scanner
+     Module: auxiliary/scanner/ssh/ssh_version
+    License: Metasploit Framework License (BSD)
+       Rank: Normal
+
+Provided by:
+  Daniel van Eeden &lt;metasploit@myname.nl&gt;
+
+Basic options:
+  Name     Current Setting  Required  Description
+  ----     ---------------  --------  -----------
+  RHOSTS                    yes       The target address range or CIDR identifier
+  RPORT    22               yes       The target port (TCP)
+  THREADS  1                yes       The number of concurrent threads
+  TIMEOUT  30               yes       Timeout for the SSH probe
+
+Description:
+  Detect SSH Version.
+
+References:
+  http://en.wikipedia.org/wiki/SecureShell
+
+msf >
+</pre>
+<p>Bir modulu kullanmadan önce modulun ne işe yaradığı hakkında fikir sahibi olmamız için <q>info</q> komutu önemlidir. Gelen çıktıda <q>Description:</q> kısmında modulun tanımı yapılmaktadır. Bu modul belirtilen hedefte çalışan(var ise) SSH versiyonunu tespit etmek için kullanılıyormuş.</p>
+<br />
+<p>Bir modulu <q>use</q> komutu ile kullanıma aldıktan sonrada aynı işlem yapılabilir.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > info</pre>
+<p>veya</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > show info</pre>
+<p>Bu kullanımda bize aynı çıktıyı verecektir. Show komutunun kullanımında gördüğümüz gibi, show komutu ile beraber info komutunun kullanılabiliyor.</p>
+<p>Bu üç kullanımın hepsi bize aynı sonucu gösterecektir.</p>
+<a name="options"></a>
+<h2>Msfconsole Bir Modulun Seçenekleri Görüntülemek (options)</h2>
+<p>Show komutuna bakarken options seçeneğinin olduğunu hatırlayalım. Bu komut bir modulun çalıştırıldığı sırada kullancağı değerleri görüntülemek için kullanılır.</p>
+
+<pre class="code">msf > ? options
+Usage: options [mod1 mod2 ...]
+
+Queries the supplied module or modules for options. If no module is given,
+show options for the currently active module.
+</pre>
+<p>Yardım menusu bize <q>options</q> komutunu yazdıktan sonra bir veya daha fazla modul adını belirtmemizi söylüyor. Eğer bir modul belirtilmez ise aktif modulun seçeneklerini ekrana getirir.</p>
+<br />
+<pre class="code">msf > options auxiliary/scanner/ssh/ssh_version
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+</pre>
+<p>Yukarıdaki çıktıda <q>auxiliary/scanner/ssh/ssh_version</q> modulunun aldığı ve alabileceği seçenekleri görüyoruz.</p>
+<br />
+<p>Aynı işlemi modulu seçtikten sonrada yapabiliriz.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > options
+</pre>
+<p>veya</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > show options
+</pre>
+<p>Bu iki kullanımda ilk kullanımdaki çıktıyı verecektir.</p>
+
+<br />
+<p>Options komutunun bize getirdiği seçenekleri incelersek:</p>
+<pre class="code">Name:             bu alan seçeneğin adının olduğu kısım
+Current Settings: bu alan seçeneğin aldığı değeri içeren kısım
+Required:         alanı seçeneğin bir değere sahip olup olmama zorunluluğunu gösteren kısım
+Description:      alanı ise seçeneğin kısa tanımının yapıldığı alan</pre>
+
+<p>Modulumuzdeki seçeneklere baktığımızda tüm seçeneklerin dolu olması gerektiği belirtilmiş. (Required alanlarındaki değer <q>yes</q>)</p><br />
+<p>Seçenekleri incelersek;</p>
+<p>RHOSTS: Remote Hosts, hedef ip adresleri veya ip blokları</p>
+<p>RPORT: Remote Port, hedef sistemin port numarası</p>
+<p>THREADS: Modul için çalıştırılacak eşzamanlı thread sayısı</p>
+<p>TIMEOUT: Timeout süresi</p>
+
+<p>NOT: RHOSTS alanı bazı modullerde RHOST olarak tanımlıdır. Bizim kullandığımız modulde RHOSTS tanımılı olduğundan birden fazla hedef belirtilebilir.</p>
+<a name="set"></a>
+<h2>Msfconsole Modul Seçenekleri Değiştirmek (set)</h2>
+<p>Bir modulun seçeneklerini değiştirmek için <q>set</q> komutu kullanılabilir.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > ? set
+Usage: set [option] [value]
+
+Set the given option to value.  If value is omitted, print the current value.
+If both are omitted, print options that are currently set.
+
+If run from a module context, this will set the value in the module's
+datastore.  Use -g to operate on the global datastore
+</pre>
+<p><q>set</q> yazdıktan sonra seçenek adı(options komutundaki liste) ve bu seçeneğe girilecek değeri belirterek kullanılabiliyormuş.</p>
+<br />
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > set rport
+rport => 22
+</pre>
+<p>Eğer seçeneğe girilecek değer girilmez ise belirtilen seçenekteki değer ekrana yazdırılır.</p>
+<br />
+
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > set
+
+Global
+======
+
+No entries in data store.
+
+Module: scanner/ssh/ssh_version
+===============================
+
+  Name                 Value
+  ----                 -----
+  CHOST
+  CPORT
+  ConnectTimeout       10
+  Proxies
+  RHOSTS
+  RPORT                22
+  SSL                  false
+  SSLCipher
+  SSLVerifyMode        PEER
+  SSLVersion           Auto
+  ShowProgress         true
+  ShowProgressPercent  10
+  TCP::max_send_size   0
+  TCP::send_delay      0
+  THREADS              1
+  TIMEOUT              30
+  VERBOSE              false
+  WORKSPACE
+</pre>
+<p><q>set</q> komutu tek başına kullanılırsa bu modul için aktif seçenekleri ve bu seçeneklere atanmış değerleri görebiliriz.</p>
+
+<br />
+<p>Auxiliary modulumuz belirtilen hedef sistemdeki SSH versiyonunu öğrenmemizi sağlıyordu. Yani tek gereken RHOSTS alanına hedefi belirtmek. Hedef sistemimizin IP(IPv4) adresi 192.168.254.60 olsun.</p>
+<pre class="code">
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > set RHOSTS 192.168.254.60
+RHOSTS => 192.168.254.60
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS   192.168.254.60   yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+
+</pre>
+<p>Set komutunu kullanarak RHOSTS seçeneğine hedef sistemin IP adresini girdik.</p>
+<a name="unset"></a>
+<h2>Msfconsole Bir Modulden Seçeneğin Değerini Silmek (unset)</h2>
+<p>Bir modul içerisinde olan seçeneklerdeki değerleri <q>unset</q> komutunu kullanrak kaldırabiliriz.</p>
+
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > unset rhosts
+Unsetting rhosts...
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+
+</pre>
+<p>Görüldüğü gibi az önce set ettiğimiz RHOSTS değeri <q>unset</q> komutu ile silindi.</p>
+<a name="exploitrun"></a>
+<h2>Msfconsole Modulu Çalıştırmak (exploit, run)</h2>
+<p>Modulumuzu seçtik, gerekli tüm değerleri girdik artık modulumuzu çalıştırma vakti geldi. Modulumuzu çalıştırmak için iki farklı komut kullanılabilir <q>exploit</q> ve <q>run</q> komutları.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS   192.168.254.60   yes       The target address range or CIDR identifier
+   RPORT    22               yes       The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads
+   TIMEOUT  30               yes       Timeout for the SSH probe
+
+msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > run
+
+<span style="color: green">[+]</span> 192.168.254.60:22     - SSH server version: SSH-2.0-OpenSSH_7.4p1 Debian-10+deb9u2
+<span style="color: blue">[*]</span> Scanned 1 of 1 hosts (100% complete)
+<span style="color: blue">[*]</span> Auxiliary module execution completed
+</pre>
+
+<p>SSH servisi eğer değiştirilmemiş ise öntanımlı(default) olarak 22.port üzerinde çalışır. Bu yüzden <q>RPORT</q> alanına dokunmadık, zaten auxiliary modulumuzun amacı SSH versiyonunu tespit etmek olduğundan <q>RPORT</q> değeri öntanımlı olarak 22 olarak geliyor.</p>
+<p><q>run</q> komutunu modulumuze verdiğimizde ekrana bazı şeyler yazdı. [+] ile başlayan satırda hedef sistemin SSH versiyonunu tespit etmiş ve ekrana yazdırmış.</p>
+<p>Hedef sistemdeki SSH versiyonunun adı:<q>SSH-2.0-OpenSSH_7.4p1 Debian-10+deb9u2</q></p>
+<p>Hedef sistemde SSH-2.0 çalıştığını ssh_version auxiliary modulunu kullanarak öğrendik.</p>
+<br />
+<p>Bu işlem <q>exploit</q> komutu kullanılarakta gerçekleştirilebilir.</p>
+<pre class="code">msf auxiliary(<span style="color: red">scanner/ssh/ssh_version</span>) > exploit
+
+<span style="color: green">[+]</span> 192.168.254.60:22     - SSH server version: SSH-2.0-OpenSSH_7.4p1 Debian-10+deb9u2
+<span style="color: blue">[*]</span> Scanned 1 of 1 hosts (100% complete)
+<span style="color: blue">[*]</span> Auxiliary module execution completed</pre>
+
+<p>exploit ve run komutları arasında aslında bir fark yoktur ancak genellikle exploit komutu exploit modullerde kullanılır.</p>
+<br /><br />
+		</section>
+
+
+		</div><!--page-->
+
+
+	</body>
+</html>

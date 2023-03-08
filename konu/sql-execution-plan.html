@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="SQL Execution plan nedir? Nasıl izlenir?" />
+		<meta name="keywords" content="sql exectution plan nedir" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>SQL Execution Plan Nedir?</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 >SQL Execution Plan Nedir?</h1>
+
+
+
+            <p>Tablo yapıları, endeksleme ve sorgulama performansı, veritabanı tasarımı ve sorgulama yazma yetenekleri, veritabanı uygulamalarında performansın önemli bir rol oynamaktadır. SQL Server veya Oracle gibi büyük veritabanı yönetim sistemleri, sorguların performansını artırmak için özel olarak tasarlanmış özelliklere sahiptir. Bunların biri de "SQL Execution Plan" adı verilen özelliktir.</p>
+            <p>SQL Execution Plan, bir SQL sorgusunun nasıl çalıştığını ve veritabanı tarafından nasıl işlendiğini ayrıntılı bir şekilde açıklar. Bu plan, veritabanı yöneticilerinin ve geliştiricilerinin sorgulama performansını analiz etmelerine ve geliştirmelerine yardımcı olur. SQL Execution Plan, sorgulama performansının neden düşük olduğunu anlamak için önemli bir araçtır ve veritabanı uygulamalarının performansını artırmak için kullanılabilecek önemli bilgiler sağlar.</p>
+            <p>SQL Execution Plan, sorgunun çalıştırılması sırasında veritabanı yönetim sistemi tarafından kullanılan işlemleri gösteren bir görsel temsilidir. Bu gösterim, sorgunun her adımının işlenmesi için gereken kaynakları ve süreleri gösterir. Plan, sorgunun nasıl yürütüldüğünü ve veritabanının nasıl kullanıldığını ayrıntılı olarak açıklar.</p>
+            <p>SQL Execution Plan'ın oluşturulması için sorgu birkaç adımda işlenir. İlk olarak, sorgu dilinin işlenmesi ve doğrulanması gerekiyor. Daha sonra, veritabanı yönetim sistemi, sorgunun bir işlem planı oluşturması gereken en iyi yolu belirlemek için en uygun endeksleri veya görünümleri seçer. Son olarak, SQL Execution Plan, sorgunun nasıl işlendiğine dair ayrıntılı bir gösterim oluşturulur.</p>
+            <p>SQL Execution Plan, sorgulama performansını analiz etmek ve iyileştirmek için birçok fayda sağlar. Örneğin, planın veri erişimine dayalı sorgular için veritabanı kaynaklarına nasıl erişildiğini gösteren bölümleri bulunur. Bu bölümler, endekslerin veya tam tablo taramalarının kullanılması gibi konuları kapsayabilir. Böylece, performans sorunları belirlenebilir ve iyileştirilebilir.</p>
+            <p>SQL Execution Plan ayrıca sorguların nasıl işlendiğini anlamak için kullanışlı bir araçtır. Sorguların optimize edilmesi ve performansının artırılması için, veritabanı yöneticileri ve geliştiricileri bu planı kullanarak, sorguların nasıl işlendiğini daha iyi anlayabilirler.</p>
+
+
+
+			<h2>Index Türleri</h2>
+			<h3>Clustered Index (Kümelenmiş Index)</h3>
+			<section class="sub-section">
+	
+	<p>Clustered index (kümelenmiş indeks), veritabanı tablosundaki verilerin fiziksel olarak nasıl depolandığına ilişkin bir yapıdır. Clustered index, bir tablonun temel yapısıdır ve bir tabloda yalnızca bir tane olabilir.</p>
+	<p>Bir tabloda birden çok indeks olabilir. Ancak, bir tabloda yalnızca bir tane clustered index olabilir.</p>
+
+
+</section>
+<h3>Non-Clustered Index (Kümelenmemiş Index)</h3>
+<section class="sub-section">
+	
+	<p>Non-clustered index, bir veritabanı tablosundaki belirli bir sütuna veya sütunlara göre verileri hızlı bir şekilde sorgulamak için kullanılan bir veritabanı indeksidir. Non-clustered indexler, tablonun fiziksel sıralamasına göre değil, ayrı bir yapıda saklanır ve tablodaki bir sütunun birden çok değeri için bir giriş içerebilir. Bu girişler, anahtar sütundaki değerleri ve bu değerlerin veri sayfalarında bulundukları fiziksel konumları içerir. Bir sorgu, non-clustered indexler aracılığıyla ana veri sayfasına erişir ve gerektiğinde veri sayfasından ilgili verileri getirir.</p>
+
+		<p>Non-clustered indexler, sorguların performansını artırırken, tablo üzerindeki değişikliklerin işlem süresini yavaşlatabilir. Bu nedenle, non-clustered indexlerin doğru bir şekilde tasarlanması ve yönetilmesi, veritabanı performansını optimize etmek için önemlidir.</p>
+	</section>
+
+			<h2>Sql Execution Planları Görüntüleme</h2>
+			<p>MSSQL Management Studio açıldıktan sonra üst menüden sorgu çalıştırma ile beraber ya da sorgudan sonra seçilebilir.</p>
+
+			<h3>Estimated Execution Plan</h3>
+			<section class="sub-section">
+			<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiwFZmuJdZFR1YCDujAIOopqT0v5wD0aTEPbnwI9SluE6BvVvQbVG4An5l22t8ipmzjX8k9HiKTtg_jWzp83MQlSs6lHa-dFWmaE6MBG41NA6u0SISVNTubNWp5HsOWIyfl6LtXTKZfFc5qp5HHlZClnZdOGCpXlIJ8z24mu2l8USWHLlqmWGZQl3WOCg/s362/ep.png" />
+			<p>Query optimizer tarafından tahminlere dayanarak oluşturulan derlenmiş bir plandır. Bu, plan önbelleğinde depolanan sorgu planıdır.</p>
+			</section>
+
+			<h3>Actual Execution Plan</h3>
+			<section class="sub-section">
+			<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiv4xfR3VzGJCF6RM1Bmc0H3XbO-VYyNSwmThrbjB5oDyq0eqSZxFUxltd2elc7SxJFHwRuMP9CTEhwwgzGRrLMbXdcjIfygt67X3AzC16s1AIQftPfkRSFJ4Hxqvt8tb0ArLpKMey0fcy-30tfjEnlUOobyv588R_AE91XtadOkJuamtbw-LgxGyrHAA/s436/ap.png" />
+			<p>Sorgu yürütmesi tamamlandıktan sonra elde edilen yürütme bağlamıyla birlikte derlenmiş planı ifade eder. Bu, yürütme uyarıları gibi gerçek çalışma zamanı bilgilerini içerir.</p>
+			</section>
+
+			<h3>Live Query Statistics</h3>
+			<section class="sub-section">
+			<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjS7AzipJlNYu6Scvi9VMV9Ht-zOLWITHgeTBhbjDsTQ2T3LbzBGXxh1EtN9XHkaPVOJdP-Z5XIVstYT4u3PdUKfwEWfVM0T1ugmMlRHEFb1Ro9bFuwh9yM8ZYbYojvA33kIQv2E1WJhqejtHxTFn1S8Lzinf5zU6LeBuH97K-Bc5YLOUr6C3XMg-Nymw/s390/lp.png" />
+			<p>Yürümekte olan sorgu yürütmesi sırasında her saniye güncellenen derlenmiş plan ile yürütme bağlamını ifade eder. Bu, operatörler aracılığıyla akan gerçek satır sayısı, geçen süre ve tahmini sorgu ilerlemesi gibi çalışma zamanı bilgilerini içerir.</p>
+			</section>
+	
+
+
+
+		<h2>Scan Türleri</h2>
+		<p>SQL sorguları, veritabanındaki kayıtları almak veya değiştirmek için kullanılır. Kayıtların seçilmesi, filtrelenmesi veya sıralanması gibi işlemler için veri tabanı motoru, sorgu için farklı tarama yöntemlerini kullanır. </p>
+		
+		
+		<ol>
+			<li>Table Scan: Veri tabanı motoru, tüm tabloyu okur ve koşula uygun olan satırları seçer. Bu tarama yöntemi, küçük veri setleri için kullanılabilir, ancak büyük veri setlerinde yavaş çalışır.</li>
+			<li>Index Scan: Veri tabanı motoru, bir indekse bakarak koşula uygun satırları seçer. Bu yöntem, table scan'dan daha hızlı çalışır, ancak veri seti çok büyükse yine de yavaş olabilir.</li>
+			<li>Index Seek: Veri tabanı motoru, indekse bakarak koşula uygun satırları seçer, ancak tüm indeksi okumak yerine, indeksin belirli bir bölümüne odaklanır. Bu, index scan'dan daha hızlı çalışır.</li>
+			<li>Bookmark Lookup: Veri tabanı motoru, bir indeks veya cluster index kullanarak bir satırın konumunu bulur ve daha sonra bu konumdan verileri almak için tabloya bir bookmark (yer işareti) kullanır. Bu yöntem, cluster index varsa ve küçük veri setleri için etkilidir, ancak büyük veri setleri için yavaş olabilir.</li>
+			<li>RID Lookup: Veri tabanı motoru, bir tablo taraması yaptıktan sonra, belirli bir satırın konumunu belirlemek için bir satır tanımlayıcısı (RID) kullanır. Bu yöntem, bookmark lookup'dan daha yavaş çalışır ve genellikle en son çare olarak kullanılır.</li>
+			<li>Clustered Index Scan: Veritabanı yönetim sistemlerinde bir sorgunun çalıştırılması sırasında kullanılan bir arama yöntemidir. Bu yöntem, sorgulanan verilerin fiziksel olarak saklandığı sıralı yapılarda arama yapmak için kullanılır.</li>
+		</ol>
+
+		<h2></h2>
+		<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhSVCDUMdbjfMY3XyYa08JBQlL4gU4k8ATYgwa1A4SOQd8_Lkhl1drrMQzx0txmpvEG9KjVc8jJrqgpSCoSgtJFWz3TLHPOLqwvRpaKlq3Os0gNeVp8gbiAVc0NAeUoSco06YIfNWrZSkt4iyOJzZp7gWiRHnBsTudRs5hLMH_BqU0AybWPFFV-X3EWjw/s623/plan.png" />
+		<ol style="text-align: left;"><li><span style="font-family: courier; font-size: medium;">
+			<b>Physical Operation: </b>
+			İndeks Arama, Küme İndeksi
+			Taraması vb. gibi işlemleri gerçekleştiren nesnelerdir. Mantıksal
+			İşlemciler, bu tür işlemlerin tanımlanan işlemleri
+			gerçekleştirmesi için bu tür işlemcilere yönelik yönerge
+			sağlar.&nbsp;</span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Logical Operation: </b> 
+				Fiziksel İşlemin bir sonucu olarak, Yazılım
+			Geliştiricilerimiz Mantıksal İşlemcilerin çalışmasını
+			kullanırlar. Hangi sorgunun işlenmesinin gerekli olduğunu ve nasıl
+			performans göstereceğini açık bir şekilde gösterir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Actual Execution Mode:</b> 
+				Bu bölüm, yürütülecek gerçek planı tasvir
+			edecektir. İşlem motoru tarafından kullanılır ve sorgunun
+			yürütülmesi için kullanılır. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Execution Mode:</b> 
+				Yukarıdaki plana benzer, ancak tek farkı
+			tahmini değeri göstermesidir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Actual Number of Rows for All Executions:</b> 
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Actual Number of Batches:</b> 
+			Yalnızca Gerçek yürütme planında mevcut olacaktır. Batch sorgusuysa, Batch Sayısı döndürülür. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Operator Cost:</b> 
+				Sorgumuzda herhangi bir diğer işletimsel
+			maliyet varsa, bunun hesaplamasını yapacak ve burada
+			gösterilecektir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated I/O Cost: </b>
+				Sonuç kümesinin giriş ve çıkış
+			maliyetlerinin doğru sayısını gösterir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated CPU: </b> 
+				İşlemlerin CPU ile yürütülmesi için gerekli
+			maliyeti tahmin eder. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Number of Executions:</b> 
+				Yalnızca Actual Execution Plan'da mevcut olacaktır.
+			Tek batch'te, Optimize Edicinin işleyebileceği yürütme sayısı. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Number of Executions:</b> 
+				Yukarıdakiyle benzer, ancak tek fark tahmini
+			değeri vermesidir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Number of Rows to be Read:</b> 
+				Bu, Optimize Edicinin
+			kaç satırın döndürüleceğini tahmin ettiği sadece bir
+			tahmindir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Number of Rows Per Execution: </b> 
+				Bu, Optimizasyon Aracısı tarafından
+			tahmin edilen okunacak satır sayısını gösterir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Estimated Row Size: </b> 
+				Adından da anlaşılacağı gibi, depolamanın
+			tahmini satır boyutunu gösterir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Actual Rebinds: </b> 
+				Bu, bir nesnenin işlenmesi için kaç kez
+			yeniden değerlendirilmesi gerektiği gibi bilgileri verir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Actual Rewinds:</b> 
+				Bu bölüm, gerçek yürütme planında
+			tekrarlanacaktır. İlişkili işlemde, toplam satır sayısı iç
+			içe sonuç veri kümeleri kullanılarak yinelenir. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Ordered: </b>
+				Hangi işlemin yapıldığı veri kümesinin sıralama uygulayıp
+			uygulamadığını belirler. Yukarıdaki örnekte kontrol ederseniz,
+			henüz sıralama yapılmadığı için False (Yanlış) döndürüyor.
+			Sıralama yapılırsa True (Doğru) olacaktır. </span>
+			</li>
+			
+			<li><span style="font-family: courier; font-size: medium;">
+				<b>Node ID: </b> 
+				Bu, sağdan sola ve ardından genellikle yukarıdan
+			aşağıya doğru benzersiz bir numaralandırmayı takip eder. Bu
+			nedenle, En Alt Sağ Düğüm Kimliği = 1 ve Yürütme Planı
+			Ağacına Dayalı Maksimum Düğüm Kimliği En Üst Sol'a sahip
+			olacaktır. </span>
+			</li></ol>
+
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		<p>Kaynak: https://gelecegiyazanlar.turkcell.com.tr/konu/egitim/microsoft-sql-server-301/index</p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Proxychains ile Tor ağına bağlanmak anonim olarak internette gezmek, proxychains ve tor ile ip gizlemek, internette anonim gezmek ve proxychains ile program çalıştırmak" />
+		<meta name="keywords" content="proxychains, tor, ip gizleme, ip gizleme programı, proxychains kullanımı" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>ProxyChains ve Tor Servisi Kullanımı ve Anonim Olmak (Proxychains Kullanımı)</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+		<h1>ProxyChains ile Tor Ağına Bağlanmak ve Anonim Olmak (Proxychains Kullanımı)</h1>
+			<p><abbr title="The Onion Router">Tor</abbr> kullanıcılara internet üzerinde anonim iletişim olanağı sağlayan bir ağdır. Proxychains ise kullandığımız programların belirlediğimiz proxyler(vekil sunucu) üzerinden internete bağlanmasını sağlayan bir programdır. Proxychains ile beraber tor ağını kullanarak programlarımızın internete tor ağı ile yani farklı ip adresi ile çıkması sağlanabilir.</p>
+
+			<h2>Proxychains ve Tor ile Neler Yapılabilir?</h2>
+			<p>nmap, sqlmap, ping gibi birçok network programını proxychains ile tor ağına yönlendirebilir, ve hedef sistemlere tor ağı üzerinden erişilmiş olunur. Böylece sizin ip adresiniz gizli kalır.</p>
+			<p>Kullanımı:</p>
+			<pre class="code"># proxychains &lt;servis-ya-da-programadı&gt; &lt;program-argümanları&gt;</pre>
+			<p>Sadece kullanmak istediğimiz programdan önce <q>proxychains</q> yazıp önceden tanımlı olan proxy üzerinden programın internete çıkmasını sağlıyoruz.</p>
+
+
+			<h2>Proxychains ve Tor Yüklenmesi</h2>
+			<p>Proxychains programının ve tor servisini yüklemek için aşağıdaki komutu terminale girmeniz yeterlidir.</p>
+			<pre class="code"># sudo apt-get install tor &amp;&amp; sudo apt-get install proxychains</pre>
+			<p>Kali-linux'te proxychains kurulu gelmektedir.</p>
+			<p>Eğer paketler paket deponuzda yok ise github adresi üzerinden kurulum yapılabilir.</p>
+			<p>https://github.com/haad/proxychains adresinden proxychains ve https://www.torproject.org/download adresinden tor indirilebilir.</p>
+
+			<h2>Proxy(Vekil Sunucu) Tanımlama</h2>
+			<p>Proxychains default olarak tor ağını kullanır. Ancak eğer belirtilirse kendi proxy(vekil sunucunuz) üzerinden internete bağlanabilirsiniz.</p>
+			<p><q>/etc/proxychains.conf</q> dosya içerisinde proxychains için gerekli ayarlar yapılabilir, ve kullanmak istediğiniz proxy bu dosyada belirtilebilir.</p>
+
+			<pre class="scroll">user@linuxpc:/$ cat /etc/proxychains.conf
+
+# proxychains.conf  VER 3.1
+#
+#        HTTP, SOCKS4, SOCKS5 tunneling proxifier with DNS.
+#
+
+# The option below identifies how the ProxyList is treated.
+# only one option should be uncommented at time,
+# otherwise the last appearing option will be accepted
+#
+<span style="color: green">#dynamic_chain</span>
+#
+# Dynamic - Each connection will be done via chained proxies
+# all proxies chained in the order as they appear in the list
+# at least one proxy must be online to play in chain
+# (dead proxies are skipped)
+# otherwise EINTR is returned to the app
+#
+<span style="color: green">strict_chain</span>
+#
+# Strict - Each connection will be done via chained proxies
+# all proxies chained in the order as they appear in the list
+# all proxies must be online to play in chain
+# otherwise EINTR is returned to the app
+#
+<span style="color: green">#random_chain</span>
+#
+# Random - Each connection will be done via random proxy
+# (or proxy chain, see  chain_len) from the list.
+# this option is good to test your IDS :)
+
+# Make sense only if random_chain
+#chain_len = 2
+
+# Quiet mode (no output from library)
+#quiet_mode
+
+# Proxy DNS requests - no leak for DNS data
+<span style="color: orange">proxy_dns</span>
+
+# Some timeouts in milliseconds
+tcp_read_time_out 15000
+tcp_connect_time_out 8000
+
+# ProxyList format
+#       type  host  port [user pass]
+#       (values separated by 'tab' or 'blank')
+#
+#
+#        Examples:
+#
+#            	socks5	192.168.67.78	1080	lamer	secret
+#		http	192.168.89.3	8080	justu	hidden
+#	 	socks4	192.168.1.49	1080
+#	        http	192.168.39.93	8080
+#
+#
+#       proxy types: http, socks4, socks5
+#        ( auth types supported: "basic"-http  "user/pass"-socks )
+#
+[ProxyList]
+<span style="color: blue"># add proxy here ...</span>
+# meanwile
+# defaults set to "tor"
+<span style="color: red">socks4 	127.0.0.1 9050</span>
+</pre>
+<p>Yukarıdaki çıktının sonundaki mavi alan silinip eklenmek istenilen proxyler eklenebilir. Eğer tor ağını kullanmak istiyorsanız birşey yapmanıza gerek yok(kırmızı kısım). Default olarak tor ağı seçili ve kullanıma hazır.</p>
+<br />
+<p>Yeşil ile işaretlenmiş kısımlar ise nasıl bir zincir kuralı uygulanacağı belirlenir. Eğer tor ağı kullanmak yerine mavi alana(proxy list alanı) kullanmak istediğiniz proxyleri girdiyseniz. Bu proxyleri nasıl kullanacağını belirtilir.</p>
+<br />
+<p><span style="color: green">dynamic_chain</span> - Bu alan proxy listemizdeki proxyleri birbirine aynı sırayla bağlayıp bizi internete çıkaracaktır. Ancak eğer bir proxy yanıt vermez ise o proxy atlanıp sonrakine geçilir.</p>
+<p><span style="color: green">random_chain</span> - Her bağlantıda proxy listemizden rastgele bir proxy seçer ve onun üzerinden bağlanır.</p>
+<p><span style="color: green">strict_chain</span> - Proxy listesindeki sıraya göre tüm proxylere bağlanacaktır. Ve listenin sonundaki proxy üzerinden çıkış yapacaktır.</p>
+<br />
+<p>Kullanamak istediğimiz chain türünün başındaki # işaretini siliyoruz ve diğerlerinin başına # işaretin atıyoruz.</p>
+<br />
+<p>İnternet üzerinden bedava proxy adresleri bulunabilir ve bu listeye eklenebilir.</p>
+<br />
+<p>Turuncu renkli alanın başından # varsa kaldırın. Bu alan DNS sunucusu olarak belirtilen proxylerin dnslerini kullanır. Eğer başında # varsa proxy_dns kullanmıyorsunuz demektir. Bu da ip adresiniz gizli olsa bile bir web adresini çözümlerken kullandığınız dns sunucusunda kayıt olarak düşmeniz demektir.</p>
+<p>DNS kontrolu için önce normal tarayıcınızdan https://www.dnsleaktest.com adresine bağlanın, daha sonra tarayıcınızı kapatın ve <q>proxychains firefox https://www.dnsleaktest.com</q> yazarak tor ağı ya da belirlediğiniz proxy üzerinden internete çıkın ve test edin. Konumunuzu bulabiliyor mu?</p>
+
+			<h2>Tor Servisinin Başlatılması</h2>
+			<p>Tor ağını kullanmak için bilgisayarımızda tor servisini başlatmamız gerekir.</p>
+<pre class="code"># service tor start</pre>
+<p>Tor Servisinin Durumunun Kontrolu:</p>
+<pre class="code"># service tor status</pre>
+<p>Tor Servisini Kapatmak:</p>
+<pre class="code"># service tor stop</pre>
+<p>Eğer servisi başlatmada sorun yaşıyorsanız <q>service tor</q> yerine <q>/etc/init.d/tor</q> yazarak deneyin.</p>
+
+
+		<h2>Proxychains ile Program Çalıştırmak ve Tor Ağı Üzerinden İnternete Çıkmak</h2>
+<p>Ayarlarımızı yaptık, tor servisimizi çalıştırdık artık bunu internet kullanan programlar ile nasıl kullanırız onu görelim.</p>
+<p>Kullanımı:</p>
+			<pre class="code"># proxychains &lt;servis-ya-da-programadı&gt; &lt;program-argümanları&gt;</pre>
+		<p>IP adresimizi kontrol edelim. Bunun için şu siteler kullanılabilir.</p>
+		<ol>
+			<li>ifconfig.me</li>
+			<li>icanhazip.com</li>
+			<li>ipecho.net/plain</li>
+			<li>ident.me</li>
+			<li>bot.whatismyipaddress.com</li>
+		</ol>
+		<p>Normal <abbr title="Internet Service Provider">ISP</abbr>'nin bize verdiği ip adresi için:</p>
+		<pre class="code"># curl ifconfig.me
+<span style="color: green">93.194.118.164</span>
+# curl icanhazip.com
+<span style="color: green">93.194.118.164</span></pre>
+<p>Şimdi proxychains ile tor ağı üzerinden çıkış yapalım:</p>
+<pre class="code"># proxychains curl ifconfig.me
+ProxyChains-3.1 (http://proxychains.sf.net)
+|DNS-request| ifconfig.me
+|S-chain|-&lt;&gt;-127.0.0.1:9050-&lt;&gt;&lt;&gt;-4.2.2.2:53-&lt;&gt;&lt;&gt;-OK
+|DNS-response| ifconfig.me is 153.121.72.211
+|S-chain|-&lt;&gt;-127.0.0.1:9050-&lt;&gt;&lt;&gt;-153.121.72.211:80-&lt;&gt;&lt;&gt;-OK
+<span style="color: green">104.244.75.82</span>
+</pre>
+<p>Görüldüğü gibi ip adresimizi farklı olarak görünüyor.</p>
+
+<br />
+		<p>Proxychains ile tor ağı üzerinden ssh bağlantısı kurmak:</p>
+		<pre class="code"># proxychains ssh kullanıcıadı@serveradı</pre>
+
+
+<br />
+
+		<p>Proxychains ile tor ağı üzerinden telnet bağlantısı kurmak:</p>
+		<pre class="code"># proxychains telnet www.omurfurkanulu.com 80</pre>
+
+<br />
+
+		<p>Proxychains ile tor ağı üzerinden tarayıcıyı başlatmak:</p>
+		<pre class="code"># proxychains firefox</pre>
+
+<br />
+
+		<p>Proxychains ile tor ağı üzerinden nc programını başlatmak:</p>
+		<pre class="code"># proxychains nc 216.58.201.68 80</pre>
+
+
+<br />
+
+		<p>Proxychains ile tor ağı üzerinden nmap programını kullanarak port tarama başlatmak:</p>
+		<pre class="code"># proxychains nmap 216.58.201.68</pre>
+
+
+<br />
+
+		<p>Proxychains ile tor ağı üzerinden metasploit(msfconsole) kullanmak için önce <q>/etc/proxychains.conf</q> dosyasının sonuna <q>localnet 127.0.0.1 000 255.255.255.255
+</q> satırını eklemelisiniz.</p>
+		<pre class="code"># sudo echo "localnet 127.0.0.1 000 255.255.255.255" >> /etc/proxychains.conf
+# proxychains msfconsole</pre>
+
+</section>
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+		</div><!--page-->
+
+
+
+	</body>
+</html>

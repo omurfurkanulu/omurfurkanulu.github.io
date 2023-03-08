@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="GNU/Linux Hardlink ve Softlink Kullanımı, GNU/Linux Sembolik Link Kullanımı, Hardlink ve softlink nedir? Inode nedir?" />
+		<meta name="keywords" content="hardlink, softlink, ln command, symbolic link, linux" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>GNU/Linux Hard Link ve Soft Link Kullanımı (Symbolic Link - Sembolik Link - ln Komutu)</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >GNU/Linux Hard Link ve Symbolic Link Kullanımı - Inode Nedir? (ln,link,stat komutu)</h1>
+
+			<p>Linking(bağlama), bir dosyayı başka bir dosyaya(link) bağlamaya denilebilir. Hardlink oluşturulan bağlantının aynı dosyaymış gibi davranmasına sebeb olurken sembolik link ise aynı dosyayı gösteren bir gösterici olarak düşünülebilir.</p>
+
+			<h2>Inode Nedir?</h2>
+			<p>Inode, Linux ve Unix benzeri işletim sistemlerinde dosya sistemindeki bir veri yapısıdır. Dosya adı ve dosya içeriği hariç dosya hakkındaki tüm bilgileri barındırır. Kısaca bir dosya hakkında <abbr title="Veriler hakkındaki veriler: Üstbilgi">metadata</abbr> bilgisini barındırır. Dosyanın sistemdeki konumu, dosya nitelikleri, dosya boyutu, oluşturma tarihi vs.</p>
+			<p>Bir programa bir dosyayı kullanmasını söylediğimizde sistem dosyanın inode numarasından ismi bulur. Inode numaraları sistem üzerinde inode tablosunda bulunur. Dosya sisteminde, dosya isimleri birer inode ile gösterililr. Her inode tek bir dosyayı gösterir. Yani her dosya için o dosyayı gösteren eşsiz bir inode numarası vardır.</p>
+
+			<h3>Dosyaların Inode Numaralarını Öğrenme</h3>
+			<p>Bir dosyanın inode numarasını öğrenmek için <q>ls</q> komutunu <q>-i</q> şeçeneği ile beraber çalıştırabiliriz. Bu bize dosyanın inode numarasını verecektir.</p>
+			<pre class="code">user@linuxpc:~/links$ ls -lai
+total 12
+<span style="color: red">659602</span> drwxr-xr-x  2 user user 4096 Eki 28 16:53 .
+<span style="color: red">524290</span> drwxr-xr-x 19 user user 4096 Eki 28 16:45 ..
+<span style="color: red">659653</span> -rw-r--r--  1 user user   16 Eki 28 16:54 dosya1.txt
+</pre>
+<p>Yukarıdaki çıktıdan bulunduğumuz dizinin(.) 659602 inode numarasına sahip olduğunu, üst dizinin(..) yani home dizininin 524290 numaralı inode'a ait olduğunu ve son olarak links dizinindeki dosya1.txt dosyasının 659653 inode numarasına sahip olduğunu görebiliriz.</p>
+<br />
+<p>Aynı şekilde <q>stat</q> komutu kullanılarak bir dosyanın inode numarası öğrenilebilir.</p>
+
+<pre class="code">user@linuxpc:~/links$ stat dosya1.txt
+  File: dosya1.txt
+  Size: 16        	Blocks: 8          IO Block: 4096   regular file
+Device: 802h/2050d	Inode: <span style="color: red">659653</span>       Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/  user)   Gid: ( 1000/  user)
+Access: 2018-10-28 16:53:56.228472967 +0300
+Modify: 2018-10-28 16:54:04.584399901 +0300
+Change: 2018-10-28 16:54:04.584399901 +0300
+ Birth: -
+</pre>
+
+			<h2>Hard Link Oluşturma ve Kullanımı (ln, link komutu)</h2>
+			<p>Hard Link bir dosyaya alternatif isimli bir dosya oluşturmak istenildiğinde kullanılır. Oluşturulan hard link orjinal dosya ile aynı inode numarasına sahip olacaktır. Bu sebeble birisine yapılan değişiklik iki dosyayada etki edecektir. Bir dosyaya istenilen sayıda hard link oluşturulabilir. Aynı zamanda bir hard link'e başka bir hard link oluşturulabilir. Ancak hard link oluşturamayacağımız durumlar vardır.</p>
+
+			<ol>
+			<li>Dizinlere</li>
+			<li>Dosya Sistemlerine</li>
+			<li>Partisyonlara</li>
+			</ol>
+			<p>Hard link oluşturulamaz. Inode numaraları her dosya sisteminde ve partisyonda eşsizdir bu yüzden partisyonlar ve dosya sistemleri arasında hard link oluşturulamaz.</p>
+
+
+<br />
+			<p>Bir dosyaya hard link oluşturmak için <q>ln</q> ya da <q>link</q> komutunu kullanabiliriz.</p>
+			<p>Kullanımı:</p>
+			<pre class="code"># ln &lt;dosyaadı&gt; &lt;hardlinkadı&gt;
+# link &lt;dosyaadı&gt; &lt;hardlinkadı&gt;</pre>
+
+			<p>Bir dosyaya hard link oluşturduğumuzda, oluşturduğumuz hard link orjinal dosya ile aynı inode numarasına sahip olacaktır. Yani iki dosyada hard disk üzerindeki aynı veriyi gösterir. Bu dosyalardan herhangi birine yapılan değişiklik iki dosya içinde uygulanmış olur. </p>
+			<br />
+			<pre class="code">user@linuxpc:~/links$ echo "Merhaba Dünya!" > dosya1.txt
+user@linuxpc:~/links$ ls -i
+659651 dosya1.txt</pre>
+<p><q>dosya1.txt</q> adındaki dosyamızı oluşturduk içine <q>Merhaba Dünya!</q> yazdırdık. Dosyanın inode numarası 659651. Şimdi bu dosyaya bir hard link oluşturalım.</p>
+<br />
+<pre class="code">user@linuxpc:~/links$ ln dosya1.txt hlinkdosya1
+user@linuxpc:~/links$ ls -li
+total 8
+<span style="color: red">659651</span> -rw-r--r-- 2 user user 16 Eki 28 17:43 dosya1.txt
+<span style="color: red">659651</span> -rw-r--r-- 2 user user 16 Eki 28 17:43 hlinkdosya1
+</pre>
+
+<p>Oluşturduğumuz hard link'in ve orjinal dosyamızın inode numaralarının aynı olduğunu görüyoruz. İşletim sistemimiz için bu iki dosyanın birbirinden farkı yoktur.</p>
+<br />
+
+<p>Şimdi dosyalarımız <q>stat</q> komutu ile inceleyelim ve belirttiğimiz dosyanın yani inode numarasının kaç tane bağa(link) sahip olduğunu görelim.</p>
+<pre class="code">user@linuxpc:~/links$ stat dosya1.txt hlinkdosya1
+  File: dosya1.txt
+  Size: 34        	Blocks: 8          IO Block: 4096   regular file
+Device: 802h/2050d	Inode: 659651      Links: <span style="color: red">2</span>
+Access: (0644/-rw-r--r--)  Uid: ( 1000/  user)   Gid: ( 1000/  user)
+Access: 2018-10-28 18:01:30.805396974 +0300
+Modify: 2018-10-28 18:01:26.457367046 +0300
+Change: 2018-10-28 18:01:26.457367046 +0300
+ Birth: -
+
+  File: hlinkdosya1
+  Size: 34        	Blocks: 8          IO Block: 4096   regular file
+Device: 802h/2050d	Inode: 659651      Links: <span style="color: red">2</span>
+Access: (0644/-rw-r--r--)  Uid: ( 1000/  user)   Gid: ( 1000/  user)
+Access: 2018-10-28 18:01:30.805396974 +0300
+Modify: 2018-10-28 18:01:26.457367046 +0300
+Change: 2018-10-28 18:01:26.457367046 +0300
+ Birth: -
+</pre>
+<p>Yukarıdaki çıktıda Links alanında yazan 2 sayısı belirttiğimiz dosyanın yani inode'un sahip olduğu hard linklerin sayısını gösteriyor. Bu inode'a iki bağ var. Anlaşıldığı üzere orjinal dosyayıda bir bağ(link) olarak görüyor.</p>
+
+
+<br />
+<p>Şimdi oluşturduğumuz hardlink dosyasını değiştirelim ve neler olacak görelim.</p>
+<pre class="code">user@linuxpc:~/links$ echo "This is GNU/Linux" >> hlinkdosya1
+
+user@linuxpc:~/links$ cat hlinkdosya1
+Merhaba Dünya!
+This is GNU/Linux
+
+user@linuxpc:~/links$ cat dosya1.txt
+Merhaba Dünya!
+This is GNU/Linux
+</pre>
+<p>Görüldüğü üzere bir dosyaya yapılan değişiklik diğer dosyayada etki ediyor. Bunun sebebi aynı inode numaralarına sahip olmaları, sistem dosyanın inode numarasını alıyor ve değişikliği bu inode üzerinden gerçekleştiriyor. İki dosyada aynı inode numarasına sahip olduğundan iki dosyada değişmiş oluyor. Aynı şekilde bu dosyarın konumlarını değiştirsekte halen aynı veriyi işaret ediyor olacaklardır.</p>
+
+
+
+<br />
+<p>Şimdi orjinal dosyamızı silelim ve neler olacak görelim.</p>
+<pre class="code">user@linuxpc:~/links$ rm dosya1.txt
+user@linuxpc:~/links$ ls -i
+659651 hlinkdosya1
+
+user@linuxpc:~/links$ cat hlinkdosya1
+Merhaba Dünya!
+This is GNU/Linux
+
+user@linuxpc:~/links$ stat hlinkdosya1 | grep Link
+Device: 802h/2050d	Inode: 659651      Links: 1
+</pre>
+<p>Dosyayı silmek istiyorsak, dosyanın sahip olduğu inode'u silemiz gerekir. En azından inode ortadan kalktığı için dosya erişilemez olacaktır. Bunun içinde inode'un bağlı olduğu tüm linklerin silinmesi gerekir.</p>
+<br />
+
+<p>Sonuç olarak hard link dosyanın ikizi gibidir. Ancak aynı zamanda aynı dosyadır. Mitolojideki 3 başlı köpek olan Kerberos'a benzetebiliriz. Her kafa aynı vucuda sahip ancak bir kafayı kopardığında vucut hala ordadır. Yok etmek için hepsini yok etmek gerekir. İlginç bir tanım oldu!</p>
+
+
+
+			<h2>Sembolik Link Oluşturma ve Kullanımı - (Soft Link)</h2>
+<p>Sembolik linkler daha kullanışlı olabilir. Hard linkteki gibi kısıtlamaları yoktur. Dizinlere, diğer dosya sistemlerine ve diğer partisyonlara sembolik link oluşturulabilir. Aslında windows ortamındaki kısayollar gibi düşünülebilir. Sembolik linkler bir dosyayının konumunu işaret ederler. Bir sembolik link, hard link gibi dosyanın diskketi fiziksel konumunu işaret etmek yerine dosyanın yolunu(path) işaret ederler.</p>
+<ol>
+	<li>Eğer sembolik link başka bir dizine taşınırsa halen sembolik link geçerlidir.</li>
+	<li>Ancak eğer orjinal dosya farklı bir dizine taşınırsa sembolik link artık geçersizdir.</li>
+	<li>Orjinal dosya silinirse, sembolik link geçersizdir.</li>
+	<li>Ancak sembolik link aynı konumu işaret etmeye devam eder. Bu sebeble sembolik linkin gösterdiği konuma aynı isimde dosya oluşturulabilir ve sembolik link kullanılmaya devam edilebilir.</li>
+	<li>Sembolik linklerin boyutu, gösterdiği dosya boyutuyla alakalı değildir. Sadece dosya yolunu gösteren dosyalardır.</li>
+</ol>
+
+<p>Kullanımı:</p>
+<pre class="code"># ln -s &lt;dosya-ya-da-dizin&gt; &lt;sembolik-link-adı&gt;</pre>
+<p><q>-s</q> seçeneği ile bunun bir sembolik link olduğunu belirtiyoruz. Links dizinimiz içerisindeki dosyaları silelim ve tekrar dosya1.txt adında bir dosya yaratalım.</p>
+
+<pre class="code">user@linuxpc:~/links$ rm ./*
+user@linuxpc:~/links$ echo "Merhaba Dünya!" > dosya1.txt
+user@linuxpc:~/links$ ln -s dosya1.txt sym-dosya1
+user@linuxpc:~/links$ ls -li
+total 4
+660760 -rw-r--r-- 1 user user 16 Eki 28 18:27 dosya1.txt
+660853 lrwxrwxrwx 1 user user 10 Eki 28 18:27 sym-dosya1 -> dosya1.txt
+</pre>
+<p>Son satıra bakarsak oluşturduğumuz sembolik link'in inode numarasının orjinal dosyanınkinden farklı olduğunu görürüz. Yani bu iki dosya birbirinden bağımsız. Ancak oluşturduğumuz sembolik hedefteki dosyayı gösterdiğinden sembolik link üzerinden orjinal dosyamıza bağlanabiliriz ve o dosyayı değiştirebiliriz.</p>
+<br />
+<p>Son satırdaki sembolik linkin dosya erişim haklarının olduğu kısmın en sol başına bakarsak bu dosyanın bir sembolik link olduğunu belirten <q>l</q> karakterinin olduğunu görürüz.</p>
+<pre class="code">660853 <span style="color: red">l</span>rwxrwxrwx 1 user user 10 Eki 28 18:27 sym-dosya1 <span style="color: red">-&gt;</span> dosya1.txt</pre>
+<p>Aynı zamanda dosyanın ok işareti ile işaret ettiği dosya yolunu görebiliriz.</p>
+<br />
+
+
+<pre class="code">user@linuxpc:~/links$ stat dosya1.txt | grep Link
+Device: 802h/2050d	Inode: 660760      Links: 1
+</pre>
+<p>Görüldüğü üzere sembolik linkler inode üzerinde bir bağ oluşturmuyor. Çünkü sembolik linkler belirtilen yolu(path) gösteriyor.</p>
+<br />
+
+<p>Eğer orjinal dosyayı silersek sembolik link'in gösterdiği adreste bir şey olmuyacaktır. Ancak sembolik link'in gösterdiği dosya ile aynı isimde yeni bir dosya oluşturursak sembolik link bu yeni dosyayı işaret edecektir.</p>
+<pre class="code">user@linuxpc:~/links$ cat dosya1.txt sym-dosya1
+Merhaba Dünya!
+Merhaba Dünya!
+
+user@linuxpc:~/links$ rm dosya1.txt
+
+user@linuxpc:~/links$ ls -li
+total 4
+661354 lrwxrwxrwx 1 user user   10 Eki 28 18:57 <span style="color: red">sym-dosya1 -> dosya1.txt</span>
+
+user@linuxpc:~/links$ echo "Bu farklı dosya" > dosya1.txt
+user@linuxpc:~/links$ ls -li
+total 4
+661357 -rw-r--r-- 1 user user   17 Eki 28 18:58 dosya1.txt
+661354 lrwxrwxrwx 1 user user   10 Eki 28 18:57 sym-dosya1 -> dosya1.txt
+
+user@linuxpc:~/links$ cat sym-dosya1
+Bu farklı dosya
+</pre>
+<p>Yukarıdada görüldüğü gibi orjinal dosyamızı sildik ancak sembolik link aynı konumu göstermeye devam etti. Yeni bir dosya oluşturduk ve içeriğini farklı bir şey yaptık.
+Görüldüğü üzere sembolik link yeni dosyayı işaret ediyor. Oluşturduğumuz yeni dosyanın inode numarasının sildiğimiz dosyanın inode numarasından farklı olduğunu görüyoruz.</p>
+
+
+
+		</section>
+		<br /><br /><br />
+		<footer>
+		<p>Kaynak: http://www.linfo.org/inode.html</p>
+		<p>Kaynak: http://www.linfo.org/metadata.html</p>
+		<p>Kaynak: https://www.tldp.org/LDP/intro-linux/html/sect_03_01.html#sect_03_01_03_02</p>
+		<p>Kaynak: http://www.linfo.org/hard_link.html</p>
+		</footer>
+<br /><br /><br />
+		</div><!--page-->
+
+
+	</body>
+</html>

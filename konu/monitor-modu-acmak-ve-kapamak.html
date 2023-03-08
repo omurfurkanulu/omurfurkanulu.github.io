@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Airmon-ng Kullanımı, Monitor modunu açma ve kapatma" />
+		<meta name="keywords" content="arimon-ng, monitormod, aircrack-ng, airmon-ng check kill" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Monitor Modu Açmak ve Kapatmak (Airmon-ng Kullanımı)</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+
+
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >Monitor Modu Açma ve Kapama (Airmon-ng Kullanımı)</h1>
+			<ol>
+				<li><a href="#monitor-mode-nedir">Monitor Modu Nedir?</a></li>
+				<li><a href="#arayuz-adi-ogrenme-iw-dev">Wireless Kartının Arayüz Adını Öğrenme (iw dev)</a></li>
+				<li><a href="#iw-list">Wireless Arayüzünün Monitor Modu Özelliği Olup Olmadığını Kontrol Etmek (iw list)</a></li>
+				<li><a href="#airmon-ng-check-kill">Monitor Modunun Çalışmasını Engelleyen Servisleri Sonlandırmak (airmon-ng check kill)</a></li>
+				<li><a href="#airmon-ng-start">Monitor Modunu Açmak (airmon-ng start &lt;interface&gt;)</a></li>
+				<li><a href="#airmon-ng-stop">Monitor Modunu Kapatmak (airmon-ng stop &lt;interface&gt;)</a></li>
+				<li><a href="#restart-wifi-services">Monitor Modunu Engelleyen Servisleri Yeniden Başlatmak (networking, network-manager)</a></li>
+				<li><a href="#monmod-toggle-script">Monitor Modu Aç/Kapa(toggle) Bash Script</a></li>
+			</ol>
+			<h2><a id="monitor-mode-nedir">Monitor Mode Nedir?</a></h2>
+			<p>Monitor modu bilgisayarımızın hiç bir sinyal göndermediği sadece çevresindeki sinyalleri dinlendiği moddur.</p>
+			<p>NOT: Anlatım Debian tabanlı sistemler içindir. Diğer sistemlerde farklı komutlar gerekebilir.</p>
+
+			<h2><a id="arayuz-adi-ogrenme-iw-dev">Wireless Kartının Arayüz Adını Öğrenme (iw, iwconfig)</a></h2>
+
+			<p>Monitor modunu açmadan önce wi-fi arayüzümüzün(interface) adını öğrenmemiz lazım.
+				Arayüz adını öğrenmek için <q>iw</q> veya <q>iwconfig</q> komutu kullanılabilir.</p>
+
+				<br />
+			<pre class="code">$ iw dev | grep Interface
+	Interface wlp2s0</pre>
+
+		<br />
+		<p>Wireless interface adının <q>wlp2s0</q> olduğunu öğrendik. Bu arayüz adı her bilgisayarda farklı olabilir.</p>
+
+
+			<h2><a id="iw-list">Wireless Arayüzünün Monitor Modu Özelliği Olup Olmadığını Kontrol Etmek</a></h2>
+			<p>Wireless arayüzünüzde eğer monitor modu desteği yok ise monitor moduna geçiş yapamazsınız.
+				Arayüzünüzün monitor modu desteği olup olmadığını kontrol etmek için <q>iw list</q> komutu kullanılabilir.</p>
+
+				<br />
+				<pre class="code">$ iw list
+...
+Supported interface modes:
+	 * IBSS
+	 * managed
+	 * AP
+	 * AP/VLAN
+	 * <span style="color:green">monitor</span>
+	 * P2P-client
+	 * P2P-GO
+	 * P2P-device
+...</pre>
+
+		<br />
+		<p><q>iw list</q> komutunu verdikten sonra gelen çıktıda <q>Supported interface modes:</q> alanında <q>monitor</q> adında bir ifade varsa wireless arayüzünüz monitor modunu destekliyordur.</p>
+
+
+		<h2><a id="airmon-ng-check-kill">Monitor Modunun Çalışmasını Engelleyen Servisleri Sonlandırmak (airmon-ng check kill)</a></h2>
+<p>Monitor modunun çalışmasını engelleyen bazı servisler bulunmaktadır. Bu servisleri <q>airmon-ng check kill</q> komutu ile sonlandırabiliriz.</p>
+<br />
+<p>Öncelikle monitor moduna geçtiğimizde bize sorun çıkarabilecek işlemlere bakalım. <q>airmon-ng check</q> komutunu vererek bilgisayarımızın monitor modundayken çalışmasını engelleyecek processleri listeleyebiliriz.</p>
+<br />
+<pre class="code"># airmon-ng check
+
+Found 5 processes that could cause trouble.
+If airodump-ng, aireplay-ng or airtun-ng stops working after
+a short period of time, you may want to run 'airmon-ng check kill'
+
+PID Name
+772 NetworkManager
+776 avahi-daemon
+830 avahi-daemon
+1087 wpa_supplicant
+1219 dhclient
+
+</pre>
+
+<br />
+<p>Şimdi monitor modunu açmamızı engelleyen işlemleri sonlandırmak için <q>airmon-ng check kill</q> komutu kullanıyoruz.</p>
+<br />
+
+			<pre class="code"># airmon-ng check kill
+
+Killing these processes:
+
+  PID Name
+ 1087 wpa_supplicant
+30717 avahi-daemon
+30718 avahi-daemon
+
+</pre>
+
+	<br />
+	<p>NOT: Bu sayfadaki tüm komutlar <q>root</q> kullanıcısı yetkisiyle çalıştırılmıştır. Eğer <q>root</q> kullanıcısı değilseniz komutların başına <q>sudo</q> eklemelisiniz.</p>
+
+
+
+	<h2><a id="airmon-ng-start">Monitor Modunu Açmak (airmon-ng start &lt;interface&gt;)</a></h2>
+	<p>Bilgisayarımızı monitor moduna geçirmek için <q>aircrack-ng</q> araçları içerisinde gelen <q>airmon-ng</q> aracını kullanılabiliriz.</p>
+<br />
+	<p>NOT: iwconfig ve iw programları kullanılarak da monitor modu açılıp kapatılabilir.</p>
+<br />
+	<p>Airmon-ng programına bu wireless arayüzüz adımızı <q>airmon-ng start wlp2s0</q> şeklinde vererek monitor modunu başlatabiliriz.</p>
+	<br />
+	<pre class="code"># airmon-ng start wlp2s0
+
+PHY	Interface	Driver		Chipset
+
+phy0	wlp2s0		iwlwifi		Intel Corporation Wireless 3160 (rev 93)
+
+		(mac80211 monitor mode vif enabled for [phy0]wlp2s0 on [phy0]<span style="color:green">wlp2s0mon</span>)
+		(mac80211 station mode vif disabled for [phy0]wlp2s0)
+
+</pre>
+
+<br />
+<p>Monitor modumuzun başarılı bir şekilde <q>wlp2s0mon</q> arayüzünde başlatıldığını görüyoruz. Kontrol etmek için <q>iw dev</q> komutunu verelim.</p>
+<br />
+<pre class="code"># iw dev
+phy#0
+	Interface wlp2s0mon
+		ifindex 6
+		wdev 0x3
+		addr de:de:de:ba:ba:ba
+		type <span style="color:green">monitor</span>
+		channel 10 (2457 MHz), width: 20 MHz (no HT), center1: 2457 MHz
+		txpower 0.00 dBm</pre>
+
+<br />
+<p><q>iw dev</q> komutu ile wireless arayüzümüze baktığımızda <q>type</q> kısmının Monitor olarak değiştiğini görüyoruz. Artık monitor modunda işlemleri yapmak için <q>wlp2s0mon</q> arayüzünü kullanacağız.</p>
+
+
+
+	<h2><a id="airmon-ng-stop">Monitor Modunu Kapamak (airmon-ng stop &lt;interface&gt;)</a></h2>
+<p>Monitor modunu kapatmak, açmak gibidir sadece <q>start</q> ifadesi yerine <q>stop</q> ifadesini yazmamız yeterlidir. Ancak bu sefer kullanacağımız arayüz monitor modunu temsil eden arayüzümüz yani <q>wlp2s0mon</q> arayüzü.</p>
+<br />
+<pre class="code"># airmon-ng stop wlp2s0mon
+
+PHY	Interface	Driver		Chipset
+
+phy0	wlp2s0mon	iwlwifi		Intel Corporation Wireless 3160 (rev 93)
+
+		(mac80211 station mode vif enabled on [phy0]<span style="color:green">wlp2s0</span>)
+
+		(mac80211 monitor mode vif disabled for [phy0]wlp2s0mon)
+
+</pre>
+<br />
+<p>Kontrol etmek için <q>iw dev</q> komutunu tekrar verelim.</p>
+
+<pre class="code"># iw dev
+phy#0
+	Interface wlp2s0
+		ifindex 9
+		wdev 0x7
+		addr de:de:de:ba:ba:ba
+		type <span style="color:green">managed</span>
+		txpower 0.00 dBm
+</pre>
+<br />
+<p>Çıktıdan anlaşıldığı üzere tekrar <q>managed</q> moduna geri döndük ve monitor modunu kapatmış olduk.</p>
+
+<h2><a id="restart-wifi-services">Monitor Modunu Engelleyen Servisleri Yeniden Başlatmak</a></h2>
+<pre class="code"># service network-manager start
+# service networking start</pre>
+<p>Yukarıdaki komutları verdikten sonra wireless arayüzünüzün düzgün bir şekilde çalışması için gerekli servisler tekrar başlatılacaktır.</p>
+
+
+
+<h2><a id="monmod-toggle-script">Monitor Modu Aç/Kapa(toggle) Bash Script</a></h2>
+<p>Monitor modunu açıp kapayan basit bir bash script yazarak tüm bu işlemleri otomatik hale getirebiliriz.</p>
+
+<br />
+
+<pre class="code">#!/bin/bash
+#Monitor Mode Aç/Kapa(toggle) Script v1.0
+#Date: 18.11.2018
+#Author: Ömür Furkan Ulu
+#Requirements: aircrack-ng and a *nix system
+
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+   echo "Bu script root yetkisiyle çalıştırılmalı (sudo $0)" 1>&2
+   exit 1
+fi
+
+interface=`iw dev | grep Interface | awk '{print $2}'`
+moninterface=`iw dev | grep Interface | grep mon | awk '{print $2}'`
+
+#echo "Monitor mode interface: $moninterface"
+
+#if monitor mode is open, then close the monitor mode
+#if monitor mode is close, then open the monitor mode
+if [ -z "$moninterface" ]
+then
+ #monitor modu kapalı ise aç
+ airmon-ng check kill >/dev/null
+ airmon-ng start $interface >/dev/null
+ iw dev | grep Interface | grep mon | awk '{print $2}'
+else
+ #monitor modu açık ise kapat
+ airmon-ng stop $moninterface >/dev/null
+ service networking start >/dev/null
+ service network-manager start >/dev/null
+ iw dev | grep Interface | awk '{print $2}'
+fi
+
+sleep 2</pre>
+
+<br />
+<p>Kurulum için yukarıdaki komutları kopyalayıp bir dosyaya kaydedin örnek olarak adı <q>monmodtoggle.sh</q> olsun. Dosyanın izinlerine çalıştırma iznini ekleyin. Daha sonra dosyayı PATH değişkenizdeki bir dizine kopyalayın. Son olarak bu yola bir sembolik link ekleyerek programa bir kısayol ekleyin.</p>
+<pre class="code">$ sudo su
+# chmod +x monmodtoggle.sh
+# cp monmodetoggle.sh /usr/local/sbin/
+# ln -s /usr/local/sbin/monmodetoggle.sh /usr/local/sbin/monitormod
+</pre>
+
+<br />
+<p>Scripti kullanmak için</p>
+<pre class="code">$ monitormod
+Bu script root yetkisiyle çalıştırılmalı (sudo /usr/local/sbin/monitormod)
+$ sudo monitormod
+wlp2s0mon
+$ sudo monitormod
+wlp2s0</pre>
+
+<br />
+<p>NOT: Bu scriptte tek bir wireless arayüzünün olduğu kabul edilmiştir. Birden fazla wireless arayüzünüz var ise düzgün çalışmayabilir.</p>
+
+
+<br />
+<br /><br />
+<br />
+<br /><br />
+
+
+		</section>
+
+		<footer>
+		</footer>
+
+		</div><!--page-->
+
+
+	</body>
+</html>

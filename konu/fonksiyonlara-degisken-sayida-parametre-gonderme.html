@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="C değişken sayıda argüman alabilen fonksiyonlar, c bir fonksiyona birden fazla argüman göndermek, c birden fazla parametre alan fonksiyonlar" />
+		<meta name="keywords" content="c, variadic fonksiyonlar, c ... ne demek, c va_list, c va_arg, c va_start" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>C Bir Fonksiyona Birden Fazla Argüman Göndermek (Variadic Variables)</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+		<h1>C Değişken Sayıda Argüman Alabilen Fonksiyonlar (Variadic Functions, ...)</h1>
+
+			<h2>Variadic Fonksiyon Nedir?</h2>
+			<p>Variadic fonksiyonlar değişken sayıda argüman alabilir. Sıradan C fonksiyonlarının alacağı argüman sayısı ve türü önceden belirtilir.
+			Her fonksiyon çağrısında, fonksiyon önceden türü(type) belirtilmiş argümanları bekler. </p>
+
+			<p>Ancak bazı fonksiyonlar önceden belirlenmemiş sayıda argüman alabilirler. Bunlar variadic fonksiyonlardır.</p>
+			<p>Variadic fonksiyonlara en güzel örneklerden birisi <q>printf</q> fonksiyonudur. Printf fonksiyonunun
+			kaç tane argüman alacağı belirtilmemiştir. İstediğimiz kadar argüman gönderebiliriz.</p>
+
+			<p>Printf fonksiyonunun protatipi aşağıdaki gibidir.</p>
+			<pre class="code">int printf(char *fmt, <span style="color: red;">...</span>)</pre>
+			<p>Printf fonksiyonundaki kırmızı renkle gösterilmiş olan üç nokta(ellipsis), bu alana istenilen sayıda ve herhangi bir türde argümanı alabileceğimizi söylüyor.</p>
+			<br />
+			<p>NOT: Bir fonksiyonda ...(ellipsis) kullanırken dikkat edilmesi gerekenler şunlardır;</p>
+			<ol>
+				<li>...(ellipsis) tek başına bir fonksiyonun argümanı olamaz.</li>
+				<pre class="code">int printf(...)  /* YANLIŞ */
+int printf(char *fmt, ...) /* DOĞRU */</pre>
+				<li>...(ellipsis) her zaman bir fonksiyondaki en son argüman olmalıdır.</li>
+				<pre class="code">int printf(char *fmt, ..., int count) /* YANLIŞ */
+int printf(char *fmt, int count, ...) /* DOĞRU */</pre>
+			</ol>
+
+
+			<h2>Variadic Fonksiyonlara Gönderdiğimiz Değişken Sayıdaki Argümana Nasıl Ulaşırız?</h2>
+			<p>Variadic bir fonksiyona gönderdiğimiz değişken sayıdaki argümanı yani ...(ellipsis) ile belirtilen alana gelen argümanların listesini almak için
+			sayfamıza <q>&lt;stdarg.h&gt;</q> standart header dosyasını dahil etmemiz gerekir.</p>
+			<p>stdarg.h dosyası argüman listesini işlememiz için gerekli macroları barındırır.</p>
+			<p>Örnek olarak şöyle bir fonksiyonumuz olsun;</p>
+			<pre class="code">int sum(int count, ...)</pre>
+
+
+			<p>stdarg.h içerisindeki macrolar şunlardır;</p>
+			<ol>
+			<li><b>va_list</b> - fonksiyona gönderdiğimiz argüman listesini işaret eden typedef ile tanımlandmış bir pointer veri türüdür.</li>
+			<pre class="code">va_list ap;  /* ap'yi va_list türünde argüman pointerı olarak tanımladık. */</pre>
+			<li>va_start - oluşturduğumuz ap pointerını argüman listesindeki ilk argümana point ettirir.</li>
+			<pre class="code">void va_start (va_list ap, sonargumaninadi)  /* Macro Prototipi */
+
+/* Burda <q>sonargumaninadi</q> olarak belirtilen fonksiyonumuzda ...(ellipsis) ifadesinden
+önceki argümanı belirtiliyor. Yukarıda oluşturduğumuz fonksiyona uygularsak şöyle olacak */
+
+va_start(ap, count);</pre>
+			<li>va_arg - her çağrıldığında argüman listesini point eden pointerı bir sonrakine geçirir.</li>
+			<pre class="code">type va_arg (va_list ap, type)  /* Macro Prototipi */
+
+/* Burda ap'miz yani argüman listesini işaret eden pointerımız, argüman listesindeki
+bir sonraki argümana işaret ettirilir. Ve bu argumanın türü(type) belirtilir.
+Çünkü programımız gönderilen argümanın hangi türde olduğunu bilemeyecektir.
+Bu sebeple fonksiyona en az 1 tane önceden tanımlanmış bir argüman belirtilir.
+Bu önceden tanımlanmış argümanla, ...(ellipsis) alanına gelen argümanların türü
+belirlenebilir. Printf örneğinde ilk argüman alanına sonraki argümanların hangi
+türde olacağı bilgisini giriyoruz. ÖR: printf("%s", "hello world!"); */
+
+int sum;
+sum = va_arg(ap, int);	</pre>
+<p>va_arg argüman pointerının(ap) bir sonraki argümana işaret ettirmesini sağlıyor. va_start ile argüman pointerımızı ...(ellipsis) alanından önceki
+argümanı işaret etmesi gerektiğini söylemiştik. va_arg ise ap'yi bir sonrakine işaret edecek şekilde kaydırdığı için ... alanındaki ilk argümana
+va_arg ile ulaşabiliriz.</p>
+			</ol>
+
+			<br/>
+			<p>Programın çalışır hali şu şekilde olacaktır:</p>
+			<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;stdarg.h&gt;
+
+int sum(int count, ...); /* Prototip */
+
+int main(void){
+
+	printf("%s%d\n","Total : ",sum(<span style="color: red;">9</span>,1,2,3,4,5,6,7,8,9));
+	return 0;
+}
+
+int sum(int count, ...){
+
+	va_list ap;
+	va_start(ap,count);
+	int sum = 0, i = 1;
+	while(i != count + 1){
+		sum += va_arg(ap, int);
+		i++;
+	}
+	va_end(ap); /* Temizleme - AP'nin işinin bittiğini belirtmek için */
+	return sum;
+
+}</pre>
+
+<p>Yukarıdaki programda fonksiyonumuzda kırmızı ile belirtilen argüman(9) kaç tane argümanın fonksiyona iletileceği bilgisini içeriyor.
+Program buna göre işlem yapıyor.</p>
+
+			<h2>Argüman Listesindeki(va_list) Argüman Sayısı </h2>
+			<p>Aslında bunun için doğrudan bir yol yok. Genellikle önceden tanımlanmış argümana kendisinden sonra gelecek argümanlar hakkında bilgi verilir.
+			Argüman sayısı ya da her argümanda yapılacak işlem gibi, böylece bu tanımlanmış argümandaki işlemler bittiğinde başka argüman olmadığı anlaşılır.</p>
+
+			<p>Belirttiğimiz işlemi yapan fonksiyonu yazalım:</p>
+
+			<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;stdarg.h&gt;
+
+void calculate(char *islem, int count, ...);
+
+int main(void){
+	calculate("*",<span style="color: red;">3</span>,4,5,4);
+	calculate("+",<span style="color: red;">4</span>,10,20,30,40);
+	calculate("-",<span style="color: red;">5</span>,50,20,4,10,2);
+	calculate("/",<span style="color: red;">6</span>,1000,2,5,5,2,5);
+	/* calculate fonksiyonuna istediğimiz sayıda değer girip
+	istediğimiz işlemi yaptırabiliriz. Kırmızı ile belirtilen alanlar
+	calculate fonksiyonuna işlem yapılmak üzere gönderilen değerlerin sayısı */
+
+	return 0;
+}
+
+void calculate(char *islem, int count, ...){
+
+	va_list ap;
+	va_start(ap, count);  // count'u pointerın ilk argümanı olarak başlatıyoruz
+	int a,b,i, result = 0;
+	a = b = i = 1;
+
+	switch(*islem){
+
+		case '*':
+			result = 1;
+			while(i &lt;= count){
+				result *= va_arg(ap, int);
+				i++;
+			}
+		break;
+		case '+':
+			while(i &lt;= count){
+				result += va_arg(ap, int);
+				i++;
+			}
+		break;
+		case '-':
+			while(i &lt;= count){
+				if(a == 1){
+					result = va_arg(ap, int);
+					a = 0;
+				}
+				else{
+					result -= va_arg(ap, int);
+				}
+				i++;
+			}
+		break;
+		case '/':
+			while(i &lt;= count){
+				if(b == 1){
+					result = va_arg(ap, int);
+					b = 0;
+				}
+				else{
+					result /= va_arg(ap, int);
+				}
+				i++;
+			}
+		break;
+	}
+	va_end(ap);
+	printf("%s%d\n","Calculate: ", result);
+}</pre>
+<p>Çıktı:</p>
+<pre class="code">user@pc:~/c/variadic$ gcc variadic.c -Wall
+user@pc:~/c/variadic$ ./a.out
+Calculate: 80
+Calculate: 100
+Calculate: 14
+Calculate: 2
+</pre>
+<p>Programmımız içerisindeki calculate fonksiyonuna hangi işlemi yapacağımızı ve kaç sayı ile işlem yapması gerektiğini bildirdik. Sonuçlara bakarsak hiçbir hata olmadan doğru hesapladığı görebiliriz.</p>
+
+			<br /><br /><br />
+		</section>
+		<footer>
+			<p>Kaynak: https://www.gnu.org/software/libc/manual/html_node/Argument-Macros.html#Argument-Macros</p>
+			<p>Kaynak: https://www.gnu.org/software/libc/manual/html_node/Variadic-Example.html#Variadic-Example</p>
+			<p>Kaynak: https://www.gnu.org/software/libc/manual/html_node/How-Many-Arguments.html#How-Many-Arguments</p>
+			<p>Kaynak: https://www.gnu.org/software/libc/manual/html_node/Receiving-Arguments.html#Receiving-Arguments</p>
+			<p>Kaynak: K&amp;R The C Programming Language -  syf:155-156</p>
+		</footer>
+		</div><!--page-->
+
+<script async="" src="Linuxte%20C_C++%20Complier(Derleyici)_dosyalar/analytics.js"></script>
+
+
+
+</body></html>

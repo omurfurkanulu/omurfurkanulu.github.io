@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Cipher komutu, cipher kullanımı, cipher.exe kullanımı, wipe nedir, windowsta silinen dosyaları kurtarmak, windowsta kalıcı dosya silme" />
+		<meta name="keywords" content="cipher, cipher.exe, wipe, dosya kurtarmak, silinen dosyalar" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Cipher Programı Kullanımı (Wipe Nedir?)</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">Wipe Nedir? Dosya Kurtarma ve Cipher ile Dosyaları Kalıcı Olarak Silme</h1>
+
+			<h2 style="border-bottom: 1px dashed white;">Windows Dosyalarımızı Nasıl Siliyor?</h2>
+
+			<p>Öncelikle verilerimiz harddiskimiz üzerinde 0 ve 1 durumlarına göre duruyor. Harddiskimizin içerisindeki manyetik kafa veri yazarken diskimizin üzerinde gerekli manyetik alanı oluşturarak disketimizin üzerini 0 ve 1 durumları ile dolduruyor. Yani veri var ve yok şeklinde. Ancak bunları belli bir kurala göre yazdığı için anlamlı bir bilgi oluşturuyor.</p>
+
+			<p>Bilgisayarımızda bir dosyayı sil dediğimiz zaman windows o dosyayı silindi olarak işaretliyor ve dosyamız üstüne yazılabilir oluyor.
+			Yani dosyamız harddiskimizde silinmiyor. Sadece üstüne yazılabilir izni alıyor ve windowsumuz o dosyayı bize görünmez yapıyor. Aslında windowsun bir dosyayı sil dediğiniz zaman yaptığı tam olarak bu.
+			 Durum böyle olunca silinen dosyaların nasıl geri getirilebildiği anlaşılıyor sanırım.</p>
+
+			 <p>Şöyle bir örnek verecek olursak 10GB lık bir dosya sildiniz. Daha sonra üzerine 6GB lık başka bir dosya yazdınız. Önceki dosyanın sadece 4GB lık bölümü kurtarılabilir.</p>
+
+			 <h2 style="border-bottom: 1px dashed white;">Silinen Dosyalar Nasıl Kurtarılır?</h2>
+
+			 <p> Şöyleki sil dediğimiz dosyamız windows tarafından silinmediği için dosyamız olduğu gibi harddisk'imizde duruyor. Ancak windows bize bu dosyayı göstermiyor.
+			 Zaten uygulama aşamasında bakılınca 10GB lık tek dosyayı silme işlemi bir kaç saniye sürerken içinde yüzlerce dosya olan 100MB lık bir dizini silmek daha uzun sürüyor. Buradanda anlaşılacağı üzere
+			 tek dosyayı silinmiş olarak işaretlemek kısa sürerken yüzlerce dosyaya aynı işlem yapılınca işlem çok daha uzun sürüyor.</p>
+			 <p>İçerisinde birçok dosyanın olduğu bir dizini silerken windows size saniyede kaç mb dosya sildiğini değil saniyede kaç dosya sildiğini gösterir.Anlaşıldığı gibi windows bir silme işlemi yapmıyor. Silme işleminden kasıt silinen dosyanın üstüne rastgele veya doğrudan 0 ve 1 yazdırması işlemidir. Böylece silinen dosyaya ulaşılamıyacaktır. Ancak bu işlemin yazma işleminden farksız olduğunu anlamışınızdır. Aslında silme işlemi bir yazma işlemidir diyebiliriz.</p>
+			<p>Sonuç olarak silinen dosyanın üzerine başka bir veri yazılmadığı sürece silinen veri çok rahat bir şekilde geri getirilebilir.</p>
+
+			<h2 style="border-bottom: 1px dashed white;">Shift+del ile Silinen Dosyalar Kurtarılabilir mi? </h2>
+
+			<p>Evet ne yazıkki shift+del ile silinen dosyalarda geri getirilebilir.</p>
+			<p>Shift+del'in normal silme işleminden tek farkı dosyayı sildikten sonra geri dönüşüm kutusuna göndermemesidir. Yani silinen dosya geri dönüşüm kutusuna gönderilmediğinden dosyanın silinme tarihinede ulaşılamaz.
+			Çünkü dosyalar silinme tarihinin kaydını tutmaz ancak geri dönüşüm kutusuna giden bir dosyasın geri dönüşüm kutusuna geliş tarihi olduğu için dosyanın silinme tarihine ulaşılabilir.</p>
+			<p>Del ve shift+del ile silinmiş dosyaları geri getirirken oluşan tek fark del ile silinen dosyanın silinme tarihine ulaşılabilir. Ancak shift+del ile silinen dosyanın silinme tarihine net bir şekilde ulaşılamaz sadece belirli bir aralık ile tahmin edilir. Dosya oluşturma tarihi ile bilgisayarın incelendiği tarih arasında silinmiş olduğu anlaşılır.</p>
+
+
+			<h2 style="border-bottom: 1px dashed white;">Formatlanan Diskimizdeki Veriler Kurtarılabilir mi?</h2>
+
+			<p>Herkesin bildiği gibi flash belleğimizi biçimlendirirken hızlı biçimlendir diye bir seçenek mevcut bu işlem normal silme işlemidir. Yani dosyalarınızı silmez, dosyalarınızın üstüne yeni veri yazılmadığı sürece sildiğinizi sandığınız dosyalar geri getirilebilir. Ancak hızlı biçimlendir seçeneğini seçmezseniz diskinizin üzerindeki tüm boş alanlara veri yazılacaktır haliyle bu işlem hızlı biçimlendirmeye göre daha uzun sürecektir. Ancak diskinizdeki dosyalar geri getirilemez hal alacaktır.</p>
+			<p>Artık flash belleğinizi birisine verirken içinde ulaşılmasını istemediğiniz dosyalar varsa iki kez düşünün ya da temiz bir format atın.</p>
+
+
+			<h2 style="border-bottom: 1px dashed white;">Wipe Nedir? Diskimizdeki Boş Alandaki Verileri Kalıcı Olarak Silmek</h2>
+
+			<p>Flash bellek ya da diskimizdeki boş alanda kalan verileri silmek için wipe programları var. Wipe programları temel olarak diskinizdeki boş alanın üzerine veri yazarak sildiğiniz dosyaları geri getirilemez yapar. Ancak internetten indirdiğiniz bazı wipe
+			programları bu işi çok hızlı bir şekilde yapıyor. Gerçek bir silme işlemi oldukça uzun sürecektir. Yani kısa süren wipe programları verilerinizi tam anlamıyla silmemiş demektir.</p>
+			<p>Windows 2000 sonrasında windowslarla beraber gelen cipher.exe programıda bu işi görür.</p>
+			<p>Windowsumuzdaki boş alanı şifrelemek için kullanılan cipher programına birazdan bakacağız.</p>
+
+
+			<h2 style="border-bottom: 1px dashed white;">Guttman Metodu ile 35 Kez Veri Yazma İşlemi</h2>
+			<p>Bu yöntemin amacı silinen verilerinizin üstüne 35 kez farklı veri yazılarak eski verilerinizin ulaşılmaz olmasını sağlamaktır.</p>
+
+
+			<h2 style="border-bottom: 1px dashed white;">Yanlışlıkla Silinen Dosyaları Geri Getirmek Kurtarmak</h2>
+			<p>Silinen dosyalarınızı geri getirmek için Recovery (veri kurtarma) yazılımlarını kullanabilirsiniz tabiki normal silme işlemi yaptıysanız. Eğer wipe işlemine soktuysanız veya silinen alana yeni veri yazdıysanız o dosyaları kurtarmanız mümkün olmaz. Özellikle format atarken genellikle hızlı biçimlendirme yapılır bu yüzden silindiği sanılan tüm veriler kurtarılabilir.
+			Şimdi hangi programlarla verilerimizi geri getirebiliriz bakalım</p>
+			<ol>
+				<li>Active Partition Recovery - Windows</li>
+				<li>PhotoRec - Linux</li>
+			</ol>
+
+			<p>Active Partition Recovery programı silinen(üstüne veri yazılmamış) harddiskteki tüm verileri dosya ve klasör düzeni ile geri getirebilir. Ancak bu program, kurtarma işlemi için yedek bir harddisk istiyor</p>
+			<p>PhotoRec linux üzerinde çalışan çok başarılı kullanımı basit bir veri kurtarma yazılımıdır. Terminal üzerinde çalışır. Dosya ve klasör düzenine bakmadan dosyalarınızı kurtaracaktır.</p>
+			<p>İnternette recovery data gibi aramalar yaparak başka recovery programlarına ulaşabilirsiniz. Ancak çoğu program bulduğu dosyaları klasör düzeni olmaksızın kurtardığı için ben Active Partition Recovery programını tavsiye ederim. Dosyaları klasör adları ile beraber kurtardığı için çok başarılı buluyorum. Yani dizinler içinde yüzlerce dosyanız varsa hangi dosya hangi klasöre ait olduğu çözmek bile saatlerinizi alabilir. Ancak bu program bu sorunu çözüyor.</p>
+
+
+
+			<h2 style="border-bottom: 1px dashed white;">Cipher.exe Nedir? Cipher.exe Kullanımı</h2>
+			<p>Cipher programı windows 2000 sonrası tüm windowslarla beraber gelen bir wipe programıdır. Diskinizdeki boş alana şifreli rastgele veriler yazarak boş alandaki verileri ulaşılamaz yapar.</p>
+			<p>Başlat > ara > cmd.exe ile cmd.exe yi çalıştırıyoruz.</p>
+			<br />
+			<p>cipher /w</p>
+			<p>Bu komut ile belirtilen dizinin içeriğindeki boş alanı şifreliyerek silinen dosylarınızı geri getirilemez yapacaktır. Cipher programını kullanırken dosyalarınızın silineceği konusunda endişe etmenize gerek yok sadece boş alanı şifreliyecektir.</p>
+			<pre class="code">cipher /w:c\</pre>
+			<p>Yukarıdaki komut c diskimizdeki tüm boş alanın üzerine şifreli veri yazacaktır böylece sildiğiniz dosyalar ulaşılamaz olcaktır. c ile belirtilen konuma istediğiniz konumu verebilirsiniz mesela harddiskinizde e adında başka bir bölüm olsun şöyle yapmanız yeterli</p>
+			<pre class="code">cipher /w:e\</pre>
+			<p>Bu kullanımı dahada genişletip belirttiğiniz bölüm içindeki bir dizin içerisindeki boş alanı silmek içinde kullanılabilir</p>
+			<pre class="code">cipher /w:e\dosyalar\filmler</pre>
+			<p>Yukarıdaki kod e diskimizdeki dosyalar klasörünün içindeki filmler klasörünün içeriğindeki boş alanı silecektir. Yani silinen dosyaları geri getirilemez yapacaktır.</p>
+
+			<br />
+			<p>ÖNEMLİ NOT: Cipher.exe programını kullanırken asla işlemi yarıda kesmeyin. Mümkünse çalışan diğer programları kapatın. Silme işleminin harddiskinizin boyutuyla doğru orantılı olarak uzun süreceğini unutmayın.</p>
+			<br />
+		</section>
+
+		<footer>
+			<p>Kaynak: http://www.dijitaldeliller.com/gutmann.html</p>
+			<p>Kaynak: http://www.dijitaldeliller.com/wipe_kurtarma.html</p>
+			<p>Kaynak: https://technet.microsoft.com/en-us/library/bb490878.aspx</p>
+		</footer>
+
+		</div><!--id=page-->
+
+
+
+	</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Linux program kurmak, linux paket silmek, Linux güncelleme yapma, apt-get install, apt-get remove, apt-get update" />
+		<meta name="keywords" content="apt-get, apt-get install, apt-get update, dpkg, gdebi" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Linux Paket Kurma Silme ve Güncelleme</title>
+
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;" >GNU/Linux Paket Kurmak, Silmek ve Güncellemek (apt-get, dpkg, gdebi)</h1>
+
+			<p>GNU/Linux kurduysanız ilk bilmeniz gerekenlerden birisi bilgisayarınızı nasıl güncel tutacağınızdır. Diğeri ise bir programın nasıl yüklenip kaldırılacağıdır.</p>
+			<br />
+			<p>Öncelikle bilgisayarınıza linux kurduysanız ilk yapmanız gereken sistemi güncellemektir.</p>
+			<pre class="code">apt-get clean &amp;&amp; apt-get update &amp;&amp; apt-get upgrade -y &amp;&amp; apt-get dist-upgrade -y</pre>
+
+			<p>Üst satırdaki kodun tam olarak ne işe yaradığını aşağıda öğreneceğiz ancak debian tabanlı bir linux kurduysanız yukarıdaki satırı terminale yazıp çalıştırmanız sisteminizi güncelleyecektir.</p>
+			<br />
+			<p>Anlatım debian tabanlı sistemler içindir ancak linux yapısı gereği diğer sistemleri anlamanızda da faydalı olacaktır.</p>
+
+			<h2>Paket Nedir?</h2>
+			<p>Paketler içlerinde, gerekli programın binary(ikili, çalıştırılabilir) halini, configurasyon dosyalarını, programın çalışması için gerekli dosyaları, dökümantasyonu barındıran bir dosya türüdür.
+				Böylece bir paket kurulurken, kurulmak istenilen programın gerek duyduğu diğer dosyalarda sisteme kurulmuş olur.</p>
+				<br />
+			<p>Linux sistemler kullanıcıların bir pakete ihtiyacı olduğunda rahat bir şekilde arama yapabilmeleri için paket depolarına sahiptirler. Bu paket depolarından istenilen program aranıp bulunabilir ve bilgisayara kurulabilir.</p>
+			<br />
+			<p>Farklı linux dağıtımlarında bu paketler farklılık gösterebilir. Bu linux dağıtımların kendi paketlerinin yüklenebilmesi vs. için farklı komutları vardır.</p>
+
+			<pre class="code">---------------------
+Paketler ve Komutları
+---------------------
+Debian : .deb | apt, apt-cache, apt-get, dpkg
+Ubuntu : .deb | apt, apt-cache, apt-get, dpkg
+CentOs : .rpm | yum
+Fedora : .rpm | dnf
+FreeBSD: .txz | make,pkg
+---------------------
+</pre>
+
+<p>Debian paketlerinin <q>.deb</q> uzantısına sahiptirler.</p>
+<p>Paket arama yükleme ve kaldırma işlemlerine geçmeden <q>sudo</q> komutunu öğrenmemizde fayda var. Çünkü bu işlemler root yetkisi gerektiriyor.</p><br />
+<p># sudo</p>
+<p>Bu komut bir programın başka bir kullanıcı yetkileriyle çalıştırılmasını sağlar.</p>
+<p>Kullanımı ise oldukça basit çalıştırmak istediğiniz programdan önce <q>sudo</q> yazarak çalıştırılır.</p>
+<p># sudo programadi</p>
+<br />
+<p>Şimdi sayfamızın başına yazdığımız kodumuzu inceleyelim</p>
+<pre class="code">apt-get clean &amp;&amp; apt-get update &amp;&amp; apt-get upgrade -y &amp;&amp; apt-get dist-upgrade -y</pre>
+<p># apt-get clean</p>
+<p>Bu komut daha önceden yüklemek için yerel depomuza(bilgisayarımıza) indirdiğimiz ve kurduğumuz paketlerin hepsini siler. Yani kurulu paketleri temizlemez, kurulmuş paketlerin dosyalarını siler.</p><br />
+
+<p># apt-get update</p>
+<p>Bilgisayarımızdaki paket listesini(/etc/apt/sources.list) günceller. Yani paket index'ini günceller.</p>
+<br />
+<p># apt-get upgrade</p>
+<p>Bilgisayarımıza kurulu olan paketleri /etc/apt/sources.list dosyasındaki paket listesine bakarak en güncel versiyonlarına günceller.</p>
+<br />
+
+<p># apt-get dist-upgrade</p>
+<p>Bu daha upgrade'in daha gelişmiş bir fonksiyonudur.Gerekli gördüğü paketleri silecek ve paketleri güncelliyecektir.</p>
+
+<br />
+<p>-y parametresi</p>
+<p>Eğer bu parametre kullanılmaz ise güncelleştirme yapılırken bazı programlarda bizden onaylama isticektir. -y parametresi ile gelecek olan tüm onay isteklerine onay vermiş oluyoruz böylece güncelleştirmeler otomatik olarak yapılacaktır.</p>
+
+<br />
+<p>Her komut arasındaki &amp;&amp; işaretlerinin kullanımını şu yazımda anlatmıştım.</p>
+<p>Bkz: <a href="temel-linux-komutlari.html" style="border-bottom: 1px dotted green;">Temel Linux Komutları</a></p>
+
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Paket Aramak (apt-cache search &lt;paketadi&gt;)</h2>
+
+<p># apt-cache search paketadi</p>
+<p><q>paketadi</q> ile belirtilen programın paket deposunda olup olmadığına bakar. Eğer belirtilen isimde bir paket varsa bunu ekrana basar.</p>
+<pre class="code">root@kali:~# apt-cache search cmatrix
+
+cmatrix - simulates the display from "The Matrix"
+cmatrix-xfont - X11 font for cmatrix
+</pre>
+<p><q>cmatrix</q> programını arattık ve bize bu ismi içeren iki tane paket olduğunu belirtti.</p>
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Paket Hakkında Bilgi Edinmek
+</h2>
+<p># apt-cache show paketadi</p>
+<p>Aradığımız paketin doğru paket olduğunu anlamak için paketi detaylı inceleyebiliriz.</p>
+
+<pre class="code">root@kali:~# apt-cache show cmatrix
+
+Package: cmatrix
+Source: cmatrix (1.2a-5)
+Version: 1.2a-5+b1
+Installed-Size: 50
+Maintainer: Diego Fernández Durán &lt;diego@goedi.net&gt;
+Architecture: amd64
+Depends: libc6 (>= 2.4), libncurses5 (>= 6), libtinfo5 (>= 6)
+Recommends: kbd
+Suggests: cmatrix-xfont
+Size: 16908
+SHA256: dbb6c1494302818bfb684743e813615e90b9c4d95d6202282716bd5b478c7f45
+SHA1: 87936baa63b36e3cf0813858eac741d919c4cea1
+MD5sum: 6a189d3c1d28ab45a749e0e2bd8ecc30
+Description: simulates the display from "The Matrix"
+ Screen saver for the terminal based in the movie "The Matrix". It works in
+ terminals of all dimensions and have the following features:
+  * Support terminal resize.
+  * Screen saver mode: any key closes it.
+  * Selectable color.
+  * Change text scroll rate.
+Description-md5: 9af1f58e4b6301a6583f036c780c6ae6
+Homepage: http://www.asty.org/cmatrix/
+Tag: game::toys, interface::text-mode, role::program, uitoolkit::ncurses,
+ use::entertaining
+Section: misc
+Priority: optional
+Filename: pool/main/c/cmatrix/cmatrix_1.2a-5+b1_amd64.deb
+</pre>
+
+
+<h2 style="border-bottom: 1px dashed white;">Paket Kurmak (sudo apt-get install paketadi)</h2>
+<p># apt-get install paketadi</p>
+<p>apt-get install komutu ile belirtilen program bilgisayarımıza kurulacaktır</p>
+<br />
+<p># apt-get install paketadi1 paketadi2</p>
+<p>Belirttiğimiz paketler bilgisayarımıza kurulacaktır</p>
+<br />
+<p># apt-get install -y paketadi</p>
+<p>Paket yüklenirken bize soracağı sorulara -y ile onay verdik</p>
+<pre class="code">root@kali:~# apt-get install -y cmatrix
+</pre>
+
+
+
+<h2 style="border-bottom: 1px dashed white;">Paket Kaldırmak (sudo apt-get remove paketadi)</h2>
+<p># apt-get remove paketadi</p>
+<p>Belirtilen paketi bilgisayarımızdan siler.</p>
+<pre class="code">root@kali:~# apt-get remove cmatrix</pre>
+<br />
+<p># apt-get autoremove</p>
+<p>Bilgisayarımızın artık ihtiyacı olmayan gereksiz paketleri otomatik olarak siler.</p>
+<pre class="code">root@kali:~# apt-get autoremove</pre>
+<br />
+
+<p># apt-get --purge remove paketadi</p>
+<p>Kaldırmak istediğimiz programı configurasyon dosyaları ile beraber siler.</p>
+<pre class="code">root@kali:~# apt-get --purge remove cmatrix</pre>
+
+
+<h2 style="border-bottom: 1px dashed white;">Dışarıdan İndirdiğimiz Paketi(.deb) Kurmak</h2>
+<p>İnternette dolaşıyorsunuz ve bir program buldunuz. Test etmek veya kullanmak için linux bilgisayarınıza indirdiniz ve nasıl kurulacağını bilmiyorsunuz paket deposundan kurmak istediniz ve program paket deposundada yok. Böyle durumlarda sakin olun ve şu adımları izleyin. :)</p>
+<br />
+<p>İnternet üzerinden veya başka bir yolla elinize .deb uzantılı bir program geçti, şimdi bunu bilgisayarımıza kuralım.</p>
+<br />
+<p># dpkg -i paketadi.deb</p>
+<p>dpkg debian paketlerini(.deb) yönetmek için yazılmış bir yazılımdır.</p>
+<p>-i parametresi ile <q>install</q> yükle komutunu vermiş oluyoruz.</p>
+<pre class="code">root@kali:~# dpkg -i paketadi.deb</pre>
+
+<br />
+<p><q>gdebi</q> programı ile paket kurmak</p>
+<p>gdebi bilgisayarımıza dpkg gibi kurulu gelmiyecektir. Bu yüzden önce gdebi programını kuruyoruz.</p>
+<p># apt-get install -y gdebi</p>
+<pre class="code">root@kali:~# apt-get install -y gdebi</pre>
+<p># gdebi paketadi.deb</p>
+<pre class="code">root@kali:~# gdebi paketadi.deb</pre>
+<p>Anlıyacağınız üzere dışarıdan edindiğiniz .deb uzantılı paketleri kurmanın iki kolay yolu mevcut</p>
+
+<br />
+<p># dpkg -l</p>
+<p>Bilgisayarımıza kurulu olan paketleri listeler.</p>
+<pre class="code">root@kali:~# dpkg -l</pre>
+
+
+
+<br />
+<p># dpkg -s paketadi</p>
+<p>Belirtilen paketin özelliklerini gösterir.</p>
+<pre class="code">root@kali:~# dpkg -s cmatrix
+
+Package: cmatrix
+Status: install ok installed
+Priority: optional
+Section: misc
+Installed-Size: 50
+Maintainer: Diego Fernández Durán &lt;diego@goedi.net&gt;
+Architecture: amd64
+Source: cmatrix (1.2a-5)
+Version: 1.2a-5+b1
+Depends: libc6 (>= 2.4), libncurses5 (>= 6), libtinfo5 (>= 6)
+Recommends: kbd
+Suggests: cmatrix-xfont
+Description: simulates the display from "The Matrix"
+ Screen saver for the terminal based in the movie "The Matrix". It works in
+ terminals of all dimensions and have the following features:
+  * Support terminal resize.
+  * Screen saver mode: any key closes it.
+  * Selectable color.
+  * Change text scroll rate.
+Homepage: http://www.asty.org/cmatrix/
+</pre>
+
+
+<br />
+<br /><br />
+
+		</section>
+
+		</div><!--page-->
+
+
+	</body>
+</html>

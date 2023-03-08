@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="decription" content="linuxte dosya nasıl oluşturulur, linuxte dosya ve klasör silme, linuxte klasör oluşturma, linuxte klasör nasıl oluşturulur" />
+		<meta name="keywords" content="temel linux komutları, ls, cd, cat, mkdir, rm, touch, echo" />
+		<meta name="robots" content="index,follow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Temel Linux Komutları I</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1 style="border-bottom: 1px dashed green;">Temel Linux Komutları I (Dosya ve Dizin İşlemleri)</h1>
+			<p>Öncelikle aşağıdaki kodları çalıştırabilmeniz için sisteminizde GNU/Linux çekirdeğine sahip bir işletim sistemi kurulu olmalıdır.</p>
+
+			<p>Bkz: <a href="linux-dagitimlari.html" style="border-bottom: 1px dotted green;">Linux Dağıtımları</a></p><br />
+
+			<p>Linux'ı açtıktan sonra terminale giriş yapıyoruz. Öncelikle belirteyim terminal ekranında yazdığınız her komut bir programı çalıştırır. Yani aslında komut değil bir program çalıştırıyorsunuz.</p>
+			<br/>
+			<p># ls</p>
+			<p>Bu komut o anda bulunduğunuz dizindeki dosya ve klasörleri listeler</p>
+<pre class="code">root@kali:~# ls
+ag.txt    Downloads  Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+Belgeler  Genel      Müzik     Resimler       Videolar
+</pre>
+			<p>Görüldüğü gibi bulunduğumuz dizinde bulunan dosya ve klasörler ekrana basıldı.</p>
+			<p>Linux Terminali ya da Uçbiriminde komutların manual sayfası yani komut hakkında bilgi veren sayfaları mevcuttur.</p>
+			<br />
+
+			<p># man ls</p>
+			<p>Örnek olarak ls komutunun manual sayfası için <q>man ls</q> komutunu vermemiz gerekiyor. Açılan manual sayfasında neler yazıyor inceleyelim.</p>
+<pre class="scroll">LS(1)                                       User Commands                          LS(1)
+
+NAME
+       ls - list directory contents
+
+SYNOPSIS
+       ls [OPTION]... [FILE]...
+
+DESCRIPTION
+       List  information about the FILEs (the current directory by default).
+       Sort entries alphabeti‐
+       cally if none of -cftuvSUX nor --sort is specified.
+
+       Mandatory arguments to long options are mandatory for short options too.
+
+       -a, --all
+              do not ignore entries starting with .
+
+       -A, --almost-all
+              do not list implied . and ..
+
+       --author
+              with -l, print the author of each file
+
+       -b, --escape
+              print C-style escapes for nongraphic characters
+
+       --block-size=SIZE
+              scale sizes by SIZE before printing them; e.g., '--block-size=M' prints sizes in  units
+              of 1,048,576 bytes; see SIZE format below
+
+       -B, --ignore-backups
+              do not list implied entries ending with ~
+
+       -c     with  -lt:  sort by, and show, ctime (time of last modification of file status informa‐
+              tion); with -l: show ctime and sort by name; otherwise: sort by ctime, newest first
+
+       -C     list entries by columns
+
+       --color[=WHEN]
+              colorize the output; WHEN can be 'always' (default if  omitted),  'auto',  or  'never';
+              more info below
+
+       -d, --directory
+              list directories themselves, not their contents
+
+       -D, --dired
+              generate output designed for Emacs' dired mode
+
+       -f     do not sort, enable -aU, disable -ls --color
+
+       -F, --classify
+              append indicator (one of */=>@|) to entries
+
+       --file-type
+              likewise, except do not append '*'
+
+       --format=WORD
+              across -x, commas -m, horizontal -x, long -l, single-column -1, verbose -l, vertical -C
+
+       --full-time
+              like -l --time-style=full-iso
+
+       -g     like -l, but do not list owner
+
+       --group-directories-first
+              group directories before files;
+
+              can  be augmented with a --sort option, but any use of --sort=none (-U) disables group‐
+              ing
+
+       -G, --no-group
+              in a long listing, don't print group names
+
+       -h, --human-readable
+              with -l and/or -s, print human readable sizes (e.g., 1K 234M 2G)
+
+       --si   likewise, but use powers of 1000 not 1024
+
+       -H, --dereference-command-line
+              follow symbolic links listed on the command line
+
+       --dereference-command-line-symlink-to-dir
+              follow each command line symbolic link
+
+              that points to a directory
+
+       --hide=PATTERN
+              do not list implied entries matching shell PATTERN (overridden by -a or -A)
+
+       --indicator-style=WORD
+              append indicator with style WORD to entry names: none (default), slash (-p),  file-type
+              (--file-type), classify (-F)
+
+       -i, --inode
+              print the index number of each file
+
+       -I, --ignore=PATTERN
+              do not list implied entries matching shell PATTERN
+
+
+       -k, --kibibytes
+              default to 1024-byte blocks for disk usage
+
+       -l     use a long listing format
+
+       -L, --dereference
+              when  showing  file  information for a symbolic link, show information for the file the
+              link references rather than for the link itself
+
+       -m     fill width with a comma separated list of entries
+
+       -n, --numeric-uid-gid
+              like -l, but list numeric user and group IDs
+
+       -N, --literal
+              print raw entry names (don't treat e.g. control characters specially)
+
+       -o     like -l, but do not list group information
+
+       -p, --indicator-style=slash
+              append / indicator to directories
+
+       -q, --hide-control-chars
+              print ? instead of nongraphic characters
+
+       --show-control-chars
+              show nongraphic characters as-is (the default, unless program is 'ls' and output  is  a
+              terminal)
+
+       -Q, --quote-name
+              enclose entry names in double quotes
+
+       --quoting-style=WORD
+              use  quoting  style  WORD  for  entry  names:  literal,  locale,  shell,  shell-always,
+              shell-escape, shell-escape-always, c, escape
+
+       -r, --reverse
+              reverse order while sorting
+
+       -R, --recursive
+              list subdirectories recursively
+
+       -s, --size
+              print the allocated size of each file, in blocks
+       -S     sort by file size, largest first
+
+       --sort=WORD
+              sort by WORD instead of name: none (-U), size (-S), time (-t), version (-v),  extension
+              (-X)
+
+       --time=WORD
+              with -l, show time as WORD instead of default modification time: atime or access or use
+              (-u); ctime or status (-c); also use specified time as sort key if --sort=time  (newest
+              first)
+
+       --time-style=STYLE
+              with  -l,  show  times  using style STYLE: full-iso, long-iso, iso, locale, or +FORMAT;
+              FORMAT is interpreted like in 'date'; if FORMAT is FORMAT1&gt;newline&lt;FORMAT2,  then  FOR‐
+              MAT1 applies to non-recent files and FORMAT2 to recent files; if STYLE is prefixed with
+              'posix-', STYLE takes effect only outside the POSIX locale
+
+       -t     sort by modification time, newest first
+
+       -T, --tabsize=COLS
+              assume tab stops at each COLS instead of 8
+
+       -u     with -lt: sort by, and show, access time; with -l: show access time and sort  by  name;
+              otherwise: sort by access time, newest first
+
+       -U     do not sort; list entries in directory order
+
+       -v     natural sort of (version) numbers within text
+
+       -w, --width=COLS
+              set output width to COLS.  0 means no limit
+
+       -x     list entries by lines instead of by columns
+
+       -X     sort alphabetically by entry extension
+
+       -Z, --context
+              print any security context of each file
+
+       -1     list one file per line.  Avoid '\n' with -q or -b
+
+       --help display this help and exit
+
+       --version
+              output version information and exit
+
+       The  SIZE  argument  is  an  integer  and  optional unit (example: 10K is 10*1024).  Units are
+       K,M,G,T,P,E,Z,Y (powers of 1024) or KB,MB,... (powers of 1000).
+
+       Using color to distinguish file types is disabled both  by  default  and  with  --color=never.
+       With  --color=auto, ls emits color codes only when standard output is connected to a terminal.
+       The LS_COLORS environment variable can change the settings.  Use the dircolors command to  set
+       it.
+
+   Exit status:
+       0      if OK,
+
+       1      if minor problems (e.g., cannot access subdirectory),
+
+       2      if serious trouble (e.g., cannot access command-line argument).
+
+AUTHOR
+       Written by Richard M. Stallman and David MacKenzie.
+
+REPORTING BUGS
+       GNU coreutils online help: &gt;http://www.gnu.org/software/coreutils/>
+       Report ls translation bugs to &gt;http://translationproject.org/team/>
+
+COPYRIGHT
+       Copyright  ©  2016  Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later
+       &gt;http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO  WARRANTY,  to
+       the extent permitted by law.
+
+SEE ALSO
+       Full documentation at: &gt;http://www.gnu.org/software/coreutils/ls>
+       or available locally via: info '(coreutils) ls invocation'
+
+
+</pre>
+
+			<p>Yukarıdaki örnekte görüldüğü gibi manual sayfasında ls programının nasıl kullanılacağı alabileceği parametreler, copyright ve hatta ls programını yazan kişinin adı bile yer almakta.</p>
+			<p>Klavyeden q tuşuna basılarak bu sayfadan çıkılabilir.</p>
+			<br/>
+			<p>man komutunu tüm komutlar ile kullanabilirsiniz. Kullanmak istediğiniz komut ile ilgili tüm dokumasyona man ile ulaşabilirsiniz. Tabi biraz ingilizce gerekli.</p>
+			<p>Şimdi ls komutunun bazı parametrelerini inceleyelim.</p>
+			<br />
+
+			<p># ls -a</p>
+			<p>Burdaki -a parametresi <q>all</q> yani <q>hepsi</q> demek.</p>
+<pre class="code">root@kali:~# ls -a
+.               .cache         .ipython  .mysql_history    Resimler     Videolar
+..              .config        .java     NXcFUxPL.jpeg     .rnd         .viminfo
+ag.txt          Downloads      .local    .ophcrackrc       .set         VirtualBox VMs
+.armitage.prop  .gconf         Masaüstü  .profile          .sqlmap      .wxHexEditor
+.bash_history   Genel          .mozilla  .python_history   Şablonlar    .xrced
+.bashrc         .gimp-2.8      .msf4     .python_history-  .thumbnails
+Belgeler        .ICEauthority  Müzik     .recently-used    .tor
+</pre>
+			<p>Görüldüğü gibi bulunduğumuz dizindeki tüm dosya ve klasörler ekrana geldi. Gizli klasör ve dosyalarda dahil</p>
+
+			<br/>
+			<p># ls -l</p>
+			<p>Burda -l parametresi <q>liste</q> anlamına gelmekte ve liste şeklinde ekrana basmakla birlikte dosya ve klasörlerimizin oluşturulma tarihi ve okuma yazma izinleri, dosya sahibi ile birlikte görüntülenebilir.</p>
+<pre class="code">root@kali:~# ls -l
+toplam 192
+-rw-r--r-- 1 root root  31362 Eki 24 22:46 ag.txt
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Belgeler
+drwxr-xr-x 2 root root   4096 Tem 29 18:57 Downloads
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Genel
+drwxr-xr-x 8 root root   4096 Eki 28 19:00 Masaüstü
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Müzik
+-rw-r--r-- 1 root root 119762 Eki 25 18:55 NXcFUxPL.jpeg
+drwxr-xr-x 2 root root   4096 Eki 23 14:09 Resimler
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Şablonlar
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Videolar
+drwxr-xr-x 6 root root   4096 Eki 27 19:20 VirtualBox VMs
+</pre>
+			<p>Şimdi -l ile -a parametresini birlikte kullanalım</p>
+			<br />
+
+			<p># ls -la</p>
+			<p>Yukarıda görüldüğü gibi iki parametreyi birlikte kullanmak istediğimiz zaman tek tire <q>-</q> işareti yetiyor ve program iki parametreyi birden çalıştırıyor.</p>
+<pre class="code">root@kali:~# ls -la
+toplam 356
+drwxr-xr-x 24 root root   4096 Kas  5 14:18 .
+drwxr-xr-x 21 root root   4096 Eki 22 21:52 ..
+-rw-r--r--  1 root root  31362 Eki 24 22:46 ag.txt
+-rw-r--r--  1 root root   2265 Ağu 21 01:21 .armitage.prop
+-rw-------  1 root root  21761 Kas  5 16:22 .bash_history
+-rw-r--r--  1 root root   3405 Tem 29 22:24 .bashrc
+drwxr-xr-x  2 root root   4096 Tem 29 17:02 Belgeler
+drwx------ 15 root root   4096 Eki 24 21:39 .cache
+drwxr-xr-x 27 root root   4096 Kas  5 16:42 .config
+drwxr-xr-x  2 root root   4096 Tem 29 18:57 Downloads
+drwx------  2 root root   4096 Kas  5 15:19 .gconf
+drwxr-xr-x  2 root root   4096 Tem 29 17:02 Genel
+drwxr-xr-x 24 root root   4096 Eyl  2 15:39 .gimp-2.8
+-rw-------  1 root root  25996 Kas  5 14:18 .ICEauthority
+drwxr-xr-x  5 root root   4096 Tem 29 20:28 .ipython
+drwxr-xr-x  4 root root   4096 Eki 23 13:54 .java
+drwx------  3 root root   4096 Tem 29 17:02 .local
+drwxr-xr-x  8 root root   4096 Kas  5 16:14 Masaüstü
+drwx------  4 root root   4096 Tem 29 17:03 .mozilla
+drwxr-xr-x  8 root root   4096 Ağu 21 01:21 .msf4
+drwxr-xr-x  2 root root   4096 Tem 29 17:02 Müzik
+-rw-------  1 root root    125 Ağu 29 19:04 .mysql_history
+-rw-r--r--  1 root root 119762 Eki 25 18:55 NXcFUxPL.jpeg
+-rw-r--r--  1 root root     72 Eki 14 18:48 .ophcrackrc
+-rw-r--r--  1 root root    148 Haz  8 14:01 .profile
+-rw-------  1 root root      0 Eki 15 22:45 .python_history
+-rw-------  1 root root    927 Eki 15 19:17 .python_history-
+-rw-------  1 root root   1975 Eki 25 19:10 .recently-used
+drwxr-xr-x  2 root root   4096 Eki 23 14:09 Resimler
+-rw-------  1 root root   1024 Ağu  2 16:42 .rnd
+drwxr-xr-x  2 root root   4096 Eki 28 19:05 .set
+drwxr-xr-x  3 root root   4096 Eki 23 13:59 .sqlmap
+drwxr-xr-x  2 root root   4096 Tem 29 17:02 Şablonlar
+drwx------  3 root root   4096 Ağu  2 15:47 .thumbnails
+drwx------  2 root root   4096 Eki 25 19:30 .tor
+drwxr-xr-x  2 root root   4096 Tem 29 17:02 Videolar
+-rw-------  1 root root   1064 Eki 15 21:59 .viminfo
+drwxr-xr-x  7 root root   4096 Kas  4 14:51 VirtualBox VMs
+-rw-r--r--  1 root root   1959 Eki 24 16:57 .wxHexEditor
+-rw-r--r--  1 root root    463 Ağu 25 15:26 .xrced
+</pre>
+			<p>. (nokta) ile başlayan dosyalar gizli klasör ve dosyalardır. Ve dosya yöneticiniz ile bu dizine girdiğinizde default olarak görünmezler. Dosya yöneticiniz ile bu dizine girdiğinizde ctrl+h kısayolu ile bu gizli dosyaları görünür hale getirebilirsiniz.</p>
+
+			<br />
+			<p># cd</p>
+			<p><q><abbr title="change directory">cd</abbr></q> ile dizinler arasında dolaşılabilir <q>cd dizinadı</q> şeklinde istediğiniz dizine girebilirsiniz. Örnek olarak .config dizinine girelim.</p>
+<pre class="code">root@kali:~# cd .config
+root@kali:~/.config# ls
+autostart     gedit                 leafpad         Trolltech.conf
+codef00.com   gnome-control-center  libreoffice     user-dirs.dirs
+dconf         gnome-session         mimeapps.list   user-dirs.locale
+enchant       goa-1.0               nautilus        VirtualBox
+eog           gtk-2.0               pulse           wireshark
+ettercap_gtk  gtk-3.0               sublime-text-3  yelp
+evolution     ibus                  systemd
+filezilla     keepnote              totem
+</pre>
+<br />
+
+<p># cd ..</p>
+<p>.. ile üst dizine geri dönülebilir.</p>
+<pre class="code">root@kali:~/.config# cd ..
+root@kali:~# ls
+ag.txt    Downloads  Masaüstü  NXcFUxPL.jpeg  selam dunya  Videolar
+Belgeler  Genel      Müzik     Resimler       Şablonlar    VirtualBox VMs
+</pre>
+<br />
+
+<p><q>selam dunya</q> klasörüne girelim</p>
+<pre class="code">root@kali:~# cd selam dunya
+bash: cd: selam: Böyle bir dosya ya da dizin yok
+</pre>
+<p>Yukarıda görüldüğü gibi hata verdi çünkü selam ile dunya arasında boşluk var ve cd programı selam klasörünü bulmaya çalıştı ancak böyle bir dizin olmadığından hata verdi. Bu tür adında boşluk olan dizinlere erişmek için tırnak(") işareti kullanılır.</p>
+
+<br/>
+<p># cd "selam dunya"</p>
+<pre class="code">root@kali:~# cd "selam dunya"
+root@kali:~/selam dunya# </pre>
+<br />
+
+<p># pwd</p>
+<p><abbr title="print working directory">pwd</abbr> komutu ile o anda bulunduğunuz dizini ekrana basabilirsiniz</p>
+<pre class="code">root@kali:~# pwd
+/root
+</pre>
+<p>Yukarıdaki örnekte / yani kök dizin altındaki root klasöründe olduğumu belirtiyor</p>
+<p>Başka bir dizindeyken pwd komutuna bakalım</p>
+<pre class="code">root@kali:/media/root/Depo# pwd
+/media/root/Depo
+</pre>
+
+<br />
+<p># mkdir</p>
+<p><q>mkdir klasöradı</q> şeklinde yeni klasör(dizin) oluşturabiliriz.</p>
+<pre class="code">root@kali:~# ls -l
+toplam 196
+-rw-r--r-- 1 root root  31362 Eki 24 22:46 ag.txt
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Belgeler
+drwxr-xr-x 2 root root   4096 Tem 29 18:57 Downloads
+drwxr-xr-x 2 root root   4096 Kas  5 17:57 dünya
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Genel
+drwxr-xr-x 9 root root   4096 Kas  5 18:10 Masaüstü
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Müzik
+-rw-r--r-- 1 root root 119762 Eki 25 18:55 NXcFUxPL.jpeg
+drwxr-xr-x 2 root root   4096 Kas  5 17:40 Resimler
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Şablonlar
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Videolar
+drwxr-xr-x 7 root root   4096 Kas  4 14:51 VirtualBox VMs
+
+root@kali:~# mkdir klasörümüzünadı
+root@kali:~# ls -l
+toplam 200
+-rw-r--r-- 1 root root  31362 Eki 24 22:46 ag.txt
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Belgeler
+drwxr-xr-x 2 root root   4096 Tem 29 18:57 Downloads
+drwxr-xr-x 2 root root   4096 Kas  5 17:57 dünya
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Genel
+drwxr-xr-x 2 root root   4096 Kas  5 18:14 klasörümüzünadı
+drwxr-xr-x 9 root root   4096 Kas  5 18:10 Masaüstü
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Müzik
+-rw-r--r-- 1 root root 119762 Eki 25 18:55 NXcFUxPL.jpeg
+drwxr-xr-x 2 root root   4096 Kas  5 17:40 Resimler
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Şablonlar
+drwxr-xr-x 2 root root   4096 Tem 29 17:02 Videolar
+drwxr-xr-x 7 root root   4096 Kas  4 14:51 VirtualBox VMs
+</pre>
+
+<p>ls ile dizindeki dosya ve klasörleri listelediğimizde <q>klasörümüzünadı</q> adında yeni bir klasör oluşturduğunu görüyorsunuz</p>
+
+<br />
+<p># mkdir "selam dunya"</p>
+<p>Görüldüğü üzere dosya adında boşluk varsa herzaman tırnak içinde yazmamız gerekiyor bu kural her zaman aynı</p>
+<pre class="code">root@kali:~# mkdir "selam dunya"
+root@kali:~# ls
+ag.txt     dünya            Masaüstü       Resimler     Videolar
+Belgeler   Genel            Müzik          selam dunya  VirtualBox VMs
+Downloads  klasörümüzünadı  NXcFUxPL.jpeg  Şablonlar
+</pre>
+
+<p># mkdir -v yeniklasör</p>
+<p>-v parametresi ile klasörün oluşturulup oluşuturulmadığına dair bilgiyi ekrana basmasını sağlayabiliriz</p>
+<pre class="code">root@kali:~# mkdir -v selam
+mkdir: dizin 'selam' oluşturuldu
+
+root@kali:~# ls
+ag.txt     dünya            Masaüstü       Resimler     Şablonlar
+Belgeler   Genel            Müzik          selam        Videolar
+Downloads  klasörümüzünadı  NXcFUxPL.jpeg  selam dunya  VirtualBox VMs
+root@kali:~#
+</pre>
+<br />
+<p># rmdir</p>
+<p><q>rmdir dizinadı</q> şeklinde belirtilen dizin boş bir dizin ise silinir. Örnek olarak klasör1 dizinimiz olsun içinde deneme.txt adında bir dosyamız olsun birde klasör2 adında boş bir dizinimiz olsun. Şimdi bu iki dizini rmdir ile silmeyi deniyelim.</p>
+<pre class="code">root@kali:~# rmdir klasör1 -v
+rmdir: dizin 'klasör1' siliniyor
+rmdir: 'klasör1' kaldırılamadı: Dizin boş değil
+
+root@kali:~# rmdir klasör2 -v
+rmdir: dizin 'klasör2' siliniyor
+
+root@kali:~# ls
+ag.txt    Downloads  klasör1   Müzik          Resimler   Videolar
+Belgeler  Genel      Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+</pre>
+
+<p>Peki içi dolu klasörleri nasıl sileceğiz?</p>
+<br />
+<p># rm</p>
+<p>Dosya veya klasör silmek için kullanılır. <q>rm dosya-ya-da-klasör-adı</q> şeklinde kullanılır. </p>
+<p>Örnek olarak bulunduğumuz dizinde deneme.txt adında bir dosyamız olsun ve bunu silelim</p>
+<pre class="code">root@kali:~# ls
+ag.txt      Downloads  Masaüstü       Resimler   VirtualBox VMs
+Belgeler    Genel      Müzik          Şablonlar
+deneme.txt  klasör1    NXcFUxPL.jpeg  Videolar
+
+root@kali:~# rm deneme.txt -v
+'deneme.txt' silindi
+
+root@kali:~# ls
+ag.txt    Downloads  klasör1   Müzik          Resimler   Videolar
+Belgeler  Genel      Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+</pre>
+<br />
+<p>Şimdi boş bir klasör silelim</p>
+<pre class="code">root@kali:~# ls
+ag.txt     Downloads  Masaüstü       Resimler   VirtualBox VMs
+Belgeler   Genel      Müzik          Şablonlar
+boşklasör  klasör1    NXcFUxPL.jpeg  Videolar
+
+root@kali:~# rm boşklasör
+rm: 'boşklasör' silinemedi: Bir dizin
+</pre>
+<p>Görüldüğü gibi rm komutu ile tekbaşına silme yapamadık. Ancak rm komutuna -d parametresi eklersek boş dizinleri silebilir</p>
+<p># rm boşklasör/ -d -v</p>
+<pre class="code">root@kali:~# rm boşklasör/ -d -v
+removed directory 'boşklasör/'
+
+root@kali:~# ls
+ag.txt    Downloads  klasör1   Müzik          Resimler   Videolar
+Belgeler  Genel      Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+</pre>
+<p>Görüldüğü gibi boş klasörümüzü sildi. -v parametresini kullanarak işlemin çalışıp çalışmadığına dair geri bildirim aldık<p>
+<p>Şimdi de içi dolu bir dizini silelim</p>
+<p># rm -r klasör1 -v</p>
+<pre class="code">root@kali:~# rm -r klasör1/ -v
+'klasör1/deneme.txt' silindi
+removed directory 'klasör1/'
+
+root@kali:~# ls
+ag.txt    Downloads  Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+Belgeler  Genel      Müzik     Resimler       Videolar
+</pre>
+<p>-r parametresi ile içi dolu dizinleri silebiliyoruz</p>
+<p>-v parametresi ile silinip silinmediği bilgisini ekrana basıyoruz</p>
+<p>Görüldüğü gibi klasör1'in içindeki deneme.txt dosyasınında silindiğine dair bilgiyi ekrana bastı ve klasör1'i içindeki dosya ile beraber sildi</p><br />
+
+<p># rm -r klasör1 -i -v</p>
+<p>Şimdi dosya ve klasörleri silerken onay almaya bakalım</p>
+<pre class="code">root@kali:~# ls
+ag.txt    Downloads  klasör1   Müzik          Resimler   Videolar
+Belgeler  Genel      Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+
+root@kali:~# rm -r klasör1/ -i -v
+rm: 'klasör1/' dizininin içine inilsin mi?e
+rm: normal boş dosya 'klasör1/deneme.txt' silinsin mi?e
+'klasör1/deneme.txt' silindi
+rm: dizin 'klasör1/' silinsin mi?e
+removed directory 'klasör1/'
+</pre>
+<p>Yukarıda görüldüğü gibi program bize önce soru sorup onay istedi</p>
+<p>rm: 'klasör1/' dizininin içine inilsin mi? şeklinde </p>
+<p><q>e</q> e tuşuna basarak evet demek istediğimizi belirttik</p>
+<p>rm: normal boş dosya 'klasör1/deneme.txt' silinsin mi?</p>
+<p>klasör1 içindeki deneme.txt dosyasının silinmesi için onayımızı istedi</p>
+<p>rm: dizin 'klasör1/' silinsin mi?</p>
+<p>klasör1 dizinindeki dosylar bittikten sonra klasör1'in silinmesi için onayımızı istedi eğer klasör1'i silmek istemiyorsak <q>h</q> ya da <q>n</q> tuşunu kullanıyoruz n tuşu bildiğiniz no demek h de hayır demek</p>
+<p>-i parametresi ile onay istenmesi gerektiğini belirttik</p>
+<p>-v parametresi ile dosyanın silinip silinmediği bilgisini ekrana basmasını belirttik</p>
+<p>-r ile içi dolu klasörleri silmesini sağladık</p>
+<br />
+<p># mv</p>
+<p>Dosya ve klasör taşımak istediğimizde ve dosya ya da klasör adlarını değiştirmek istediğimizde kullanılır</p>
+<p># mv tasınacakdosyayadadizin hedefdizin</p>
+<p># mv deneme.txt klasör/</p>
+<pre class="code">root@kali:~# ls
+ag.txt      Downloads  Masaüstü       Resimler   VirtualBox VMs
+Belgeler    Genel      Müzik          Şablonlar
+deneme.txt  klasör     NXcFUxPL.jpeg  Videolar
+
+root@kali:~# mv deneme.txt klasör/
+root@kali:~# ls
+ag.txt    Downloads  klasör    Müzik          Resimler   Videolar
+Belgeler  Genel      Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+
+root@kali:~# ls klasör/
+deneme.txt</pre>
+<p>Yukarıda görüldüğü üzere deneme.txt dosyasını klasör dizininin içine taşıdık</p>
+
+<p>Şimdide içi dolu bir klasörü başka bir klasörün içine taşıyalım</p>
+<pre class="code">root@kali:~# ls
+ag.txt    dizin      Genel   Masaüstü  NXcFUxPL.jpeg  Şablonlar  VirtualBox VMs
+Belgeler  Downloads  klasör  Müzik     Resimler       Videolar
+root@kali:~# ls klasör/
+deneme.txt
+
+root@kali:~# mv klasör/ dizin/klasör -v
+'klasör/' -> 'dizin/klasör'
+
+root@kali:~# ls dizin
+klasör</pre>
+<p>-v parametresi ile ekrana yapılan işlemi bastırdık</p>
+<p>Yukarıdada görüldüğü üzere taşıma işlemini başarıyla yapmış</p>
+
+
+<br />
+<p># mv dosyaadi.txt dosyaninyeniadi.txt</p>
+<p>Dosya adını değiştirmemizi sağlar. Bir dosyanın adı aslında dosyanın konumudur. Bu yüzden dosyayı taşıma işlemi yaptığımız zaman dosyanın konumunu yani adını değiştirmiş oluruz.</p>
+<pre class="code">root@kali:~/Masaüstü# ls
+c  dosya.txt
+
+root@kali:~/Masaüstü# mv dosya.txt dosyanınyeniadi.txt
+root@kali:~/Masaüstü# ls
+c  dosyanınyeniadi.txt
+</pre>
+<p>Veya</p>
+<pre class="code">
+root@kali:~/Masaüstü# ls
+c  dizin  dosya.txt
+
+root@kali:~/Masaüstü# mv dosya.txt dizin/dosyaninyeniadi.txt
+
+root@kali:~/Masaüstü# ls
+c  dizin
+
+root@kali:~/Masaüstü# ls dizin/
+dosyaninyeniadi.txt
+</pre>
+<p>Dosya adını yukarıda görüldüğü değiştirebiliriz.Aynı şekilde dizin adlarınıda mv ile değitirebiliriz.</p>
+<pre class="code">root@kali:~/Masaüstü# ls
+c  dizin
+
+root@kali:~/Masaüstü# mv dizin klasör
+root@kali:~/Masaüstü# ls
+c  klasör
+</pre>
+
+<br />
+<p># touch dosyaadi.txt</p>
+<p>Touch komutu ile belirttiğimiz isimde bir dosya oluşturcaktır.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls
+root@kali:~/Masaüstü/test# touch deneme.txt
+root@kali:~/Masaüstü/test# ls
+deneme.txt</pre>
+<p>Yukarıda görüldüğü gibi deneme.txt adında bir dosya oluştu.</p><br />
+<p># touch dosya1.txt dosya2.txt</p>
+<p>Touch ile aynı anda birden fazla dosya oluşturabilirsiniz.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls -l
+toplam 0
+-rw-r--r-- 1 root root 0 Kas 20 00:01 deneme.txt
+
+root@kali:~/Masaüstü/test# touch deneme2.txt deneme3.txt
+
+root@kali:~/Masaüstü/test# ls -l
+toplam 0
+-rw-r--r-- 1 root root 0 Kas 20 00:03 deneme2.txt
+-rw-r--r-- 1 root root 0 Kas 20 00:03 deneme3.txt
+-rw-r--r-- 1 root root 0 Kas 20 00:01 deneme.txt</pre>
+
+<br />
+<p># cat dosya.txt</p>
+<p>cat komutu ile bir dosyadaki veriyi terminal ekranına bastırabilirsiniz. Yani dosyayı okumak için kullanılır.</p>
+<p>Örnek olarak etc dizinimizin altındaki sparta.conf dosyasını okuyalım</p>
+<br />
+<p># cat /etc/sparta.conf</p>
+<pre class="scroll">root@kali:/# cat /etc/sparta.conf
+[GeneralSettings]
+default-terminal=gnome-terminal
+tool-output-black-background=False
+screenshooter-timeout=15000
+web-services="http,https,ssl,soap,http-proxy,http-alt,https-alt"
+enable-scheduler=True
+enable-scheduler-on-import=False
+max-fast-processes=10
+max-slow-processes=10
+
+[BruteSettings]
+store-cleartext-passwords-on-exit=True
+username-wordlist-path=/usr/share/wordlists/
+password-wordlist-path=/usr/share/wordlists/
+default-username=root
+default-password=password
+services="asterisk,afp,cisco,cisco-enable,cvs,firebird,ftp,ftps,http-head,http-get,https-head,https-get,http-get-form,http-post-form,https-get-form,https-post-form,http-proxy,http-proxy-urlenum,icq,imap,imaps,irc,ldap2,ldap2s,ldap3,ldap3s,ldap3-crammd5,ldap3-crammd5s,ldap3-digestmd5,ldap3-digestmd5s,mssql,mysql,ncp,nntp,oracle-listener,oracle-sid,pcanywhere,pcnfs,pop3,pop3s,postgres,rdp,rexec,rlogin,rsh,s7-300,sip,smb,smtp,smtps,smtp-enum,snmp,socks5,ssh,sshkey,svn,teamspeak,telnet,telnets,vmauthd,vnc,xmpp"
+no-username-services="cisco,cisco-enable,oracle-listener,s7-300,snmp,vnc"
+no-password-services="oracle-sid,rsh,smtp-enum"
+
+[StagedNmapSettings]
+stage1-ports="T:80,443"
+stage2-ports="T:25,135,137,139,445,1433,3306,5432,U:137,161,162,1434"
+stage3-ports="T:23,21,22,110,111,2049,3389,8080,U:500,5060"
+stage4-ports="T:0-20,24,26-79,81-109,112-134,136,138,140-442,444,446-1432,1434-2048,2050-3305,3307-3388,3390-5431,5433-8079,8081-29999"
+stage5-ports=T:30000-65535
+
+[ToolSettings]
+nmap-path=/usr/bin/nmap
+hydra-path=/usr/bin/hydra
+cutycapt-path=/usr/bin/cutycapt
+texteditor-path=/usr/bin/leafpad
+
+[HostActions]
+nmap-fast-tcp=Run nmap (fast TCP), nmap -Pn -F -T4 -vvvv [IP] -oA \"[OUTPUT]\"
+nmap-full-tcp=Run nmap (full TCP), nmap -Pn -sV -sC -O -p- -T4 -vvvvv [IP] -oA \"[OUTPUT]\"
+nmap-fast-udp=Run nmap (fast UDP), "nmap -n -Pn -sU -F --min-rate=1000 -vvvvv [IP] -oA \"[OUTPUT]\""
+nmap-udp-1000=Run nmap (top 1000 quick UDP), "nmap -n -Pn -sU --min-rate=1000 -vvvvv [IP] -oA \"[OUTPUT]\""
+nmap-full-udp=Run nmap (full UDP), nmap -n -Pn -sU -p- -T4 -vvvvv [IP] -oA \"[OUTPUT]\"
+unicornscan-full-udp=Run unicornscan (full UDP), unicornscan -mU -Ir 1000 [IP]:a -v
+
+[PortActions]
+banner=Grab banner, bash -c \"echo \"\" | nc -v -n -w1 [IP] [PORT]\",
+nmap=Run nmap (scripts) on port, nmap -Pn -sV -sC -vvvvv -p[PORT] [IP] -oA [OUTPUT],
+nikto=Run nikto, nikto -o \"[OUTPUT].txt\" -p [PORT] -h [IP], "http,https,ssl,soap,http-proxy,http-alt"
+dirbuster=Launch dirbuster, java -Xmx256M -jar /usr/share/dirbuster/DirBuster-1.0-RC1.jar -u http://[IP]:[PORT]/, "http,https,ssl,soap,http-proxy,http-alt"
+webslayer=Launch webslayer, webslayer, "http,https,ssl,soap,http-proxy,http-alt"
+whatweb=Run whatweb, "whatweb [IP]:[PORT] --color=never --log-brief=\"[OUTPUT].txt\"", "http,https,ssl,soap,http-proxy,http-alt"
+samrdump=Run samrdump, python /usr/share/doc/python-impacket-doc/examples/samrdump.py [IP] [PORT]/SMB, "netbios-ssn,microsoft-ds"
+nbtscan=Run nbtscan, nbtscan -v -h [IP], netbios-ns
+smbenum=Run smbenum, bash ./scripts/smbenum.sh [IP], "netbios-ssn,microsoft-ds"
+enum4linux=Run enum4linux, enum4linux [IP], "netbios-ssn,microsoft-ds"
+polenum=Extract password policy (polenum), polenum [IP], "netbios-ssn,microsoft-ds"
+smb-enum-users=Enumerate users (nmap), "nmap -p[PORT] --script=smb-enum-users [IP] -vvvvv", "netbios-ssn,microsoft-ds"
+smb-enum-users-rpc=Enumerate users (rpcclient), bash -c \"echo 'enumdomusers' | rpcclient [IP] -U%\", "netbios-ssn,microsoft-ds"
+smb-enum-admins=Enumerate domain admins (net), "net rpc group members \"Domain Admins\" -I [IP] -U% ", "netbios-ssn,microsoft-ds"
+smb-enum-groups=Enumerate groups (nmap), "nmap -p[PORT] --script=smb-enum-groups [IP] -vvvvv", "netbios-ssn,microsoft-ds"
+smb-enum-shares=Enumerate shares (nmap), "nmap -p[PORT] --script=smb-enum-shares [IP] -vvvvv", "netbios-ssn,microsoft-ds"
+smb-enum-sessions=Enumerate logged in users (nmap), "nmap -p[PORT] --script=smb-enum-sessions [IP] -vvvvv", "netbios-ssn,microsoft-ds"
+smb-enum-policies=Extract password policy (nmap), "nmap -p[PORT] --script=smb-enum-domains [IP] -vvvvv", "netbios-ssn,microsoft-ds"
+smb-null-sessions=Check for null sessions (rpcclient), bash -c \"echo 'srvinfo' | rpcclient [IP] -U%\", "netbios-ssn,microsoft-ds"
+ldapsearch=Run ldapsearch, ldapsearch -h [IP] -p [PORT] -x -s base, ldap
+snmpcheck=Run snmpcheck, snmpcheck -t [IP], "snmp,snmptrap"
+rpcinfo=Run rpcinfo, rpcinfo -p [IP], rpcbind
+rdp-sec-check=Run rdp-sec-check.pl, perl ./scripts/rdp-sec-check.pl [IP]:[PORT], ms-wbt-server
+showmount=Show nfs shares, showmount -e [IP], nfs
+x11screen=Run x11screenshot, bash ./scripts/x11screenshot.sh [IP], X11
+sslscan=Run sslscan, sslscan --no-failed [IP]:[PORT], "https,ssl"
+sslyze=Run sslyze, sslyze --regular [IP]:[PORT], "https,ssl,ms-wbt-server,imap,pop3,smtp"
+rwho=Run rwho, rwho -a [IP], who
+finger=Enumerate users (finger), ./scripts/fingertool.sh [IP], finger
+smtp-enum-vrfy=Enumerate SMTP users (VRFY), smtp-user-enum -M VRFY -U /usr/share/metasploit-framework/data/wordlists/unix_users.txt -t [IP] -p [PORT], smtp
+smtp-enum-expn=Enumerate SMTP users (EXPN), smtp-user-enum -M EXPN -U /usr/share/metasploit-framework/data/wordlists/unix_users.txt -t [IP] -p [PORT], smtp
+smtp-enum-rcpt=Enumerate SMTP users (RCPT), smtp-user-enum -M RCPT -U /usr/share/metasploit-framework/data/wordlists/unix_users.txt -t [IP] -p [PORT], smtp
+ftp-default=Check for default ftp credentials, hydra -s [PORT] -C ./wordlists/ftp-default-userpass.txt -u -o \"[OUTPUT].txt\" -f [IP] ftp, ftp
+mssql-default=Check for default mssql credentials, hydra -s [PORT] -C ./wordlists/mssql-default-userpass.txt -u -o \"[OUTPUT].txt\" -f [IP] mssql, ms-sql-s
+mysql-default=Check for default mysql credentials, hydra -s [PORT] -C ./wordlists/mysql-default-userpass.txt -u -o \"[OUTPUT].txt\" -f [IP] mysql, mysql
+oracle-default=Check for default oracle credentials, hydra -s [PORT] -C ./wordlists/oracle-default-userpass.txt -u -o \"[OUTPUT].txt\" -f [IP] oracle-listener, oracle-tns
+postgres-default=Check for default postgres credentials, hydra -s [PORT] -C ./wordlists/postgres-default-userpass.txt -u -o \"[OUTPUT].txt\" -f [IP] postgres, postgresql
+snmp-default=Check for default community strings, python ./scripts/snmpbrute.py -t [IP] -p [PORT] -f ./wordlists/snmp-default.txt -b --no-colours, "snmp,snmptrap"
+snmp-brute=Bruteforce community strings (medusa), bash -c \"medusa -h [IP] -u root -P ./wordlists/snmp-default.txt -M snmp | grep SUCCESS\", "snmp,snmptrap"
+oracle-version=Get version, "msfcli auxiliary/scanner/oracle/tnslsnr_version rhosts=[IP] E", oracle-tns
+oracle-sid=Oracle SID enumeration, "msfcli auxiliary/scanner/oracle/sid_enum rhosts=[IP] E", oracle-tns
+
+[PortTerminalActions]
+netcat=Open with netcat, nc -v [IP] [PORT],
+telnet=Open with telnet, telnet [IP] [PORT],
+ftp=Open with ftp client, ftp [IP] [PORT], ftp
+mysql=Open with mysql client (as root), "mysql -u root -h [IP] --port=[PORT] -p", mysql
+mssql=Open with mssql client (as sa), python /usr/share/doc/python-impacket-doc/examples/mssqlclient.py -p [PORT] sa@[IP], "mys-sql-s,codasrv-se"
+ssh=Open with ssh client (as root), ssh root@[IP] -p [PORT], ssh
+psql=Open with postgres client (as postgres), psql -h [IP] -p [PORT] -U postgres, postgres
+rdesktop=Open with rdesktop, rdesktop [IP]:[PORT], ms-wbt-server
+rpcclient=Open with rpcclient (NULL session), rpcclient [IP] -p [PORT] -U%, "netbios-ssn,microsoft-ds"
+vncviewer=Open with vncviewer, vncviewer [IP]:[PORT], vnc
+xephyr=Open with Xephyr, Xephyr -query [IP] :1, xdmcp
+rlogin=Open with rlogin, rlogin -i root -p [PORT] [IP], login
+rsh=Open with rsh, rsh -l root [IP], shell
+
+[SchedulerSettings]
+nikto="http,https,ssl,soap,http-proxy,http-alt", tcp
+screenshooter="http,https,ssl,http-proxy,http-alt", tcp
+smbenum=microsoft-ds, tcp
+snmpcheck=snmp, udp
+x11screen=X11, tcp
+snmp-default=snmp, udp
+smtp-enum-vrfy=smtp, tcp
+mysql-default=mysql, tcp
+mssql-default=ms-sql-s, tcp
+ftp-default=ftp, tcp
+postgres-default=postgresql, tcp
+oracle-default=oracle-tns, tcp
+</pre>
+<p>Yukarıda örnekte görüldüğü gibi dosya içerisindeki tüm veri terminal ekranına basıldı.</p>
+<p>Ancak çok uzun dosya içeriklerini doğrudan terminal ekranına basmak istemiyebilirsiniz bunun için head ve more komutları var</p>
+			<br />
+<p># head</p>
+<p>Bu komut parametresiz kullanıldığında basılmasını istediğimiz dosyanın sadece ilk 10 satırını basacaktır.</p>
+<p># head /etc/sparta.conf</p>
+<pre class="code">root@kali:/# head /etc/sparta.conf
+[GeneralSettings]
+default-terminal=gnome-terminal
+tool-output-black-background=False
+screenshooter-timeout=15000
+web-services="http,https,ssl,soap,http-proxy,http-alt,https-alt"
+enable-scheduler=True
+enable-scheduler-on-import=False
+max-fast-processes=10
+max-slow-processes=10
+
+</pre>
+<p>head komutuna eklenebilecek iki güzel parametremiz daha var</p>
+<p>-n kaç satır çekileceği</p>
+<p>-c kaç byte lık veri çekileceği</p>
+<br />
+<p># head -n 20 /etc/sparta.conf</p>
+<pre class="code">root@kali:/# head -n 20 /etc/sparta.conf
+[GeneralSettings]
+default-terminal=gnome-terminal
+tool-output-black-background=False
+screenshooter-timeout=15000
+web-services="http,https,ssl,soap,http-proxy,http-alt,https-alt"
+enable-scheduler=True
+enable-scheduler-on-import=False
+max-fast-processes=10
+max-slow-processes=10
+
+[BruteSettings]
+store-cleartext-passwords-on-exit=True
+username-wordlist-path=/usr/share/wordlists/
+password-wordlist-path=/usr/share/wordlists/
+default-username=root
+default-password=password
+services="asterisk,afp,cisco,cisco-enable,cvs,firebird,ftp,ftps,http-head,http-get,
+https-head,https-get,http-get-form,http-post-form,https-get-form,https-post-form,
+http-proxy,http-proxy-urlenum,icq,imap,imaps,irc,ldap2,ldap2s,ldap3,ldap3s,
+ldap3-crammd5,ldap3-crammd5s,ldap3-digestmd5,ldap3-digestmd5s,mssql,mysql,ncp,nntp,
+oracle-listener,oracle-sid,pcanywhere,pcnfs,pop3,pop3s,postgres,rdp,rexec,rlogin,
+rsh,s7-300,sip,smb,smtp,smtps,smtp-enum,snmp,socks5,ssh,sshkey,svn,teamspeak,
+telnet,telnets,vmauthd,vnc,xmpp"
+no-username-services="cisco,cisco-enable,oracle-listener,s7-300,snmp,vnc"
+no-password-services="oracle-sid,rsh,smtp-enum"
+
+</pre>
+<p>Yukarıda görüldüğü gibi sparta.conf dosyasının ilk 20 satırını okuduk.</p>
+<br />
+<p># head -c 10 /etc/sparta.conf</p>
+<pre class="code">root@kali:/# head -c 10 /etc/sparta.conf
+[GeneralSe
+
+root@kali:/# head -c 100 /etc/sparta.conf
+[GeneralSettings]
+default-terminal=gnome-terminal
+tool-output-black-background=False
+screenshooter-t</pre>
+<p>Yukarıdaki örnekte iki kullanım gösteriliyor. İlk örnekte 10 bytelık veri çekmek istediğimiz belirtiyoruz. Tabi bir karakter 1 byte'a tekabul ettiğinden 10 karakter çektik. İkinci örnekte 100byte'lık veri çekmek istediğimiz belirttik ve ilk 100 karakteri çektik.</p>
+
+<br/>
+<p># more</p>
+<p>more komutu ile dosya okunması için terminal ekranının bittiği yere kadar dosyayı okur daha sonra dosyanın devamını terminale basmanız için boşluk tuşuna basmanızı bekler boşluk tuşuna basıldığında dosyanın kalanını ekrana basar boşluk ile dosya sonuna kadar böyle devam eder en sonunda ise tüm dosyayı ekrana basmış olur.</p>
+<p>#more /etc/sparta.conf</p>
+
+<br/>
+<p># tail</p>
+<p>tail komutu ise bir dosyayı son satırlardan itibaren okumaya başlar. Parametresiz kullanıldığında belirtilen dosyanın son 10 sastırını ekrana basacaktır.
+<pre class="code">root@kali:/etc# tail sparta.conf
+smbenum=microsoft-ds, tcp
+snmpcheck=snmp, udp
+x11screen=X11, tcp
+snmp-default=snmp, udp
+smtp-enum-vrfy=smtp, tcp
+mysql-default=mysql, tcp
+mssql-default=ms-sql-s, tcp
+ftp-default=ftp, tcp
+postgres-default=postgresql, tcp
+oracle-default=oracle-tns, tcp
+</pre>
+<br />
+<p># tail -n 20<p>
+<p>-n parametresi ile son 20 satırı ekrana getirmesini söylüyoruz.</p>
+<br />
+<p># tail -f syslog</p>
+<p>-f parametresi <q>follow</q> anlamındadır. Ve bir dosyaya veri eklenmeye devam ettiği sürece bu eklenen verileri ekrana yazması gerektiğini belirtiyoruz. Yani okuduğumuz dosyayı güncel bir şekilde ekrana basacaktır.</p>
+<p>Genellikle <q>tail -f &lt;dosyaadi&gt;</q>  komutu log dosyalarınıdaki anlık değişimi takip etmek için kullanılır.</p>
+
+
+
+
+
+<br />
+<p># clear</p>
+<p>Bu komut terminal ekranınızı temizler. <q>ctrl + l</q> kombinasyonu ilede ekran temizlenebilir.</p>
+
+<br />
+<p># echo "basılcak metin"</p>
+<p>echo ile ekrana tırnak içindeki metin yazılabilir. Bu komutu daha çok kabuk programlamada ve bir dosyanın içeriğine veri yazarken kullanabiliriz.</p>
+<pre class="code">root@kali:/# echo "selam"
+selam
+</pre>
+
+<br />
+<p>&gt; operatörü</p>
+<p>&gt; operatörü bir dosyanın içeriğine bir komutun çıktısını veya istenilen ifadeyi yazdırmak için kullanılır. Dosya içeriğini siler ve belirtilen ifadeyi dosyaya yazar.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls
+deneme.txt
+
+root@kali:~/Masaüstü/test# ls -l /boot > deneme.txt
+
+root@kali:~/Masaüstü/test# cat deneme.txt
+toplam 63228
+-rw-r--r-- 1 root root   172463 Oca 13  2016 config-4.3.0-kali1-amd64
+-rw-r--r-- 1 root root   182830 Kas  4 16:49 config-4.8.0-kali1-amd64
+drwxr-xr-x 5 root root     4096 Kas 12 03:12 grub
+-rw-r--r-- 1 root root 24635154 Kas 11 19:26 initrd.img-4.3.0-kali1-amd64
+-rw-r--r-- 1 root root 25966500 Kas 12 03:15 initrd.img-4.8.0-kali1-amd64
+drwx------ 2 root root    16384 Kas 11 15:57 lost+found
+-rw-r--r-- 1 root root  2943919 Oca 13  2016 System.map-4.3.0-kali1-amd64
+-rw-r--r-- 1 root root  3139094 Kas  4 16:49 System.map-4.8.0-kali1-amd64
+-rw-r--r-- 1 root root  3559200 Oca 13  2016 vmlinuz-4.3.0-kali1-amd64
+-rw-r--r-- 1 root root  4110624 Kas  4 16:49 vmlinuz-4.8.0-kali1-amd64
+</pre>
+
+
+<p>Yukarıdaki örnekte görüldüğü gibi <q>ls -l /boot</q> komutuyla /boot dizinini liste halinde ekrana basma komutu var <q>&gt;</q> operatörü ile bu çıktıyı deneme.txt dosyamıza yazdırmak istediğimiz belirttik. <q>cat</q> komutu ile deneme.txt dosyamızı açtığımızda boot dizinindeki klasör ve dosyaların listesinin yazılı olduğunu görüyoruz.</p>
+
+
+<p>Herhangi bir komutun çıktısını bir dosyaya &gt; operatörü ile yazdırabilirsiniz.</p><br />
+<p># echo "merhaba dünya" > deneme.txt</p>
+<pre class="code">root@kali:~/Masaüstü/test# echo "merhaba dünya" > deneme.txt
+
+root@kali:~/Masaüstü/test# cat deneme.txt
+merhaba dünya
+</pre>
+<p>Örnekte görüldüğü gibi deneme.txt dosyamızın içeriğini sildi ve echo ile verilen çıktı deneme.txt dosyamıza yazdırıldı.</p><br />
+<p>NOT: &gt; operatörü ile operatörün sağında bulundan isimde dosya yoksa bile belirtilen isimde bir dosya oluşturup içeriği içerisine yazacaktır.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls
+deneme.txt
+
+root@kali:~/Masaüstü/test# echo "selam dostlar" > dosya.txt
+
+root@kali:~/Masaüstü/test# ls
+deneme.txt  dosya.txt
+
+root@kali:~/Masaüstü/test# cat dosya.txt
+selam dostlar
+</pre>
+<p>Yukarıda görüldüğü gibi dosya.txt adında bir dosya oluşturdu ve çıktıyı içerisine yazdı.</p>
+
+<br/>
+<p>&gt;&gt; operatörü</p>
+<p>Bu operatörün &gt; operatörüden farkı; bu operatör dosyanın son satırına çıktıyı ekler ve dosya içeriğini silmez</p>
+<pre class="code">root@kali:~/Masaüstü/test# cat dosya.txt
+selam dostlar
+
+root@kali:~/Masaüstü/test# echo "merhaba dünya" >> dosya.txt
+
+root@kali:~/Masaüstü/test# ls
+deneme.txt  dosya.txt
+
+root@kali:~/Masaüstü/test# cat dosya.txt
+selam dostlar
+merhaba dünya
+</pre>
+<p>&gt;&gt; operatörüde &gt; operatörü gibi eğer dosya yoksa belirtilen isimde bir dosya oluşturur ve içeriği ona yazar.</p>
+
+
+<br/>
+<p>tab tuşu</p>
+<p>tab tuşu bir komutu yazmaya başlarken kullanılır yazacağınız komutu tamamlar. Örnek olarak bir cat ile bir dosyayı okumak istiyorsunuz. <q>cat d</q> yazıp tab tuşuna basarsanız <q>cat dosya.txt</q> gibi tamalıyacaktır. Aynı şekilde bir komut girerken ilk harflerini yazıp tab tuşua basarsanız komutunuzuda tamalicaktır.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls
+deneme.txt  dosya.txt
+root@kali:~/Masaüstü/test# cat do
+
+[Burda tab tuşuna basıyoruz]
+
+root@kali:~/Masaüstü/test# cat dosya.txt
+</pre>
+<p>Örnekte görüldüğü gibi dosya adımızı tamamladı klasörde iki tane d harfli ile başlayan dosya olduğundan ikinci harfe kadar yazdık.</p>
+
+<p>Aynı şekilde herhangi bir komutu yazarkende tab tuşunu kullabilirsiniz eğer belirtiğiniz harfle başlayan komut tek ise komutu tamamlayacaktır</p>
+<br />
+<p>tab tab</p>
+<p>Bir komutu yazmaya başladınız ancak tab tuşu tamamlamadı bu aynı isimle başlayan birden fazla komut olduğunu gösterir. Örnek olarak <q>ca</q> yazıp iki kez tab tuşuna basarsanız ca ile başlayan komutlar(programlar) ekrana basılacaktır.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ca
+cabextract           calendar             captoinfo            casefile
+cachedump            caller               cardos-tool          castxml
+cadaver              cancel               cardselect.py        cat
+cal                  capinfos             caribou-preferences  catchsegv
+calc_tickadj         capsh                case                 catman
+</pre>
+
+<br />
+<p>&& operatörü</p>
+<p>and operatörü iki komutu tek satırda yazmamızı sağlar. Tek satırda birden çok komut verebilmemizi sağlar.</p>
+<pre class="code">root@kali:~/Masaüstü/test# ls
+deneme.txt  dosya.txt
+
+root@kali:~/Masaüstü/test# ls -l && touch merhaba.txt && ls -l > merhaba.txt
+toplam 8
+-rw-r--r-- 1 root root 15 Kas 20 16:33 deneme.txt
+-rw-r--r-- 1 root root 28 Kas 20 16:53 dosya.txt
+
+root@kali:~/Masaüstü/test# ls
+deneme.txt  dosya.txt  merhaba.txt
+
+root@kali:~/Masaüstü/test# cat merhaba.txt
+toplam 8
+-rw-r--r-- 1 root root 15 Kas 20 16:33 deneme.txt
+-rw-r--r-- 1 root root 28 Kas 20 16:53 dosya.txt
+-rw-r--r-- 1 root root  0 Kas 20 17:08 merhaba.txt
+</pre>
+<p>Yukarıdaki örnekte üç farklı komutu tek satırda çalıştırdık. Sırayla tüm komutlar soldan sağa doğru çalıştırıldı. Önce dizinimizi listeledik. Sonra dosya oluşturduk daha sonra ise ls -l komutunun çıktısını bu oluşturduğumuz dosyaya yazdık.</p>
+<p>Şimdilik bu kadar.</p>
+<br /><br />
+<footer>
+			<p>Kaynak: Linux Komut Satırı - Kemal Demirez</p>
+		</footer>
+		</section>
+
+		</div><!--page-->
+
+	</body>
+</html>

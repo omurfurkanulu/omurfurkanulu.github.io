@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Transaction Scope Nedir? Nasıl Kullanılır?" />
+		<meta name="keywords" content="transaction scope, c# transaction scope kullanımı" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Transaciton Scope</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1>Transaction Scope</h1>
+			<ol>
+				<li><a>Transaction Scope Nedir?</a></li>
+				<li><a>.NET Transaction Scope Nasıl Kullanılır?</a></li>
+				<li><a>Entity Framework Core + Transaction Scope Kullanımı</a></li>
+
+				<li><a>Transaction Scope Nasıl Çalışır?</a></li>
+			</ol>
+
+			<h2>Transaction Scope Nedir?</h2>
+
+<p>Transaction Scope, .NET Framework ve .NET Core gibi bazı programlama dillerinde bulunan bir sınıftır ve işlemlerin atomikliğini (başarılı veya başarısız tamamlanma garantisi), tutarlılığını (verilerin tutarlı kalması) ve yalıtımını (işlemler arasında birbirini etkileme) sağlamak için kullanılır.</p>
+<p>Transaction Scope, birden fazla veritabanı işleminin birleştirilmesine olanak tanır ve bu işlemlerin tamamı ya başarılı bir şekilde tamamlanır ya da hiçbiri tamamlanmaz. Bu, bir işlem veya bir dizi işlemi otomatik olarak geri alma (rollback) özelliği ile birlikte çalışır. Eğer bir işlem başarısız olursa, tüm işlemler geri alınır ve verilerin tutarlılığı korunur.</p>
+<p>Transaction Scope, kod yazarken daha az çaba ve daha az hata yapmanızı sağlar, çünkü işlemlerin doğru bir şekilde gerçekleştiğinden emin olursunuz. Ayrıca, Transaction Scope, işlemleri yönetmek için ayrıntılı kod yazmanıza gerek kalmadan, kolayca uygulanabilir bir çözüm sunar.</p>
+<p>Özetle, Transaction Scope, birden fazla veritabanı işleminin birleştirilmesini, işlemlerin atomikliğini, tutarlılığını ve yalıtımını sağlayan bir sınıftır.</p>
+
+<h2>.NET Transaction Scope Nasıl Kullanılır?</h2>
+<p>
+    <q>System.Transactions</q> isim alanı içerisindeki <q>TransactionScope</q> sınıfı kullanılarak bir kod blogu tanımlanır. </p>
+
+
+<pre class="code">
+using (TransactionScope transactionScope = new TransactionScope()){
+
+	//-> Yapılmak istenen sql işlemleri bu kod bloğu içerisine yazılır
+
+	transactionScope.Complete(); //-> Transaction'ın tamamlandığı belirtir
+}
+</pre>
+
+
+<p>Yukarıdaki kod bloğunun çalışabilmesi için, sayfanıza <q>System.Transactions</q> isim alanı eklenmelidir.</p>
+<pre class="code">using System.Transactions;</pre>
+
+
+<p>Yapılmak istenen sorgular sırasıyla bu kod bloğu içerine yazılır. İşlemler tamamlandığında commit edilmesi için <q>transactionScope.Complete();</q> methodunun çağrılması gerekir.</p>
+
+<h3>Complete Methodu</h3>
+<section class="sub-section">
+	<pre class="code">transactionScope.Complete();</pre>
+	<p><q>Complete()</q> methodu kapsamdaki tüm işlemlerin başarıyla tamamlandığını gösterir.</p>
+</section>
+
+
+<h3>Dispose Methodu</h3>
+<section class="sub-section">
+	<pre class="code">transactionScope.Dispose();</pre>
+	<p><q>Dispose()</q> methodu işlem kapsamını sonlandırır.</p>
+</section>
+
+<h2>Entity Framework Core + Transaction Scope Kullanımı</h2>
+<p>Entity Framework ile sayfamızda DbContext sınıfını (_context) ismi ile kullanabildiğimizi düşünelim.</p>
+<pre class="code">
+	private readonly DbContext _context;
+
+	public AccountsController(DbContext context)
+	{
+		_context = context;
+	}
+</pre>
+
+<p>Sayfamızın gönderen ve alıcı hesaplar arasında para transaferi yaptığını varsayalım. Bu işlem sırasında veri tutarlılığını korumalı ve başka işlemlerin bu iki hesap üzerinde işlem yapmasını engellemeliyiz, bunun için Transaction Scope içerisinde kodlarımızı yazmalıyız.</p>
+<p>Şimdi transaction scope kod bloğu içerisinde veri tutarlılığını koruyacak şekilde birden fazla işlem yapalım.</p>
+
+<pre class="code">
+using (TransactionScope transactionScope = new TransactionScope())
+{
+    try
+    {
+        Account? sender = _context.Accounts.Find(transaction.SenderID);
+        Account? receiver = _context.Accounts.Find(transaction.ReceiverID);
+        
+        if (sender != null && receiver != null)
+        {
+        
+            <span style="color:green">/**
+            * 1.İşlem
+            * Gönderen hesaptan, transfer ücreti düşülüyor
+            */</span>
+            sender.Accountbalance = sender.Accountbalance - transaction.Amount;
+            _context.Entry(sender).State = EntityState.Modified;
+            _context.SaveChanges();
+            
+            <span style="color:green">/**
+            * 2.İşlem
+            * Alıcı hesaba, transfer ücreti ekleniyor
+            */ </span>
+            receiver.Accountbalance = receiver.Accountbalance + transaction.Amount;
+            _context.Entry(receiver).State = EntityState.Modified;
+            _context.SaveChanges();
+            
+            <span style="color:green">/**
+            * 3.İşlem
+            * Gönderen ve alıcı işlem id'leri, transfer ücretiyle kayıt ediliyor
+            */</span>
+            Models.Transaction txnRecord = new Models.Transaction();
+            txnRecord.Senderid = sender.Id;
+            txnRecord.Receiverid = receiver.Id;
+            txnRecord.Amount = transaction.Amount;
+            
+            _context.Entry(txnRecord).State = EntityState.Added;
+            _context.SaveChanges();
+        }
+        
+        transactionScope.Complete();
+    
+    }
+    catch(Exception ex)
+    {
+        transactionScope.Dispose();
+    }
+}
+</pre>
+<p>Yukarıdaki örnekte, ef kullanrak 3 farklı işlemi transaction scope içerisinde yaptık.</p>
+<p>Eğer bu üç işlemden birisinde bir hata olursa, bu hata yakalanacak ve transaciton scope bitirilecek, Complete() methoduna ulaşılmadığı için yapılan işlemler rollback yapılacak ve veritabanına yansıtılmayacaktır.</p>
+
+<h2>Transaction Scope Nasıl Çalışır?</h2>
+<p>Transaction scope kod bloğu çalıştırıldığı anda, yapılacak işlemler için varsayılan olarak isolation seviyesi (SERIALIZABLE) olarak set edilir.</p>
+<p>Complete() methodu çağrılana kadar, yapılan sql işlemleri commit edilmez.</p>
+<p>Yapılması istenen sql sorguları çalıştırılırken bir hata ile karşılaşıldığında, önceki işlemler rollback yapılarak geri alınır. Böylece veri tutarlılığı korunmuş olur.</p>
+
+
+<h3>Tablonun Bloke Edilmesi (Transaction Isolation Level: SERIALIZABLE)</h3>
+<section class="sub-section">
+	<p>Bir transaction scope kod bloğu oluşturulduğunda varsayılan olarak isolation seviyesi SERIALIZABLE olarak belirtilecektir.</p>
+	<p>Isolation seviyelerinin ne olduğunu ve ne işe yaradığını şu yazımda bulabilirsiniz:</p>
+	<a style="border-bottom:1px dashed green" href="sql-isolation-level-nedir.html">Blog: SQL Isolation Levels</a>
+<br />
+
+<p><q>SQL Server Profiler</q> uygulaması ile, sql servera gönderilen sql sorgularını izleyebiliriz. </p>
+<p>File -> New Trace yolunu izleyip bağlanmak istediğiniz SQL Server giriş bilgilerinizi girerek SQL Server Profiler'ı başlatabililirsiniz.</p>
+<img src="../assets/img/sql-profiler-isolation-level.png" width="100%"/>
+
+<p>Transaction Scope içerisinde sorgular başlatıldığı öncelikle isolation seviyesini belirten bir sorgu veritabanına gönderilir.</p>
+<pre class="code">set transaction isolation level serializable </pre>
+<p>Komutu ile bu işlem yapılırken isolation seviyesinin <q>serializable</q> seviyesinde olacağını belirtiyor.</p>
+
+<br />
+
+<p>Transaction Scope içerisine girdikten sonra, VS'da debug atıp işlemi beklemeye alalım. SQL Server üzerinden tablomuzu okumaya ve kayıt atmaya çalışalalım.</p>
+<p>İki sorgunun da tamamlanmadığını göreceğiz, çünkü işlem yapmak istediğimiz tablonun üzerinde isolation seviyesi <q>serializable</q> olarak ayarlı durumda, bu isolation seviyesi bizim bu tablomuz üzerinde okuma, yazma ve güncelleme yapmamızı engelliyor.</p>
+
+<img src="../assets/img/blocking-transactions.png" width="100%"/>
+<br />
+<p><q>Reports -> Standart Reports -> Activity - All Blocking Activity</q> yolu izlenerek bloklanan sql sorguları görüntülenebilir.</p>
+
+<p></p>
+<img src="../assets/img/sql-all-blocking-txn.png" width="100%"/>
+
+<p>VS'da debug işlemini devam ettirdiğimizde ve transaction scope içerisinde çıktığında, bloklanan sql sorgularının çalıştığını göreceğiz.</p>
+
+</section>
+
+
+
+<h3>TransactionScope Isolation Level Ayarlama (TransactionOptions)</h3>
+<section class="sub-section">
+	<p>Bir transaction scope oluşturulduğunda, varsayılan isolation seviyesi (SERIALIZABLE) olarak seçilidir. Ancak <q>TransactionOptions</q> sınıfı ile bu ayar değiştirilebilir.</p>
+
+	<p>Oluşturacağımız transaction scope'un nasıl bir transaction davranışı sergileyeceğini aşağıdaki linkten detaylı olarak öğrenebilirsiniz.</p>
+<a style="border-bottom:1px dashed green" href="https://learn.microsoft.com/en-us/previous-versions/ms172152(v=vs.90)?redirectedfrom=MSDN#managing-transaction-flow-using-transactionscopeoption">MSDN:TransactionScopeOption</a>
+
+<p>Aşağıdaki kod örneğinde, transaction scope'un isolation seviyesini <q>READ COMMITTED</q> olarak değiştirdik.</p>
+<pre class="code">
+var options = new TransactionOptions
+{
+	IsolationLevel = IsolationLevel.ReadCommitted
+};
+
+using (TransactionScope transactionScope = new TransactionScope(TransactionScopeOption.Required, options))
+{
+	//-> SomeMethods(); //-> Çalıştırılacak sql sorguları
+	transactionScope.Complete();
+}
+</pre>
+</section>
+
+
+
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		<p>Kaynak: https://www.sqlekibi.com/sql-server/sql-server-blocking.html/</p>
+		<p>Kaynak: https://learn.microsoft.com/tr-tr/dotnet/api/system.transactions.transactionscope?view=net-7.0</p>
+		<p>Kaynak: https://learn.microsoft.com/en-us/previous-versions/ms172152(v=vs.90)?redirectedfrom=MSDN#managing-transaction-flow-using-transactionscopeoption</p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>
