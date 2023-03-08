@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="robots" content="index,follow" />
-		<meta name="description" content="Windows diskpart.exe nasıl kullanılır. Diskpart ile flash bellek formatlama" />
-		<meta name="keywords" content="diskpart, cmd, flashbellek, formatlama" />
+		<meta name="description" content="XSS Nedir? Cross Site Scripting Nedir? XSS Nasıl Çalışır? XSS Nasıl Yapılır?" />
+		<meta name="keywords" content="xss, cross-site scripting, csp" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>XSS Nedir?</title>
 
@@ -26,7 +26,7 @@
 				<a href="log.html">.log</a>
 			</nav>
 
-		<section>
+
 			<h1>XSS Nedir? - Cross Site Scripting</h1>
 
 
@@ -80,8 +80,6 @@
 <section class="sub-section">
 	Zararlı Javascript kodu, http isteği içerisinde bulunur. Bir Link(bağlantı) üzerinden script tetiklenir.
 	<pre class="code">http://hedefwebsayfasi.com/?pageName=&lt;script&gt;alert(document.cookie);&lt;/script&gt;</pre>
-	<p>URL Encoded hali:</p>
-	<a href="http://hedefwebsayfasi.com/?pageName=%3Cscript%3Ealert%28document.cookie%29%3B%3C%2Fscript%3E">http://hedefwebsayfasi.com/?pageName=%3Cscript%3Ealert%28document.cookie%29%3B%3C%2Fscript%3E</a>
 </section>
 
 <h3>Stored XSS</h3>
@@ -348,14 +346,12 @@ content=&quot;default-src &#39;self&#39;; img-src https://*; child-src &#39;none
 
 </section>
 
-		<br />
-		<p style="border-top: 1px dashed green;"></p>
+		<footer style="border-top: 1px dashed green;">
 		<p>Kaynak: https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event</p>
 		<p>Kaynak: https://github.com/beefproject/beef/wiki/Configuration</p>
 		<p>Kaynak: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</p>
 		<p>Kaynak: https://excess-xss.com/#xss-attacks</p>
-		</section>
-
+	</footer>
 		</div><!--page-->
 
 
