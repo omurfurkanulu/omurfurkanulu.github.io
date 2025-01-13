@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Elastic search nedir ve nerelerde kullanılır? Arama motoru ve veri analiz aracı" />
+		<meta name="keywords" content="elastic search nedir?" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Elasticsearch Nedir?</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+				<h1>Elasticsearch Nedir? - Güçlü Arama Motoru ve Veri Analiz Aracı</h1>
+	
+			<p>Veri, günümüz dijital dünyasında hızla artan bir kaynak haline gelmektedir. Bu verilerin işlenmesi, depolanması ve analiz edilmesi, hem bireysel kullanıcılar hem de büyük organizasyonlar için önemli bir gereklilik olmuştur. Bu noktada, <strong>Elasticsearch</strong> gibi güçlü araçlar devreye girer. Peki, Elasticsearch nedir ve ne işe yarar? Bu yazıda, Elasticsearch’ün temel özelliklerini, kullanım alanlarını ve nasıl çalıştığını daha yakından inceleyeceğiz.</p>
+	
+			<h2>Elasticsearch Nedir?</h2>
+			<p>Elasticsearch, açık kaynaklı, dağıtık ve RESTful bir arama motorudur. Veri arama, analitik ve log yönetimi gibi çok çeşitli kullanım alanlarına sahiptir. Genellikle, büyük veri kümeleriyle çalışırken hızlı ve etkili aramalar yapabilmek için kullanılır. Elasticsearch, <strong>Apache Lucene</strong>'in üzerine inşa edilmiştir ve verileri JSON formatında saklar. Bu da hem yapılandırılmış hem de yapılandırılmamış verilerle çalışmayı mümkün kılar.</p>
+			<p>Elasticsearch, genellikle bir <strong>Yığın (stack)</strong> içinde, <strong>Logstash</strong> ve <strong>Kibana</strong> ile birlikte kullanılır. Bu birleşim, <strong>ELK Stack</strong> olarak bilinir ve log toplama, analiz ve görselleştirme için güçlü bir araç seti sunar.</p>
+	
+			<h2>Elasticsearch'ün Temel Özellikleri</h2>
+			<ol>
+				<li><strong>Dağıtık Yapı:</strong> Elasticsearch, verileri birden çok düğümde saklayarak, yüksek ölçeklenebilirlik ve dayanıklılık sağlar. Veri her düğümde çoğaltılır, bu sayede sistemin herhangi bir noktada başarısız olması durumunda veri kaybı yaşanmaz.</li>
+				<li><strong>Tam Metin Arama:</strong> Elasticsearch, metin bazlı aramalar için oldukça güçlüdür. Arama sorgularını anlamlandırarak ilgili sonuçları hızlı bir şekilde döndürür. Bu özellik, özellikle e-ticaret siteleri ve içerik yönetim sistemlerinde çok yaygın bir şekilde kullanılır.</li>
+				<li><strong>Gerçek Zamanlı Arama:</strong> Elasticsearch, verileri depoladığı anda arama yapılabilir hale getirir. Bu özellik, kullanıcıların en güncel verilere hızlıca erişmesini sağlar.</li>
+				<li><strong>Faceted Arama ve Agregasyonlar:</strong> Elasticsearch, sadece basit aramalar yapmakla kalmaz, aynı zamanda veriler üzerinde analiz yaparak sonuçları gruplandırabilir veya agregat değerler oluşturabilir. Örneğin, kullanıcıların belirli kriterlere göre filtreleme yapabilmesine olanak tanır.</li>
+				<li><strong>Restful API:</strong> Elasticsearch, RESTful API'ler üzerinden tüm işlemleri yapmanıza olanak tanır. Bu sayede, veritabanı yönetimi ve sorgulama işlemleri HTTP üzerinden rahatlıkla gerçekleştirilebilir.</li>
+			</ol>
+	
+			<h2>Elasticsearch’ün Kullanım Alanları</h2>
+			<ol>
+				<li><strong>Web Sitesi Arama Motorları:</strong> En yaygın kullanım alanlarından biri, web sitelerinde arama işlevini sağlayan motorlardır. İçeriklerin hızlı bir şekilde aranabilmesi ve doğru sonuçların getirilmesi, kullanıcı deneyimini iyileştirir.</li>
+				<li><strong>Log Yönetimi ve İzleme:</strong> Elasticsearch, büyük miktarda log verisini analiz etmek için çok etkilidir. Web sunucuları, uygulamalar ve sistemler tarafından üretilen log dosyalarını Elasticsearch’e yönlendirebilir, bu verileri hızlı bir şekilde arayabilir ve analiz edebilirsiniz.</li>
+				<li><strong>E-Ticaret Arama Motorları:</strong> E-ticaret platformlarında, kullanıcıların ürünleri filtreleyebilmesi, kategorilere göre sıralama yapabilmesi ve anahtar kelimelerle arama yapabilmesi için Elasticsearch sıklıkla kullanılır.</li>
+				<li><strong>Veri Analitiği ve Görselleştirme:</strong> Verilerin hızlı bir şekilde analiz edilmesi ve görselleştirilmesi için Elasticsearch ile birlikte kullanılan <strong>Kibana</strong> aracı, kullanıcılara görsel raporlar ve dashboard’lar sunar. Bu, özellikle işletmelerin iş zekası süreçlerinde kullanışlıdır.</li>
+				<li><strong>Sosyal Medya ve İçerik Analizi:</strong> İçerik yönetim sistemlerinde ve sosyal medya platformlarında, kullanıcıların içeriklerine yönelik aramalar yapmak ve içeriği anlamlandırmak için Elasticsearch kullanılabilir.</li>
+			</ol>
+	
+			<h2>Elasticsearch Nasıl Çalışır?</h2>
+			<p>Elasticsearch, verileri <strong>indeksler</strong> içinde saklar. Bu indeksler, aslında veritabanlarındaki tabloların karşılığıdır. Ancak, Elasticsearch’ün temel farkı, verilerin hızlı bir şekilde aranabilir ve analiz edilebilir olmasıdır. Elasticsearch, veriyi <strong>doküman</strong> (document) formatında saklar. Bu dokümanlar, genellikle JSON formatında olup, her bir doküman bir veri parçasını temsil eder.</p>
+			<ol>
+				<li><strong>İndeks:</strong> Bir grup dokümandan oluşan yapıdır. Veriler bu indekslerde gruplanır ve sorgular bu indeksler üzerinde yapılır.</li>
+				<li><strong>Shards (Parçalar):</strong> Büyük veri kümelerinin yönetilmesi ve ölçeklenebilirlik için Elasticsearch, verileri parçalara böler. Bu parçalar dağıtık bir şekilde saklanabilir ve arama işlemi her bir parçaya paralel olarak yapılır.</li>
+				<li><strong>Replicas (Yedekler):</strong> Verilerin güvenliği için her shard’ın bir veya daha fazla yedeği bulunabilir. Bu, sistemin dayanıklılığını artırır.</li>
+			</ol>
+			<p>Bir arama sorgusu gönderildiğinde, Elasticsearch bu sorguyu indeks üzerinde işler ve ilgili dokümanları hızlıca döndürür. Bu işlem, tüm verilerin dağıtık yapıda ve paralel olarak işlendiği için son derece hızlıdır.</p>
+	
+			<h2>Elasticsearch Kullanmaya Başlama </h2>
+			<p>Elasticsearch ile çalışmaya başlamak için öncelikle bir <strong>Elasticsearch sunucusu</strong> kurmanız gerekir. Elasticsearch, farklı işletim sistemlerinde çalışabilen, kolayca yapılandırılabilen bir yazılımdır. Elasticsearch’ün kurulumu ve temel yapılandırması oldukça basittir.</p>
+			<ol>
+				<li><strong>Veri ekleme:</strong> Elasticsearch’e veri eklemek için HTTP üzerinden JSON formatında veri gönderebilirsiniz.</li>
+				<li><strong>Sorgulama:</strong> Veri üzerinde arama yapmak için, Elasticsearch’ün güçlü sorgu dili olan <strong>Query DSL</strong> kullanılabilir. Bu dil, filtreler, aramalar ve analizler oluşturmanıza olanak tanır.</li>
+			</ol>
+
+
+
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr-TR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="description" content="Angular Memory Leak Nedir? Tespiti Nasıl Yapılır? Nasıl Önlenir?" />
+		<meta name="keywords" content="angular, memory leak" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Angular Memory Leak Nedir ve Önleme Yöntemleri</title>
+
+		<!--[if lt IE 9]>
+			<script src="../assets/js/html5shiv.js"></script>
+		<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/inconsolata.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/anonymous+pro.css" />
+	</head>
+
+
+	<body>
+		<div id="page">
+			<nav>
+				<a href="index.html">Arşiv</a>
+				<a href="log.html">.log</a>
+			</nav>
+
+		<section>
+			<h1>Angular Memory Leak(Bellek Sızıntıları) Tespiti ve Önleme Yöntemleri</h1>
+
+			<h1>Angular Bellek Sızıntıları</h1>
+			<p>Angular'da bellek sızıntıları, kaynakların düzgün bir şekilde serbest bırakılmaması nedeniyle zamanla gereksiz bellek tüketimine yol açabilir. Bu sızıntılar, uygulamanın yavaşlamasına veya sonunda çökmesine neden olabilir. Aşağıda, Angular uygulamalarında bellek sızıntılarına neden olabilecek yaygın sebepler ve çözüm yolları yer almaktadır:</p>
+		  
+			<h2>1. Aboneliklerin Kapatılmaması</h2>
+			<p>Angular'da bellek sızıntılarının en yaygın sebeplerinden biri, Observable veya EventEmitter'lara olan aboneliklerin kapatılmamasıdır.</p>
+			
+			
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p><code>takeUntil</code> operatörü veya Angular'ın <code>ngOnDestroy</code> yaşam döngüsü kancası ile Observable aboneliklerini kapatmak gerekir. İşte bir örnek:</p>
+			<pre class="code">
+import { Component, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { MyService } from './my-service';
+
+@Component({
+	selector: 'app-my-component',
+	templateUrl: './my-component.component.html',
+})
+export class MyComponent implements OnDestroy {
+	private destroy$ = new Subject<void>();
+	
+	constructor(private myService: MyService) {}
+	
+	ngOnInit() {
+		this.myService.getData()
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(data => {
+			// veriyi işleme
+		});
+	}
+	
+	ngOnDestroy() {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+}
+			</pre>
+			<p><code>takeUntil</code> kullanmak, bileşen yok edildiğinde aboneliğin otomatik olarak kapatılmasını sağlar.</p>
+		  
+</section>
+
+			<h2>2. Olay Dinleyicilerinin Kaldırılmaması</h2>
+			
+			<p>Eğer özel olay dinleyicileri (örneğin <code>window</code> veya <code>document</code> dinleyicileri) eklerseniz ve bileşen yok edildiğinde bunları kaldırmazsanız, bellek sızıntılarına yol açabilir.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Olay dinleyicilerini <code>ngOnDestroy</code> yaşam döngüsü kancasına kaldırmalısınız.</p>
+			<pre class="code">
+@Component({
+	selector: 'app-my-component',
+	templateUrl: './my-component.component.html',
+})
+
+export class MyComponent implements OnDestroy {
+	ngOnInit() {
+		window.addEventListener('resize', this.onResize);
+	}
+
+	ngOnDestroy() {
+		window.removeEventListener('resize', this.onResize);
+	}
+
+	private onResize(event: Event) {
+		console.log('Pencere boyutu değişti', event);
+	}
+}</pre>
+</section>  
+
+
+
+			<h2>3. Yönetilmeyen Referanslar</h2>
+			<p>Kullanılmayan ancak bellekte tutulan nesneler veya hizmetler bellek sızıntılarına neden olabilir. Örneğin, bir bileşen hizmetlere veya büyük veri nesnelerine referans tutmaya devam ederse, bu nesneler çöp toplama (garbage collection) tarafından serbest bırakılmaz.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Kullanılmayan nesneleri <code>null</code> veya <code>undefined</code> yaparak bellekten temizlenmelerini sağlayabilirsiniz.</p>
+			<pre class="code">
+ngOnDestroy() {
+	this.myService = null;  // Hizmetin referansını temizler
+}</pre>
+</section>
+
+
+
+
+
+			<h2>4. Değişim Algılamanın Ayrılması (Detached Change Detection)</h2>
+			<p>Bazen, Angular'ın değişim algılama mekanizması bellek sorunlarına yol açabilir, özellikle değişim algılamasını manuel olarak ayırdığınızda.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p><code>ChangeDetectorRef</code>'i dikkatli kullanın. Değişim algılamasını yalnızca gerekli olduğunda ayırın ve gerektiğinde tekrar bağlayın.</p>
+<pre class="code">
+constructor(private cdRef: ChangeDetectorRef) {}
+
+ngOnInit() {
+	this.cdRef.detach(); // Performans için algılamayı ayır
+}
+
+ngOnDestroy() {
+	this.cdRef.reattach(); // Gerekirse yeniden bağla
+}</pre>
+</section>
+
+
+
+
+			<h2>5. Lazy Loading Sorunları</h2>
+			<p>Lazy-loaded (tembel yüklenen) modüllerle büyük Angular uygulamalarında, modüllerin düzgün bir şekilde temizlenmemesi bellek sızıntılarına yol açabilir.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Lazy-loaded modüllerin doğru şekilde yapılandırıldığından ve modülün temizlendiğinden emin olun.</p>
+<pre class="code">
+// Lazy Loaded Modül Örneği
+const routes: Routes = [
+	{
+		path: 'lazy',
+		loadChildren: () => import('./lazy/lazy.module').then(m => m.LazyModule),
+	},
+];
+</pre>
+</section>
+
+
+		  
+			<h2>6. Üçüncü Taraf Kütüphaneleri</h2>
+			<p>Bazı üçüncü taraf kütüphaneleri, kaynakları düzgün şekilde temizlemeyebilir ve bu da bellek sızıntılarına neden olabilir.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Üçüncü taraf kütüphanelerinin Angular ile uyumlu olduğundan ve kaynakları etkin bir şekilde yönettiklerinden emin olun. Belirli bir kütüphanenin dökümantasyonunu kontrol ederek, kaynakların nasıl temizleneceğiyle ilgili bilgi edinin.</p>
+		</section>
+
+
+
+
+
+			<h2>7. NgFor'da Değişim Takibi</h2>
+			<p><code>ngFor</code> ile büyük liste öğeleri kullanırken, değişikliklerin düzgün bir şekilde takip edilmemesi, Angular'ın görünümden kaldırılan öğelere olan referansları bellekte tutmasına yol açabilir.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Listelerdeki değişikliklerin nasıl işlendiğini optimize etmek için <code>trackBy</code> fonksiyonunu kullanın.</p>
+			
+			<pre class="code">
+&lt;div *ngFor&#x3D;&quot;let item of items; trackBy: trackById&quot;&gt;
+	{{ item.name }}
+&lt;&#x2F;div&gt;
+
+trackById(index: number, item: any): number {
+	return item.id;
+}
+</pre>
+</section>
+
+
+
+		  
+			<h2>8. Global State ve Singletonlar</h2>
+			<p>Angular hizmetleri genellikle singleton nesnelerdir ve büyük veri kümelerini veya diğer nesneleri global durumda saklamak, düzgün temizlenmediklerinde bellek sızıntılarına yol açabilir.</p>
+			<h3>Çözüm:</h3>
+			<section class="sub-section">
+			<p>Büyük ve gereksiz verileri globalde saklamaktan kaçının. Eğer ihtiyaç varsa, Angular’ın <code>Injector</code>'ını veya uygun desenleri kullanarak yaşam döngüsü yönetimini sağladığınızdan emin olun.</p>
+		  
+			<p>Bu uygulamaları takip ederek bellek sızıntılarını en aza indirebilir ve Angular uygulamanızın performansını ve kararlılığını artırabilirsiniz. Chrome'un Geliştirici Araçları gibi araçları kullanarak bellek kullanımını düzenli olarak profil çıkarabilir ve potansiyel sızıntıları tespit edebilirsiniz.</p>
+		</section>
+
+
+		<br />
+		<p style="border-top: 1px dashed green;"></p>
+		</section>
+
+		</div><!--page-->
+
+
+
+	</body>
+</html>
